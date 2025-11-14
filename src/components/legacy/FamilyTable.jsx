@@ -56,8 +56,7 @@ const familyData = [
     birthday: '25/7',
     masters: [8, 7, 11],
     sign: 'Scorpio / Water-Earth',
-    highlight: true,
-    isYou: true
+    highlight: true
   },
   {
     name: 'Kyle (Brother)',
@@ -81,7 +80,7 @@ const familyData = [
   }
 ];
 
-export default function FamilyTable({ onNumberClick }) {
+export default function FamilyTable({ onNumberClick, highlightPerson }) {
   const parseNumber = (value) => {
     if (typeof value === 'string') {
       const parts = value.split('/');
@@ -106,41 +105,44 @@ export default function FamilyTable({ onNumberClick }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {familyData.map((person, idx) => (
-            <TableRow 
-              key={idx} 
-              className={person.isYou ? 'bg-amber-50 font-semibold' : idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-            >
-              <TableCell className={person.isYou ? 'font-bold text-amber-900' : 'font-medium'}>
-                {person.name}
-              </TableCell>
-              <TableCell className="text-center">
-                <NumberBadge number={person.lifePath} onClick={onNumberClick} />
-              </TableCell>
-              <TableCell className="text-center">
-                <NumberBadge number={person.expression} onClick={onNumberClick} />
-              </TableCell>
-              <TableCell className="text-center">
-                <NumberBadge number={parseNumber(person.soulUrge)} onClick={onNumberClick} />
-              </TableCell>
-              <TableCell className="text-center">
-                <NumberBadge number={person.personality} onClick={onNumberClick} />
-              </TableCell>
-              <TableCell className="text-center text-sm text-gray-700">
-                {person.birthday}
-              </TableCell>
-              <TableCell>
-                <div className="flex gap-1 flex-wrap">
-                  {person.masters.map((num, i) => (
-                    <NumberBadge key={i} number={num} onClick={onNumberClick} size="sm" />
-                  ))}
-                </div>
-              </TableCell>
-              <TableCell className="text-sm text-gray-700">
-                {person.sign}
-              </TableCell>
-            </TableRow>
-          ))}
+          {familyData.map((person, idx) => {
+            const isHighlighted = highlightPerson ? person.name === highlightPerson : person.name === 'Christian (You)';
+            return (
+              <TableRow 
+                key={idx} 
+                className={isHighlighted ? 'bg-amber-50 font-semibold' : idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+              >
+                <TableCell className={isHighlighted ? 'font-bold text-amber-900' : 'font-medium'}>
+                  {person.name}
+                </TableCell>
+                <TableCell className="text-center">
+                  <NumberBadge number={person.lifePath} onClick={onNumberClick} />
+                </TableCell>
+                <TableCell className="text-center">
+                  <NumberBadge number={person.expression} onClick={onNumberClick} />
+                </TableCell>
+                <TableCell className="text-center">
+                  <NumberBadge number={parseNumber(person.soulUrge)} onClick={onNumberClick} />
+                </TableCell>
+                <TableCell className="text-center">
+                  <NumberBadge number={person.personality} onClick={onNumberClick} />
+                </TableCell>
+                <TableCell className="text-center text-sm text-gray-700">
+                  {person.birthday}
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-1 flex-wrap">
+                    {person.masters.map((num, i) => (
+                      <NumberBadge key={i} number={num} onClick={onNumberClick} size="sm" />
+                    ))}
+                  </div>
+                </TableCell>
+                <TableCell className="text-sm text-gray-700">
+                  {person.sign}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
