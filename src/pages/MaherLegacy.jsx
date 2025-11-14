@@ -1,7 +1,10 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Printer, Sparkles } from 'lucide-react';
+import { Printer, Sparkles, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import NumberBadge from '../components/legacy/NumberBadge';
 import FamilyTable from '../components/legacy/FamilyTable';
 import { numerologyMeanings } from '../components/legacy/numerologyData';
@@ -18,6 +21,10 @@ export default function MaherLegacy() {
       <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-2xl p-8 md:p-12 print:shadow-none">
         {/* Header */}
         <div className="text-center mb-12 print:mb-8">
+          <Link to={createPageUrl('Home')} className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 mb-4 print:hidden">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Family
+          </Link>
           <div className="flex items-center justify-center gap-3 mb-4">
             <Sparkles className="w-8 h-8 text-amber-600" />
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
