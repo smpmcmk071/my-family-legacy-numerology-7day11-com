@@ -5,6 +5,7 @@ import MelanieLegacy from './pages/MelanieLegacy';
 import StephenLegacy from './pages/StephenLegacy';
 import AmyLegacy from './pages/AmyLegacy';
 import ParentsLegacy from './pages/ParentsLegacy';
+import MarketingPage from './pages/MarketingPage';
 
 
 export const PAGES = {
@@ -15,6 +16,7 @@ export const PAGES = {
     "StephenLegacy": StephenLegacy,
     "AmyLegacy": AmyLegacy,
     "ParentsLegacy": ParentsLegacy,
+    "MarketingPage": MarketingPage,
 }
 
 export const pagesConfig = {
