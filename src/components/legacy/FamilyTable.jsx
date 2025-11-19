@@ -15,6 +15,17 @@ const familyData = [
     highlight: true
   },
   {
+    name: 'Mary Agnes O\'Neill Maher (Great-Grandma)',
+    lifePath: 9,
+    expression: 8,
+    soulUrge: 7,
+    personality: 1,
+    birthday: '14/5',
+    masters: [9, 8, 7, 1],
+    sign: 'Virgo / Earth',
+    highlight: true
+  },
+  {
     name: 'George Shotts Wilson (Maternal Great-Grandpop)',
     lifePath: 1,
     expression: 7,

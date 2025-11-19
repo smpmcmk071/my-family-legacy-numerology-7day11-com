@@ -149,9 +149,66 @@ export default function GrandparentsLegacy() {
           </div>
         </div>
 
+        {/* Great-Grandparents Foundation */}
+        <div className="mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">The Great-Grandparents' Foundation</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl border-2 border-green-300">
+              <h3 className="text-xl font-bold text-green-900 mb-3">Thomas Francis Maher</h3>
+              <p className="text-sm text-green-800 font-semibold mb-3">The Creative Visionary</p>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Life Path:</span>
+                  <NumberBadge number={3} onClick={setSelectedNumber} size="sm" />
+                </div>
+                <div className="flex justify-between">
+                  <span>Expression:</span>
+                  <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />
+                </div>
+                <div className="flex justify-between">
+                  <span>Soul Urge:</span>
+                  <NumberBadge number={5} onClick={setSelectedNumber} size="sm" />
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl border-2 border-rose-300">
+              <h3 className="text-xl font-bold text-rose-900 mb-3">Mary Agnes O'Neill Maher</h3>
+              <p className="text-sm text-rose-800 font-semibold mb-3">The Compassionate Anchor</p>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Life Path:</span>
+                  <NumberBadge number={9} onClick={setSelectedNumber} size="sm" />
+                </div>
+                <div className="flex justify-between">
+                  <span>Expression:</span>
+                  <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />
+                </div>
+                <div className="flex justify-between">
+                  <span>Soul Urge:</span>
+                  <NumberBadge number={7} onClick={setSelectedNumber} size="sm" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+            <p className="text-gray-700 leading-relaxed">
+              <strong className="text-amber-900">Mary Agnes's Legacy:</strong> Her <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> 
+              life path of humanitarian compassion flows to David's <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> life path 
+              and Kenneth's <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> personality—creating an eternal thread of 
+              wisdom and service. Her <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> soul urge mirrors John Francis's 
+              <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> and Stephen's <NumberBadge number={7} onClick={setSelectedNumber} size="sm" />, 
+              weaving introspection through both maternal and paternal lines. The <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> 
+              expression connects to the achievement power flowing through Christian, Kyle, and the entire family structure.
+            </p>
+          </div>
+        </div>
+
         {/* The Bridge: Stephen */}
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">The Bridge: Stephen Maher</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">The Bridge: Stephen, David & Kenneth</h2>
           
           <div className="p-8 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border-2 border-slate-300">
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Stephen Maher - The Connector</h3>
@@ -160,43 +217,79 @@ export default function GrandparentsLegacy() {
             </p>
 
             <div className="grid md:grid-cols-3 gap-4 mb-6">
-              <div className="p-4 bg-white rounded-lg">
-                <p className="text-sm text-gray-600 mb-2">Life Path</p>
-                <div className="flex items-center gap-2">
-                  <NumberBadge number={7} onClick={setSelectedNumber} />
-                  <span className="text-xs text-gray-600">Like Grandpop</span>
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-xs font-semibold text-blue-900 mb-2">Stephen</p>
+                <div className="space-y-1">
+                  <div className="flex gap-1">
+                    <span className="text-xs text-gray-600">LP:</span>
+                    <NumberBadge number={7} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex gap-1">
+                    <span className="text-xs text-gray-600">Exp:</span>
+                    <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex gap-1">
+                    <span className="text-xs text-gray-600">Soul:</span>
+                    <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />
+                  </div>
                 </div>
               </div>
-              <div className="p-4 bg-white rounded-lg">
-                <p className="text-sm text-gray-600 mb-2">Expression</p>
-                <div className="flex items-center gap-2">
-                  <NumberBadge number={11} onClick={setSelectedNumber} />
-                  <span className="text-xs text-gray-600">Master Intuitive</span>
+              
+              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <p className="text-xs font-semibold text-purple-900 mb-2">David</p>
+                <div className="space-y-1">
+                  <div className="flex gap-1">
+                    <span className="text-xs text-gray-600">LP:</span>
+                    <NumberBadge number={9} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex gap-1">
+                    <span className="text-xs text-gray-600">Exp:</span>
+                    <NumberBadge number={3} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex gap-1">
+                    <span className="text-xs text-gray-600">Soul:</span>
+                    <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />
+                  </div>
                 </div>
               </div>
-              <div className="p-4 bg-white rounded-lg">
-                <p className="text-sm text-gray-600 mb-2">Soul Urge</p>
-                <div className="flex items-center gap-2">
-                  <NumberBadge number={8} onClick={setSelectedNumber} />
-                  <span className="text-xs text-gray-600">Power & Achievement</span>
+
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <p className="text-xs font-semibold text-green-900 mb-2">Kenneth</p>
+                <div className="space-y-1">
+                  <div className="flex gap-1">
+                    <span className="text-xs text-gray-600">LP:</span>
+                    <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex gap-1">
+                    <span className="text-xs text-gray-600">Exp:</span>
+                    <NumberBadge number={5} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex gap-1">
+                    <span className="text-xs text-gray-600">Soul:</span>
+                    <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />
+                  </div>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4 text-gray-700 leading-relaxed">
               <p>
-                Stephen inherits his father John Francis's <NumberBadge number={7} onClick={setSelectedNumber} /> life path—
-                the same analytical, wisdom-seeking energy that seeks deeper truth beyond surface appearances.
+                <strong className="text-gray-900">Stephen</strong> inherits John Francis's <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> 
+                and Mary Agnes's <NumberBadge number={7} onClick={setSelectedNumber} size="sm" />—a double wisdom line from both grandparents.
               </p>
               <p>
-                His <NumberBadge number={11} onClick={setSelectedNumber} /> expression carries forward the master number 
-                legacy from John Francis's birth month and soul urge <NumberBadge number={22} onClick={setSelectedNumber} />, 
-                creating a channel of visionary insight.
+                <strong className="text-gray-900">David</strong> carries Mary Agnes's <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> 
+                life path of humanitarian service and John Francis's <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> expression—
+                the completer and healer of cycles.
               </p>
               <p>
-                The <NumberBadge number={8} onClick={setSelectedNumber} /> soul urge connects to Elizabeth JoAnn's 
-                birthday <NumberBadge number={8} onClick={setSelectedNumber} /> and amplifies the family's power to 
-                manifest and achieve.
+                <strong className="text-gray-900">Kenneth</strong> embodies the master <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> 
+                (both life path and soul urge) flowing from Thomas Francis's <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> 
+                expression and John Francis's legacy—a triple master visionary channel.
+              </p>
+              <p className="text-amber-900 font-semibold">
+                All three brothers carry the <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> power through Mary Agnes's expression, 
+                Elizabeth JoAnn's birthday, and Stephen's soul urge—the family's unified force for achievement.
               </p>
             </div>
           </div>
