@@ -26,6 +26,17 @@ const familyData = [
     highlight: true
   },
   {
+    name: 'Elizabeth Elanor Wilson (Maternal Grandma)',
+    lifePath: 2,
+    expression: 6,
+    soulUrge: '33/6',
+    personality: 3,
+    birthday: '17/8',
+    masters: [2, 6, 8, 33],
+    sign: 'Leo / Fire-Water',
+    highlight: true
+  },
+  {
     name: 'Stephen (Dad)',
     lifePath: 7,
     expression: 11,
