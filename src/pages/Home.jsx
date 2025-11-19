@@ -14,7 +14,7 @@ export default function Home() {
           title: 'The Builder',
           description: 'Double 8, Soul 11, Birthday 25/7',
           highlight: 'Master Builder & Visionary',
-          page: 'MaherLegacy',
+          page: 'ChristianLegacy',
           gradient: 'from-amber-500 to-orange-600'
         },
         {
@@ -45,6 +45,19 @@ export default function Home() {
           highlight: 'Wisdom & Love',
           page: 'GrandparentsLegacy',
           gradient: 'from-indigo-500 to-purple-600'
+        }
+      ]
+    },
+    {
+      title: 'The Three Brothers',
+      members: [
+        {
+          name: 'David, Stephen & Kenneth',
+          title: 'The Trinity',
+          description: 'Humanitarian, Visionary & Master Intuitive',
+          highlight: 'United in Purpose',
+          page: 'BrothersLegacy',
+          gradient: 'from-violet-500 to-indigo-600'
         }
       ]
     },

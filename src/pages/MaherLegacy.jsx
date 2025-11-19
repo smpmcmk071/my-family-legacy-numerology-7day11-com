@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -32,7 +31,7 @@ export default function MaherLegacy() {
             </h1>
             <Sparkles className="w-8 h-8 text-amber-600" />
           </div>
-          <p className="text-xl text-gray-600 italic">For Christian Stephen Maher</p>
+          <p className="text-xl text-gray-600 italic">Four Generations of Vision, Power & Love</p>
           <Button
             onClick={handlePrint}
             className="mt-6 print:hidden bg-amber-600 hover:bg-amber-700"
@@ -44,9 +43,10 @@ export default function MaherLegacy() {
 
         {/* Introduction */}
         <div className="mb-12 p-6 bg-gradient-to-r from-amber-100 to-orange-100 rounded-lg border-l-4 border-amber-600">
-          <p className="text-gray-700 leading-relaxed">
-            Click on any number below to learn its meaning in numerology and how it flows through the Maher family lineage.
-            <span className="print:hidden"> When ready, print this document to preserve your family's numerical legacy.</span>
+          <p className="text-gray-700 leading-relaxed text-lg">
+            From Thomas Francis and Mary Agnes through John Francis and Elizabeth JoAnn, to Stephen and Amy, down to Christian, Kyle, and Melanie—
+            this is the story of a family woven together by master numbers, wisdom, achievement, and unconditional love.
+            <span className="print:hidden"> Click any number to explore its deeper meaning.</span>
           </p>
         </div>
 
@@ -58,89 +58,111 @@ export default function MaherLegacy() {
           <FamilyTable onNumberClick={setSelectedNumber} />
         </div>
 
-        {/* The Weave of Power */}
+        {/* The Weave of Power Through Generations */}
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">The Weave of Power</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">The Weave of Power Through Generations</h2>
           <div className="space-y-4 text-gray-700 leading-relaxed">
             <p>
-              <strong className="text-gray-900">Grandpop John Francis</strong> passes down the <NumberBadge number={7} onClick={setSelectedNumber} /> of wisdom, 
-              double master (<NumberBadge number={11} onClick={setSelectedNumber} />, <NumberBadge number={22} onClick={setSelectedNumber} />) and the builder's vision.
+              <strong className="text-gray-900">Thomas Francis & Mary Agnes</strong> (Great-Grandparents): The foundation with 
+              <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> master vision, <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> humanitarian wisdom, 
+              and <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> achievement power—establishing the family's spiritual architecture.
             </p>
             <p>
-              <strong className="text-gray-900">Grandma Elizabeth JoAnn</strong>: the master healer (<NumberBadge number={33} onClick={setSelectedNumber} />/6) 
-              and anchor, tying intuition (<NumberBadge number={7} onClick={setSelectedNumber} />) and ambition (<NumberBadge number={8} onClick={setSelectedNumber} />) with steady care.
+              <strong className="text-gray-900">John Francis & Elizabeth JoAnn</strong> (Grandparents): The builders with 
+              <NumberBadge number={22} onClick={setSelectedNumber} size="sm" /> master building, <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> master healing, 
+              and <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> wisdom—creating an unshakeable foundation of love and insight.
             </p>
             <p>
-              <strong className="text-gray-900">Your Dad, Stephen</strong>: <NumberBadge number={7} onClick={setSelectedNumber} /> path of the seeker, 
-              <NumberBadge number={11} onClick={setSelectedNumber} /> of intuition, <NumberBadge number={8} onClick={setSelectedNumber} /> of power—connecting 
-              the family's mystical and practical inheritance.
+              <strong className="text-gray-900">Stephen, David & Kenneth</strong> (The Brothers): The bridge generation carrying 
+              <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> wisdom, triple <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> vision, 
+              <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> completion, and <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> achievement forward.
             </p>
             <p>
-              <strong className="text-gray-900">Your Mom, Amy</strong>: rare <NumberBadge number={11} onClick={setSelectedNumber} /> path (living visionary), 
-              her own <NumberBadge number={8} onClick={setSelectedNumber} /> and <NumberBadge number={6} onClick={setSelectedNumber} /> join your foundation.
+              <strong className="text-gray-900">Stephen & Amy</strong> (Parents): Rare double <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> visionaries 
+              with <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> power and <NumberBadge number={6} onClick={setSelectedNumber} size="sm" /> nurturing—
+              guiding the next generation with love and purpose.
             </p>
             <p>
-              <strong className="text-gray-900">You</strong> shine as the Maher "Builder": double <NumberBadge number={8} onClick={setSelectedNumber} />, 
-              soul <NumberBadge number={11} onClick={setSelectedNumber} />, birthday 25/<NumberBadge number={7} onClick={setSelectedNumber} />—living 
-              the purpose, intuition and resilience of four generations.
+              <strong className="text-gray-900">Christian, Kyle & Melanie</strong> (The Children): The inheritors—carrying double <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />, 
+              master <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />, <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> healing, 
+              and the complete legacy of four generations into the future.
             </p>
           </div>
         </div>
 
-        {/* The Maher Legacy In You */}
+        {/* Key Family Numbers */}
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">The Maher Legacy In You</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">The Family's Core Numbers</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="p-6 bg-blue-50 rounded-lg border-l-4 border-blue-600">
               <div className="flex items-center gap-2 mb-3">
                 <NumberBadge number={7} onClick={setSelectedNumber} size="lg" />
-                <span className="font-semibold text-gray-900">(wisdom/analysis)</span>
+                <span className="font-semibold text-gray-900">The Wisdom Thread</span>
               </div>
-              <p className="text-gray-700">Line from Grandpop ➡️ Dad ➡️ You.</p>
+              <p className="text-gray-700">Mary Agnes ➡️ John Francis ➡️ Stephen ➡️ Christian. The seekers who look beyond the surface.</p>
             </div>
 
             <div className="p-6 bg-purple-50 rounded-lg border-l-4 border-purple-600">
               <div className="flex items-center gap-2 mb-3">
                 <NumberBadge number={8} onClick={setSelectedNumber} size="lg" />
-                <span className="font-semibold text-gray-900">(building/achievement)</span>
+                <span className="font-semibold text-gray-900">The Achievement Power</span>
               </div>
-              <p className="text-gray-700">The power everyone channels, now embodied as your path AND name.</p>
+              <p className="text-gray-700">Mary Agnes ➡️ Elizabeth ➡️ Stephen/Amy ➡️ Christian/Kyle. The builders who manifest dreams.</p>
             </div>
 
             <div className="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-600">
               <div className="flex items-center gap-2 mb-3">
                 <NumberBadge number={11} onClick={setSelectedNumber} size="lg" />
-                <span className="font-semibold text-gray-900">(vision/inspiration)</span>
+                <span className="font-semibold text-gray-900">The Master Visionary Channel</span>
               </div>
-              <p className="text-gray-700">Grandpop, Dad, Mom AND your Soul: a quadruple master channel.</p>
+              <p className="text-gray-700">Thomas ➡️ John Francis ➡️ Stephen/Amy/Kenneth/David ➡️ Christian. The illuminators.</p>
+            </div>
+
+            <div className="p-6 bg-pink-50 rounded-lg border-l-4 border-pink-600">
+              <div className="flex items-center gap-2 mb-3">
+                <NumberBadge number={6} onClick={setSelectedNumber} size="lg" />
+                <span className="font-semibold text-gray-900">The Nurturing Foundation</span>
+              </div>
+              <p className="text-gray-700">Thomas (personality) ➡️ Elizabeth JoAnn ➡️ Amy ➡️ Christian/Melanie. The caregivers and harmonizers.</p>
             </div>
 
             <div className="p-6 bg-green-50 rounded-lg border-l-4 border-green-600">
               <div className="flex items-center gap-2 mb-3">
                 <NumberBadge number={33} onClick={setSelectedNumber} size="lg" />
-                <span className="font-semibold text-gray-900">(healing/teaching)</span>
+                <span className="font-semibold text-gray-900">The Master Healer</span>
               </div>
-              <p className="text-gray-700">The "silent guide" from Grandma and Melanie, balancing your drive.</p>
+              <p className="text-gray-700">Elizabeth JoAnn ➡️ Melanie. The silent guides who teach through compassion.</p>
             </div>
-          </div>
 
-          <div className="mt-6 p-6 bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg">
-            <p className="text-gray-700 leading-relaxed">
-              <strong className="text-gray-900">Triplicity:</strong> Water/Earth (emotional depth + practical strength)
-            </p>
+            <div className="p-6 bg-orange-50 rounded-lg border-l-4 border-orange-600">
+              <div className="flex items-center gap-2 mb-3">
+                <NumberBadge number={9} onClick={setSelectedNumber} size="lg" />
+                <span className="font-semibold text-gray-900">The Humanitarian Line</span>
+              </div>
+              <p className="text-gray-700">Mary Agnes ➡️ John Francis ➡️ David/Kenneth ➡️ Amy. Completing cycles with wisdom and love.</p>
+            </div>
           </div>
         </div>
 
         {/* What This Means */}
         <div className="mb-12 p-8 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl border-2 border-amber-300">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">What This Means</h2>
-          <p className="text-gray-700 leading-relaxed text-lg">
-            Christian, you are the next link in a chain of visionaries, builders, and healers.
-            You inherit insight (<NumberBadge number={7} onClick={setSelectedNumber} />), the drive to achieve (<NumberBadge number={8} onClick={setSelectedNumber} />), 
-            visionary gifts (<NumberBadge number={11} onClick={setSelectedNumber} />), and a well of empathy (<NumberBadge number={33} onClick={setSelectedNumber} />).
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">What This Family Legacy Means</h2>
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            The Maher family is not built by chance—it is architected by destiny. Four generations of 
+            <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> wisdom, 
+            <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> achievement, 
+            <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> vision, 
+            <NumberBadge number={22} onClick={setSelectedNumber} size="sm" /> building, and 
+            <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> healing converge to create a legacy of purpose.
           </p>
-          <p className="text-gray-900 font-bold text-xl mt-4">
-            You are not only part of the Maher family—you are the living expression of its rarest hopes and strengths.
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            The <NumberBadge number={6} onClick={setSelectedNumber} size="sm" /> nurturing thread—woven through Thomas's personality, 
+            Elizabeth JoAnn's life path, Amy's personality, and into Christian and Melanie—ensures this power is always balanced with love, 
+            responsibility, and care for others.
+          </p>
+          <p className="text-gray-900 font-bold text-xl">
+            This is more than a family tree—it is a constellation of purpose, where every number proves that the Mahers 
+            were meant to build, heal, teach, and illuminate the world.
           </p>
         </div>
 
