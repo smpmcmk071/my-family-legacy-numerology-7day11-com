@@ -36,6 +36,19 @@ export default function Home() {
       ]
     },
     {
+      title: 'The Grandparents',
+      members: [
+        {
+          name: 'John Francis & Elizabeth JoAnn',
+          title: 'The Foundation',
+          description: 'Master Builder (22) & Master Healer (33)',
+          highlight: 'Wisdom & Love',
+          page: 'GrandparentsLegacy',
+          gradient: 'from-indigo-500 to-purple-600'
+        }
+      ]
+    },
+    {
       title: 'The Parents',
       members: [
         {

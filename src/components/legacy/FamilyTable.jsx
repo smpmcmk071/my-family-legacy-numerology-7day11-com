@@ -110,6 +110,26 @@ const familyData = [
     birthday: '28/1',
     masters: [1, 3, 6, 33],
     sign: 'Libra / Air-Earth'
+  },
+  {
+    name: 'David (Uncle)',
+    lifePath: 9,
+    expression: 3,
+    soulUrge: 11,
+    personality: 2,
+    birthday: '1',
+    masters: [9, 11, 3],
+    sign: 'Taurus / Earth'
+  },
+  {
+    name: 'Kenneth (Uncle)',
+    lifePath: 11,
+    expression: 5,
+    soulUrge: 11,
+    personality: 9,
+    birthday: '18/9',
+    masters: [11, 9, 5],
+    sign: 'Aquarius / Air'
   }
 ];
 

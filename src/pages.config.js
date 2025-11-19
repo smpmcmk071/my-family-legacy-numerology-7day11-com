@@ -8,6 +8,7 @@ import ParentsLegacy from './pages/ParentsLegacy';
 import MarketingPage from './pages/MarketingPage';
 import Landing from './pages/Landing';
 import FamilyTree from './pages/FamilyTree';
+import GrandparentsLegacy from './pages/GrandparentsLegacy';
 
 
 export const PAGES = {
@@ -21,6 +22,7 @@ export const PAGES = {
     "MarketingPage": MarketingPage,
     "Landing": Landing,
     "FamilyTree": FamilyTree,
+    "GrandparentsLegacy": GrandparentsLegacy,
 }
 
 export const pagesConfig = {
