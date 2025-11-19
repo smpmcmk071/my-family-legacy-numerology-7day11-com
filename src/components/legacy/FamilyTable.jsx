@@ -4,6 +4,39 @@ import NumberBadge from './NumberBadge';
 
 const familyData = [
   {
+    name: 'Thomas Francis Maher (Great-Grandpop)',
+    lifePath: 3,
+    expression: 11,
+    soulUrge: 5,
+    personality: 6,
+    birthday: '5',
+    masters: [3, 11, 5],
+    sign: 'Taurus / Earth',
+    highlight: true
+  },
+  {
+    name: 'George Shotts Wilson (Maternal Great-Grandpop)',
+    lifePath: 1,
+    expression: 7,
+    soulUrge: 6,
+    personality: 1,
+    birthday: '23/5',
+    masters: [1, 7, 6],
+    sign: 'Scorpio / Water',
+    highlight: true
+  },
+  {
+    name: 'Elizabeth Elanor Wilson (Maternal Grandma)',
+    lifePath: 2,
+    expression: 6,
+    soulUrge: '33/6',
+    personality: 3,
+    birthday: '17/8',
+    masters: [2, 6, 8, 33],
+    sign: 'Leo / Fire-Water',
+    highlight: true
+  },
+  {
     name: 'John Francis (Grandpop)',
     lifePath: 7,
     expression: 9,
@@ -23,17 +56,6 @@ const familyData = [
     birthday: '26/8',
     masters: [6, 7, 8, 33],
     sign: 'Cancer / Water-Earth',
-    highlight: true
-  },
-  {
-    name: 'Elizabeth Elanor Wilson (Maternal Grandma)',
-    lifePath: 2,
-    expression: 6,
-    soulUrge: '33/6',
-    personality: 3,
-    birthday: '17/8',
-    masters: [2, 6, 8, 33],
-    sign: 'Leo / Fire-Water',
     highlight: true
   },
   {
