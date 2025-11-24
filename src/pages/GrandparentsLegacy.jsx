@@ -162,55 +162,110 @@ export default function GrandparentsLegacy() {
           <h2 className="text-3xl font-bold text-gray-900 mb-6">The Great-Grandparents' Foundation</h2>
           
           <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl border-2 border-green-300">
-              <h3 className="text-xl font-bold text-green-900 mb-3">Thomas Francis Maher</h3>
-              <p className="text-sm text-green-800 font-semibold mb-3">The Creative Visionary</p>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Life Path:</span>
-                  <NumberBadge number={3} onClick={setSelectedNumber} size="sm" />
+            {/* Paternal Line */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold text-gray-900">Paternal Great-Grandparents</h3>
+              <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl border-2 border-green-300">
+                <h4 className="text-xl font-bold text-green-900 mb-3">Thomas Francis Maher</h4>
+                <p className="text-sm text-green-800 font-semibold mb-3">The Creative Visionary</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Life Path:</span>
+                    <NumberBadge number={3} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Expression:</span>
+                    <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Soul Urge:</span>
+                    <NumberBadge number={5} onClick={setSelectedNumber} size="sm" />
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Expression:</span>
-                  <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />
-                </div>
-                <div className="flex justify-between">
-                  <span>Soul Urge:</span>
-                  <NumberBadge number={5} onClick={setSelectedNumber} size="sm" />
+              </div>
+
+              <div className="p-6 bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl border-2 border-rose-300">
+                <h4 className="text-xl font-bold text-rose-900 mb-3">Mary Agnes O'Neill Maher</h4>
+                <p className="text-sm text-rose-800 font-semibold mb-3">The Compassionate Anchor</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Life Path:</span>
+                    <NumberBadge number={9} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Expression:</span>
+                    <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Soul Urge:</span>
+                    <NumberBadge number={7} onClick={setSelectedNumber} size="sm" />
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="p-6 bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl border-2 border-rose-300">
-              <h3 className="text-xl font-bold text-rose-900 mb-3">Mary Agnes O'Neill Maher</h3>
-              <p className="text-sm text-rose-800 font-semibold mb-3">The Compassionate Anchor</p>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Life Path:</span>
-                  <NumberBadge number={9} onClick={setSelectedNumber} size="sm" />
+            {/* Maternal Line */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold text-gray-900">Maternal Great-Grandparents</h3>
+              <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-2 border-blue-300">
+                <h4 className="text-xl font-bold text-blue-900 mb-3">George Shotts Wilson</h4>
+                <p className="text-sm text-blue-800 font-semibold mb-3">The Independent Leader</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Life Path:</span>
+                    <NumberBadge number={1} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Expression:</span>
+                    <NumberBadge number={7} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Soul Urge:</span>
+                    <NumberBadge number={6} onClick={setSelectedNumber} size="sm" />
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Expression:</span>
-                  <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />
-                </div>
-                <div className="flex justify-between">
-                  <span>Soul Urge:</span>
-                  <NumberBadge number={7} onClick={setSelectedNumber} size="sm" />
+              </div>
+
+              <div className="p-6 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl border-2 border-indigo-300">
+                <h4 className="text-xl font-bold text-indigo-900 mb-3">Elizabeth Elanor Wilson</h4>
+                <p className="text-sm text-indigo-800 font-semibold mb-3">The Nurturing Seeker</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Life Path:</span>
+                    <NumberBadge number={2} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Expression:</span>
+                    <NumberBadge number={6} onClick={setSelectedNumber} size="sm" />
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Soul Urge:</span>
+                    <NumberBadge number={33} onClick={setSelectedNumber} size="sm" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-500">
-            <p className="text-gray-700 leading-relaxed">
-              <strong className="text-amber-900">Mary Agnes's Legacy:</strong> Her <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> 
-              life path of humanitarian compassion flows to David's <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> life path 
-              and Kenneth's <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> personality—creating an eternal thread of 
-              wisdom and service. Her <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> soul urge mirrors John Francis's 
-              <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> and Stephen's <NumberBadge number={7} onClick={setSelectedNumber} size="sm" />, 
-              weaving introspection through both maternal and paternal lines. The <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> 
-              expression connects to the achievement power flowing through Christian, Kyle, and the entire family structure.
-            </p>
+          <div className="space-y-4">
+            <div className="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-500">
+              <p className="text-gray-700 leading-relaxed">
+                <strong className="text-amber-900">Paternal Legacy:</strong> Thomas Francis's <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> 
+                expression flows to Stephen's <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> and Kenneth's double <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />. 
+                Mary Agnes's <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> life path flows to David and Kenneth, 
+                while her <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> soul urge mirrors John Francis and Stephen's wisdom path.
+              </p>
+            </div>
+
+            <div className="p-6 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+              <p className="text-gray-700 leading-relaxed">
+                <strong className="text-blue-900">Maternal Legacy:</strong> George Shotts Wilson's <NumberBadge number={1} onClick={setSelectedNumber} size="sm" /> 
+                leadership and <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> wisdom adds to the family's analytical power. 
+                Elizabeth Elanor Wilson's <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> master teacher/healer energy creates a dual 
+                <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> channel (with Elizabeth JoAnn) flowing to Melanie—
+                a powerful maternal healing line through the generations.
+              </p>
+            </div>
           </div>
         </div>
 
