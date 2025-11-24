@@ -315,20 +315,23 @@ function vowelConsonantAnalysis(text) {
 
 function calculateLifePathWestern(birthDate) {
   // Western/Pythagorean method: Add full numbers together, then reduce
-  // Example: 11/07/1969 = 11 + 7 + 1969 = 1987 → 1+9+8+7 = 25 → 2+5 = 7
+  // Example: 11/07/1969 = 11 + 7 + 1969 = 1987 → 25 → 7
   // Preserves master numbers (11, 22, 33)
   const date = new Date(birthDate);
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
   
-  const total = month + day + year;
+  const sumTotal = month + day + year;
+  // Reduce the sum (e.g., 1987 → 1+9+8+7 = 25)
+  const firstReduction = String(sumTotal).split('').reduce((sum, d) => sum + parseInt(d), 0);
+  const finalReduced = reduceToDigit(firstReduction);
   
   return {
-    calculation: `${month}+${day}+${year}=${total}`,
-    total,
-    reduced: reduceToDigit(total),
-    formatted: formatWithReduction(total)
+    calculation: `${month}+${day}+${year}=${sumTotal}→${firstReduction}`,
+    total: firstReduction, // Use the first reduction (25) not the raw sum (1987)
+    reduced: finalReduced,
+    formatted: formatWithReduction(firstReduction)
   };
 }
 
