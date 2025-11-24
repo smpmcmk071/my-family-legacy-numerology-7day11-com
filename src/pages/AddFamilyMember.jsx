@@ -171,10 +171,12 @@ export default function AddFamilyMember() {
       karmic_debt_number: calculatedData.karmicDebt?.numbers?.join(',') || '',
               karmic_lessons: calculatedData.karmicLessons?.lessons?.join(',') || '',
               sun_sign: calculatedData.astrology?.sunSign || '',
-              zodiac_sign: calculatedData.astrology?.sunSign || '', // Same as sun sign
-              ruling_planet: calculatedData.astrology?.rulingPlanet || '',
-              element: calculatedData.astrology?.element || '',
-              is_active: true
+                      zodiac_sign: calculatedData.astrology?.sunSign || '', // Same as sun sign
+                      ruling_planet: calculatedData.astrology?.rulingPlanet || '',
+                      element: calculatedData.astrology?.element || '',
+                      secondary_element: calculatedData.astrology?.secondaryElement || '',
+                      modality: calculatedData.astrology?.modality || '',
+                      is_active: true
     };
 
     if (editingMemberId) {
@@ -528,8 +530,28 @@ export default function AddFamilyMember() {
                                             <p className="text-xs text-gray-400 mb-2">Astrology</p>
                                             <div className="flex gap-4 text-sm text-gray-300 flex-wrap">
                                               <span>☉ {calculatedData.astrology?.sunSign || '-'}</span>
-                                              <span>🜨 {calculatedData.astrology?.element || '-'}</span>
                                               <span>♇ {calculatedData.astrology?.rulingPlanet || '-'}</span>
+                                              <span className="text-xs text-gray-400">{calculatedData.astrology?.modality || '-'}</span>
+                                            </div>
+                                            <div className="flex gap-2 mt-2">
+                                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                                calculatedData.astrology?.element === 'Water' ? 'bg-blue-500/30 text-blue-300' :
+                                                calculatedData.astrology?.element === 'Fire' ? 'bg-red-500/30 text-red-300' :
+                                                calculatedData.astrology?.element === 'Air' ? 'bg-cyan-500/30 text-cyan-300' :
+                                                'bg-green-500/30 text-green-300'
+                                              }`}>
+                                                {calculatedData.astrology?.element || '-'} (Sun)
+                                              </span>
+                                              {calculatedData.astrology?.secondaryElement && calculatedData.astrology?.secondaryElement !== calculatedData.astrology?.element && (
+                                                <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                                  calculatedData.astrology?.secondaryElement === 'Water' ? 'bg-blue-500/30 text-blue-300' :
+                                                  calculatedData.astrology?.secondaryElement === 'Fire' ? 'bg-red-500/30 text-red-300' :
+                                                  calculatedData.astrology?.secondaryElement === 'Air' ? 'bg-cyan-500/30 text-cyan-300' :
+                                                  'bg-green-500/30 text-green-300'
+                                                }`}>
+                                                  {calculatedData.astrology?.secondaryElement} (Life Path)
+                                                </span>
+                                              )}
                                             </div>
                                           </div>
 

@@ -677,6 +677,29 @@ function getHouseMeaning(houseNum) {
   return meanings[houseNum];
 }
 
+// Get element from Life Path number (numerology-based secondary element)
+function getElementFromLifePath(lifePathNum) {
+  // Fire: 1, 3, 9 - Action, creativity, passion
+  // Earth: 4, 8 - Stability, material, practical
+  // Air: 5, 7, 11 - Mental, communication, ideas
+  // Water: 2, 6, 22, 33 - Emotional, intuitive, nurturing
+  const elementMap = {
+    1: 'Fire',    // Leadership, initiative
+    2: 'Water',   // Cooperation, sensitivity
+    3: 'Fire',    // Creativity, expression
+    4: 'Earth',   // Structure, foundation
+    5: 'Air',     // Freedom, change, communication
+    6: 'Water',   // Nurturing, responsibility
+    7: 'Air',     // Analysis, spirituality, wisdom
+    8: 'Earth',   // Power, material mastery
+    9: 'Fire',    // Humanitarian, completion
+    11: 'Air',    // Intuition, inspiration, vision
+    22: 'Earth',  // Master builder (elevated Earth)
+    33: 'Water'   // Master healer (elevated Water)
+  };
+  return elementMap[lifePathNum] || 'Earth';
+}
+
 function detectNameMasterNumbers(fullName, birthDate) {
   const masters = new Set();
   const locations = [];
@@ -1000,9 +1023,15 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
     
     // Add astrology data
     const sunSignData = calculateSunSign(birthDate);
+    
+    // Calculate secondary element from Life Path number
+    const lifePathNum = result.lifePath.reduced;
+    const secondaryElement = getElementFromLifePath(lifePathNum);
+    
     result.astrology = {
       sunSign: sunSignData.sign,
       element: sunSignData.element,
+      secondaryElement: secondaryElement,
       modality: sunSignData.modality,
       rulingPlanet: sunSignData.ruler
     };
