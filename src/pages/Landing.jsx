@@ -7,7 +7,7 @@ import { createPageUrl } from '@/utils';
 
 export default function Landing() {
   const handleLogin = () => {
-    base44.auth.redirectToLogin(createPageUrl('Landing'));
+    base44.auth.redirectToLogin(createPageUrl('Home'));
   };
 
   return (
