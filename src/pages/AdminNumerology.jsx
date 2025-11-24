@@ -492,55 +492,107 @@ Stephen Maher, 1969-11-07, parent, 3, 11:06 PM EST, Drexel Hill PA"
               </div>
             )}
 
-            <div className="overflow-x-auto rounded-lg border border-white/10">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-white/10">
-                    <TableHead className="text-gray-300 w-10"></TableHead>
-                    <TableHead className="text-gray-300">Name</TableHead>
-                    <TableHead className="text-gray-300">Birth Date</TableHead>
-                    <TableHead className="text-gray-300">LP (W)</TableHead>
-                    <TableHead className="text-gray-300">LP (C)</TableHead>
-                    <TableHead className="text-gray-300">Expression</TableHead>
-                    <TableHead className="text-gray-300">Karmic</TableHead>
-                    <TableHead className="text-gray-300">Sun Sign</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {familyMembers.map(member => (
-                    <TableRow key={member.id} className="border-white/10">
-                      <TableCell>
-                        <Checkbox
-                          checked={selectedMembers.includes(member.id)}
-                          onCheckedChange={() => toggleMemberSelection(member.id)}
-                        />
-                      </TableCell>
-                      <TableCell className="text-white font-medium">
-                        {member.nickname || member.full_name?.split(' ')[0]}
-                      </TableCell>
-                      <TableCell className="text-gray-300 text-sm">
-                        {member.birth_date}
-                      </TableCell>
-                      <TableCell className="text-amber-400">
-                        {member.life_path_western || '-'}
-                      </TableCell>
-                      <TableCell className="text-blue-400">
-                        {member.life_path_chaldean || '-'}
-                      </TableCell>
-                      <TableCell className="text-purple-400">
-                        {member.expression_western || '-'}
-                      </TableCell>
-                      <TableCell className="text-red-400">
-                        {member.karmic_debt_number || '-'}
-                      </TableCell>
-                      <TableCell className="text-gray-300 text-sm">
-                        {member.sun_sign || '-'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <div className="overflow-x-auto rounded-lg border border-white/10 max-h-[500px] overflow-y-auto">
+                                <Table>
+                                  <TableHeader className="sticky top-0 bg-slate-900 z-10">
+                                    <TableRow className="border-white/10">
+                                      <TableHead className="text-gray-300 w-10"></TableHead>
+                                      <TableHead className="text-gray-300">Name</TableHead>
+                                      <TableHead className="text-gray-300">Birth Date</TableHead>
+                                      <TableHead className="text-gray-300">LP (W)</TableHead>
+                                      <TableHead className="text-gray-300">LP (C)</TableHead>
+                                      <TableHead className="text-gray-300">Expr (W)</TableHead>
+                                      <TableHead className="text-gray-300">Soul (W)</TableHead>
+                                      <TableHead className="text-gray-300">Pers (W)</TableHead>
+                                      <TableHead className="text-gray-300">Birthday</TableHead>
+                                      <TableHead className="text-gray-300">Masters</TableHead>
+                                      <TableHead className="text-gray-300">Karmic Debt</TableHead>
+                                      <TableHead className="text-gray-300">Karmic Lessons</TableHead>
+                                      <TableHead className="text-gray-300">Sun</TableHead>
+                                      <TableHead className="text-gray-300">Moon</TableHead>
+                                      <TableHead className="text-gray-300">Element</TableHead>
+                                      <TableHead className="text-gray-300">2nd Element</TableHead>
+                                      <TableHead className="text-gray-300">Modality</TableHead>
+                                      <TableHead className="text-gray-300">Ruler</TableHead>
+                                      <TableHead className="text-gray-300">Pyth Total</TableHead>
+                                      <TableHead className="text-gray-300">Chald Total</TableHead>
+                                      <TableHead className="text-gray-300">Gematria</TableHead>
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody>
+                                    {familyMembers.map(member => (
+                                      <TableRow key={member.id} className="border-white/10">
+                                        <TableCell>
+                                          <Checkbox
+                                            checked={selectedMembers.includes(member.id)}
+                                            onCheckedChange={() => toggleMemberSelection(member.id)}
+                                          />
+                                        </TableCell>
+                                        <TableCell className="text-white font-medium whitespace-nowrap">
+                                          {member.nickname || member.full_name?.split(' ')[0]}
+                                        </TableCell>
+                                        <TableCell className="text-gray-300 text-sm whitespace-nowrap">
+                                          {member.birth_date}
+                                        </TableCell>
+                                        <TableCell className="text-amber-400">
+                                          {member.life_path_western || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-blue-400">
+                                          {member.life_path_chaldean || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-purple-400">
+                                          {member.expression_western || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-pink-400">
+                                          {member.soul_urge_western || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-cyan-400">
+                                          {member.personality_western || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-orange-400">
+                                          {member.birthday_vibe || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-yellow-400">
+                                          {member.master_numbers || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-red-400">
+                                          {member.karmic_debt_number || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-orange-300 text-xs">
+                                          {member.karmic_lessons || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-gray-300 text-sm whitespace-nowrap">
+                                          {member.sun_sign || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-gray-300 text-sm whitespace-nowrap">
+                                          {member.moon_sign || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-green-400 text-sm">
+                                          {member.element || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-teal-400 text-sm">
+                                          {member.secondary_element || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-gray-400 text-sm">
+                                          {member.modality || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-indigo-400 text-sm whitespace-nowrap">
+                                          {member.ruling_planet || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-gray-400">
+                                          {member.pythagorean_total || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-gray-400">
+                                          {member.chaldean_total || '-'}
+                                        </TableCell>
+                                        <TableCell className="text-gray-400">
+                                          {member.gematria_total || '-'}
+                                        </TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </div>
           </CardContent>
         </Card>
       </div>
