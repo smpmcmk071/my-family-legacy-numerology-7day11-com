@@ -539,50 +539,108 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
   const vowelConsonant = vowelConsonantAnalysis(cleanedName);
   const masters = detectNameMasterNumbers(cleanedName, birthDate);
   
+  // Collect master numbers as array
+  const masterNumbersArray = [];
+  if ([11, 22, 33].includes(expression.sum)) masterNumbersArray.push(expression.sum);
+  else if ([11, 22, 33].includes(expression.reduced)) masterNumbersArray.push(expression.reduced);
+  if ([11, 22, 33].includes(soulUrge.sum)) masterNumbersArray.push(soulUrge.sum);
+  else if ([11, 22, 33].includes(soulUrge.reduced)) masterNumbersArray.push(soulUrge.reduced);
+  if ([11, 22, 33].includes(personality.sum)) masterNumbersArray.push(personality.sum);
+  else if ([11, 22, 33].includes(personality.reduced)) masterNumbersArray.push(personality.reduced);
+  
   const result = {
     // Name info
     original_name: fullName,
     cleaned_name: cleanedName,
     
-    // Pythagorean
-    pythagorean_sum: pythagoreanSum(cleanedName),
-    pythagorean_reduced: reduceToDigit(pythagoreanSum(cleanedName)),
+    // Pythagorean - structured for UI
+    pythagorean: {
+      total: pythagoreanSum(cleanedName),
+      reduced: reduceToDigit(pythagoreanSum(cleanedName)),
+      display: formatWithReduction(pythagoreanSum(cleanedName))
+    },
     
-    // Chaldean
-    chaldean_sum: chaldeanSum(cleanedName),
-    chaldean_reduced: reduceToDigit(chaldeanSum(cleanedName)),
+    // Chaldean - structured for UI
+    chaldean: {
+      total: chaldeanSum(cleanedName),
+      reduced: reduceToDigit(chaldeanSum(cleanedName)),
+      display: formatWithReduction(chaldeanSum(cleanedName))
+    },
     
-    // Gematria
-    gematria_simple: gematriaSimple(cleanedName),
-    gematria_reverse: gematriaReverse(cleanedName),
+    // Gematria - structured for UI
+    gematria: {
+      total: gematriaSimple(cleanedName),
+      simple: gematriaSimple(cleanedName),
+      reverse: gematriaReverse(cleanedName)
+    },
     
-    // Core numbers
-    expression: expression.reduced,
-    expression_formatted: expression.formatted,
-    soul_urge: soulUrge.reduced,
-    soul_urge_formatted: soulUrge.formatted,
-    personality: personality.reduced,
-    personality_formatted: personality.formatted,
+    // Core numbers - structured for UI with master number preservation
+    expression: {
+      sum: expression.sum,
+      reduced: [11, 22, 33].includes(expression.sum) ? expression.sum : expression.reduced,
+      display: [11, 22, 33].includes(expression.sum) ? String(expression.sum) : expression.formatted
+    },
+    soulUrge: {
+      sum: soulUrge.sum,
+      reduced: [11, 22, 33].includes(soulUrge.sum) ? soulUrge.sum : soulUrge.reduced,
+      display: [11, 22, 33].includes(soulUrge.sum) ? String(soulUrge.sum) : soulUrge.formatted
+    },
+    personality: {
+      sum: personality.sum,
+      reduced: [11, 22, 33].includes(personality.sum) ? personality.sum : personality.reduced,
+      display: [11, 22, 33].includes(personality.sum) ? String(personality.sum) : personality.formatted
+    },
     
     // Vowel/Consonant analysis
     vowel_sum: vowelConsonant.vowelSum,
     consonant_sum: vowelConsonant.consonantSum,
     vowel_consonant_ratio: vowelConsonant.ratio,
     
-    // Master numbers
+    // Master numbers as array for UI
+    masterNumbers: [...new Set(masterNumbersArray)].sort((a, b) => a - b),
+    
+    // Legacy fields
     has_master_number: masters.hasMaster ? masters.masterNumbers : null,
     master_locations: masters.masterLocations || null
   };
   
   // Add life path if birthdate provided
   if (birthDate) {
+    const date = new Date(birthDate);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
     const lifePath = calculateLifePath(birthDate);
-    const birthday = calculateBirthdayNumber(new Date(birthDate).getDate());
+    const birthday = calculateBirthdayNumber(day);
+    const birthdayMonth = { reduced: reduceToDigit(month), display: formatWithReduction(month) };
     
-    result.life_path = lifePath.reduced;
-    result.life_path_formatted = lifePath.formatted;
-    result.birthday_number = birthday.reduced;
-    result.birthday_formatted = birthday.formatted;
+    // Check if life path is master number
+    const lifePathIsMaster = [11, 22, 33].includes(lifePath.total);
+    
+    result.lifePath = {
+      total: lifePath.total,
+      reduced: lifePathIsMaster ? lifePath.total : lifePath.reduced,
+      display: lifePathIsMaster ? String(lifePath.total) : lifePath.formatted
+    };
+    
+    result.birthday = {
+      day: day,
+      reduced: [11, 22].includes(day) ? day : birthday.reduced,
+      display: [11, 22].includes(day) ? String(day) : birthday.formatted
+    };
+    
+    result.birthdayMonth = birthdayMonth;
+    
+    // Add life path to master numbers if applicable
+    if (lifePathIsMaster && !result.masterNumbers.includes(lifePath.total)) {
+      result.masterNumbers.push(lifePath.total);
+      result.masterNumbers.sort((a, b) => a - b);
+    }
+    
+    // Add birthday to master numbers if applicable
+    if ([11, 22].includes(day) && !result.masterNumbers.includes(day)) {
+      result.masterNumbers.push(day);
+      result.masterNumbers.sort((a, b) => a - b);
+    }
   }
   
   return result;
