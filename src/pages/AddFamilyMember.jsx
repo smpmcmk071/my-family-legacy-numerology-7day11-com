@@ -170,6 +170,10 @@ export default function AddFamilyMember() {
       gematria_total: calculatedData.gematria?.total,
       karmic_debt_number: calculatedData.karmicDebt?.numbers?.join(',') || '',
               karmic_lessons: calculatedData.karmicLessons?.lessons?.join(',') || '',
+              sun_sign: calculatedData.astrology?.sunSign || '',
+              zodiac_sign: calculatedData.astrology?.sunSign || '', // Same as sun sign
+              ruling_planet: calculatedData.astrology?.rulingPlanet || '',
+              element: calculatedData.astrology?.element || '',
               is_active: true
     };
 
@@ -521,13 +525,22 @@ export default function AddFamilyMember() {
                                             </div>
 
                   <div className="pt-4 border-t border-white/10">
-                    <p className="text-xs text-gray-400 mb-2">Name Totals</p>
-                    <div className="flex gap-4 text-sm text-gray-300">
-                      <span>Pythagorean: {calculatedData.pythagorean?.total}</span>
-                      <span>Chaldean: {calculatedData.chaldean?.total}</span>
-                      <span>Gematria: {calculatedData.gematria?.total}</span>
-                    </div>
-                  </div>
+                                            <p className="text-xs text-gray-400 mb-2">Astrology</p>
+                                            <div className="flex gap-4 text-sm text-gray-300 flex-wrap">
+                                              <span>☉ {calculatedData.astrology?.sunSign || '-'}</span>
+                                              <span>🜨 {calculatedData.astrology?.element || '-'}</span>
+                                              <span>♇ {calculatedData.astrology?.rulingPlanet || '-'}</span>
+                                            </div>
+                                          </div>
+
+                                          <div className="pt-4 border-t border-white/10">
+                                            <p className="text-xs text-gray-400 mb-2">Name Totals</p>
+                                            <div className="flex gap-4 text-sm text-gray-300">
+                                              <span>Pythagorean: {calculatedData.pythagorean?.total}</span>
+                                              <span>Chaldean: {calculatedData.chaldean?.total}</span>
+                                              <span>Gematria: {calculatedData.gematria?.total}</span>
+                                            </div>
+                                          </div>
 
                   <Button
                     onClick={handleSave}
