@@ -15,6 +15,7 @@ import AdminNumerology from './pages/AdminNumerology';
 import AddFamilyMember from './pages/AddFamilyMember';
 import CalendarEvents from './pages/CalendarEvents';
 import PersonalDashboard from './pages/PersonalDashboard';
+import Community from './pages/Community';
 import __Layout from './Layout.jsx';
 
 
@@ -36,6 +37,7 @@ export const PAGES = {
     "AddFamilyMember": AddFamilyMember,
     "CalendarEvents": CalendarEvents,
     "PersonalDashboard": PersonalDashboard,
+    "Community": Community,
 }
 
 export const pagesConfig = {
