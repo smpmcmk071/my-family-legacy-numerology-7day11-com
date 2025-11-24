@@ -42,11 +42,19 @@ export default function BrothersLegacy() {
           </Button>
         </div>
 
-        {/* Introduction */}
-        <div className="mb-12 p-6 bg-gradient-to-r from-amber-100 to-orange-100 rounded-lg border-l-4 border-amber-600">
-          <p className="text-gray-700 leading-relaxed">
-            Click on any number below to learn its meaning in numerology and how it flows through the Maher family lineage.
-            <span className="print:hidden"> When ready, print this document to preserve your family's numerical legacy.</span>
+        {/* Opening Message */}
+        <div className="mb-12 p-8 bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl border-2 border-amber-300">
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            To our three sons,
+          </p>
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            You are not simply three individuals—you are a trinity woven by destiny. Each of you carries a unique gift: David, the humanitarian completer; Stephen, the visionary bridge; Kenneth, the master intuitive. Together, you embody everything we hoped to create.
+          </p>
+          <p className="text-gray-700 leading-relaxed text-lg">
+            These numbers reveal how perfectly you complement one another—three paths that unite as one purpose, three hearts bound by blood and by the master energies flowing through all of you.
+          </p>
+          <p className="text-gray-900 font-semibold text-lg mt-4">
+            — Your Parents, John Francis & Elizabeth JoAnn
           </p>
         </div>
 
