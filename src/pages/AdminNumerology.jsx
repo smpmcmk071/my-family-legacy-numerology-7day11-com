@@ -82,7 +82,8 @@ export default function AdminNumerology() {
         chaldean_total: calc.chaldean?.total,
         gematria_total: calc.gematria?.total,
         karmic_debt_number: calc.karmicDebt?.numbers?.join(',') || '',
-        sun_sign: calc.astrology?.sunSign || member.sun_sign,
+                  karmic_lessons: calc.karmicLessons?.lessons?.join(',') || '',
+                  sun_sign: calc.astrology?.sunSign || member.sun_sign,
         element: calc.astrology?.element,
         ruling_planet: calc.astrology?.rulingPlanet
       });
