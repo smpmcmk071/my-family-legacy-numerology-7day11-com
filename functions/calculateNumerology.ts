@@ -314,16 +314,19 @@ function vowelConsonantAnalysis(text) {
 }
 
 function calculateLifePathWestern(birthDate) {
-  // Western method: Add full numbers together, then reduce
-  // Example: 11/07/1969 = 11 + 7 + 1969 = 1987 = 1+9+8+7 = 25/7
+  // Western method: Sum ALL digits of the full date, then reduce
+  // Example: 11/07/1969 = 1+1+0+7+1+9+6+9 = 34 = 3+4 = 7
   const date = new Date(birthDate);
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
   
-  const total = day + month + year;
+  // Sum all individual digits
+  const allDigits = `${month}${day}${year}`;
+  const total = allDigits.split('').reduce((sum, d) => sum + parseInt(d), 0);
+  
   return {
-    calculation: `${month}+${day}+${year}=${total}`,
+    calculation: allDigits.split('').join('+') + '=' + total,
     total,
     reduced: reduceToDigit(total),
     formatted: formatWithReduction(total)
