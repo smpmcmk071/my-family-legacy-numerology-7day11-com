@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { base44 } from '@/api/base44Client';
-import { Calendar, Database, Loader2, CheckCircle2, AlertCircle, Users, RefreshCw } from 'lucide-react';
+import { Calendar, Database, Loader2, CheckCircle2, AlertCircle, Users, RefreshCw, ShieldAlert } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { buildMemberDataFromCalc } from '../components/utils/numerologyHelpers';
@@ -26,10 +26,39 @@ export default function AdminNumerology() {
   // Import state
   const [importData, setImportData] = useState('');
   const [isImporting, setIsImporting] = useState(false);
+  
+  // Admin check
+  const [isAdmin, setIsAdmin] = useState(null);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
 
   useEffect(() => {
-    loadFamilyMembers();
+    checkAdminAccess();
   }, []);
+
+  const checkAdminAccess = async () => {
+    setCheckingAdmin(true);
+    const user = await base44.auth.me();
+    
+    // Check if user is admin in User entity OR has is_admin in FamilyMember
+    if (user.role === 'admin') {
+      setIsAdmin(true);
+      loadFamilyMembers();
+      setCheckingAdmin(false);
+      return;
+    }
+    
+    // Check FamilyMember for is_admin flag
+    const members = await base44.entities.FamilyMember.filter({ created_by: user.email });
+    const adminMember = members.find(m => m.is_admin === true);
+    
+    if (adminMember) {
+      setIsAdmin(true);
+      loadFamilyMembers();
+    } else {
+      setIsAdmin(false);
+    }
+    setCheckingAdmin(false);
+  };
 
   const loadFamilyMembers = async () => {
     const members = await base44.entities.FamilyMember.list();
@@ -226,6 +255,32 @@ export default function AdminNumerology() {
     
     setIsLoading(false);
   };
+
+  if (checkingAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 md:p-12 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-amber-400 mx-auto mb-4" />
+          <p className="text-gray-300">Checking access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 md:p-12 flex items-center justify-center">
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 max-w-md">
+          <CardContent className="py-12 text-center">
+            <ShieldAlert className="w-16 h-16 text-red-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
+            <p className="text-gray-300">You don't have admin privileges to access this page.</p>
+            <p className="text-gray-400 text-sm mt-4">Contact your family admin to request access.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 md:p-12">
