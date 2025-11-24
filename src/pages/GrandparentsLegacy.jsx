@@ -42,11 +42,19 @@ export default function GrandparentsLegacy() {
           </Button>
         </div>
 
-        {/* Introduction */}
-        <div className="mb-12 p-6 bg-gradient-to-r from-amber-100 to-orange-100 rounded-lg border-l-4 border-amber-600">
-          <p className="text-gray-700 leading-relaxed">
-            Click on any number below to learn its meaning in numerology and how it flows through the Maher family lineage.
-            <span className="print:hidden"> When ready, print this document to preserve your family's numerical legacy.</span>
+        {/* Opening Message */}
+        <div className="mb-12 p-8 bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl border-2 border-amber-300">
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            To our children and grandchildren,
+          </p>
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            We built this foundation with master numbers—wisdom, building power, and healing love—not knowing how it would flow through the generations. But seeing Stephen carry it forward, and watching Christian, Kyle, and Melanie embody its highest expression, we understand now what we were creating.
+          </p>
+          <p className="text-gray-700 leading-relaxed text-lg">
+            These numbers tell the story of a family architected by destiny, where every generation builds upon the last to create something greater than any individual could achieve alone.
+          </p>
+          <p className="text-gray-900 font-semibold text-lg mt-4">
+            — Grandpop John Francis & Grandma Elizabeth JoAnn
           </p>
         </div>
 

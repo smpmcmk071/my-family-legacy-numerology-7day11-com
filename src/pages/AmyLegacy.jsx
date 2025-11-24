@@ -41,10 +41,19 @@ export default function AmyLegacy() {
           </Button>
         </div>
 
-        {/* Introduction */}
-        <div className="mb-12 p-6 bg-gradient-to-r from-teal-100 to-cyan-100 rounded-lg border-l-4 border-teal-600">
-          <p className="text-gray-700 leading-relaxed">
-            Click on any number below to learn its meaning in numerology and how it flows through the Maher family lineage.
+        {/* Opening Message */}
+        <div className="mb-12 p-8 bg-gradient-to-r from-teal-100 to-cyan-100 rounded-xl border-2 border-teal-300">
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            Amy,
+          </p>
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            You are the living visionary—one of the rarest paths in numerology. Where others dream and plan, you turn inspiration into action, vision into reality. You took the Maher family's spiritual gifts and grounded them in practical achievement.
+          </p>
+          <p className="text-gray-700 leading-relaxed text-lg">
+            Your master 11 life path, combined with your dynamic energy and nurturing care, makes you the essential activator—the force that ensures our family's wisdom doesn't remain in theory but becomes real impact in the world.
+          </p>
+          <p className="text-gray-900 font-semibold text-lg mt-4">
+            — Stephen
           </p>
         </div>
 

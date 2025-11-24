@@ -41,10 +41,19 @@ export default function MelanieLegacy() {
           </Button>
         </div>
 
-        {/* Introduction */}
-        <div className="mb-12 p-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg border-l-4 border-purple-600">
-          <p className="text-gray-700 leading-relaxed">
-            Click on any number below to learn its meaning in numerology and how it flows through the Maher family lineage.
+        {/* Opening Message */}
+        <div className="mb-12 p-8 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl border-2 border-purple-300">
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            Melanie,
+          </p>
+          <p className="text-gray-700 leading-relaxed text-lg mb-4">
+            You carry Grandma's rarest gift—the master teacher and healer energy that flows through only you and her. While the family builds and achieves, you bring the essential balance of compassion, creativity, and joy that makes everything worthwhile.
+          </p>
+          <p className="text-gray-700 leading-relaxed text-lg">
+            Your numbers tell the story of a pioneering healer—someone who leads with love, creates with purpose, and reminds us all that true power includes caring for others.
+          </p>
+          <p className="text-gray-900 font-semibold text-lg mt-4">
+            — Dad (Stephen)
           </p>
         </div>
 
