@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { base44 } from '@/api/base44Client';
-import { Calendar, Database, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Calendar, Database, Loader2, CheckCircle2, AlertCircle, Users, RefreshCw } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export default function AdminNumerology() {
   const [startDate, setStartDate] = useState('2025-01-01');
@@ -13,6 +15,106 @@ export default function AdminNumerology() {
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState(null);
   const [results, setResults] = useState(null);
+  
+  // Family members state
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [selectedMembers, setSelectedMembers] = useState([]);
+  const [isUpdatingMembers, setIsUpdatingMembers] = useState(false);
+  const [memberStatus, setMemberStatus] = useState(null);
+
+  useEffect(() => {
+    loadFamilyMembers();
+  }, []);
+
+  const loadFamilyMembers = async () => {
+    const members = await base44.entities.FamilyMember.list();
+    setFamilyMembers(members);
+  };
+
+  const toggleMemberSelection = (memberId) => {
+    setSelectedMembers(prev => 
+      prev.includes(memberId) 
+        ? prev.filter(id => id !== memberId)
+        : [...prev, memberId]
+    );
+  };
+
+  const selectAllMembers = () => {
+    if (selectedMembers.length === familyMembers.length) {
+      setSelectedMembers([]);
+    } else {
+      setSelectedMembers(familyMembers.map(m => m.id));
+    }
+  };
+
+  const recalculateMember = async (member) => {
+    const response = await base44.functions.invoke('calculateNumerology', {
+      type: 'name',
+      name: member.full_name,
+      birthDate: member.birth_date
+    });
+
+    if (response.data?.success) {
+      const calc = response.data.data;
+      await base44.entities.FamilyMember.update(member.id, {
+        life_path_western: calc.lifePath?.reduced,
+        life_path_chaldean: calc.lifePathChaldean?.reduced,
+        life_path_master: calc.lifePath?.display,
+        birthday_vibe: calc.birthday?.display,
+        birthday_number: calc.birthday?.reduced,
+        birthday_month_number: calc.birthdayMonth?.reduced,
+        expression_western: calc.expression?.reduced,
+        expression_chaldean: calc.expressionChaldean?.reduced,
+        expression_master: calc.expression?.display,
+        life_purpose: calc.expression?.reduced,
+        soul_urge_western: calc.soulUrge?.reduced,
+        soul_urge_chaldean: calc.soulUrgeChaldean?.reduced,
+        soul_urge_master: calc.soulUrge?.display,
+        personality_western: calc.personality?.reduced,
+        personality_chaldean: calc.personalityChaldean?.reduced,
+        personality_master: calc.personality?.display,
+        master_numbers: calc.masterNumbers?.join(',') || '',
+        pythagorean_total: calc.pythagorean?.total,
+        chaldean_total: calc.chaldean?.total,
+        gematria_total: calc.gematria?.total,
+        karmic_debt_number: calc.karmicDebt?.numbers?.join(',') || '',
+        sun_sign: calc.astrology?.sunSign || member.sun_sign,
+        element: calc.astrology?.element,
+        ruling_planet: calc.astrology?.rulingPlanet
+      });
+      return true;
+    }
+    return false;
+  };
+
+  const updateSelectedMembers = async () => {
+    if (selectedMembers.length === 0) return;
+    
+    setIsUpdatingMembers(true);
+    setMemberStatus(`Updating ${selectedMembers.length} members...`);
+    
+    let success = 0;
+    let errors = 0;
+    
+    for (const memberId of selectedMembers) {
+      const member = familyMembers.find(m => m.id === memberId);
+      if (member) {
+        try {
+          const result = await recalculateMember(member);
+          if (result) success++;
+          else errors++;
+        } catch (e) {
+          errors++;
+        }
+      }
+      setMemberStatus(`Updated ${success} of ${selectedMembers.length}...`);
+    }
+    
+    setMemberStatus(`Complete! ${success} updated, ${errors} errors`);
+    setIsUpdatingMembers(false);
+    setSelectedMembers([]);
+    loadFamilyMembers();
+  };
 
   const populateCalendar = async () => {
     setIsLoading(true);
@@ -238,6 +340,112 @@ export default function AdminNumerology() {
             >
               1950-2050 (Big!)
             </Button>
+          </CardContent>
+        </Card>
+
+        {/* Family Members Recalculation */}
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 mt-6">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Users className="w-5 h-5" />
+              Family Members ({familyMembers.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex gap-2 mb-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={selectAllMembers}
+                className="border-white/20 text-white hover:bg-white/10"
+              >
+                {selectedMembers.length === familyMembers.length ? 'Deselect All' : 'Select All'}
+              </Button>
+              <Button
+                onClick={updateSelectedMembers}
+                disabled={selectedMembers.length === 0 || isUpdatingMembers}
+                size="sm"
+                className="bg-amber-600 hover:bg-amber-700"
+              >
+                {isUpdatingMembers ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Recalculate Selected ({selectedMembers.length})
+                  </>
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={loadFamilyMembers}
+                className="text-gray-400 hover:text-white"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {memberStatus && (
+              <div className={`p-3 rounded-lg text-sm ${
+                memberStatus.includes('Complete') ? 'bg-green-500/20 text-green-300' : 'bg-blue-500/20 text-blue-300'
+              }`}>
+                {memberStatus}
+              </div>
+            )}
+
+            <div className="overflow-x-auto rounded-lg border border-white/10">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-white/10">
+                    <TableHead className="text-gray-300 w-10"></TableHead>
+                    <TableHead className="text-gray-300">Name</TableHead>
+                    <TableHead className="text-gray-300">Birth Date</TableHead>
+                    <TableHead className="text-gray-300">LP (W)</TableHead>
+                    <TableHead className="text-gray-300">LP (C)</TableHead>
+                    <TableHead className="text-gray-300">Expression</TableHead>
+                    <TableHead className="text-gray-300">Karmic</TableHead>
+                    <TableHead className="text-gray-300">Sun Sign</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {familyMembers.map(member => (
+                    <TableRow key={member.id} className="border-white/10">
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedMembers.includes(member.id)}
+                          onCheckedChange={() => toggleMemberSelection(member.id)}
+                        />
+                      </TableCell>
+                      <TableCell className="text-white font-medium">
+                        {member.nickname || member.full_name?.split(' ')[0]}
+                      </TableCell>
+                      <TableCell className="text-gray-300 text-sm">
+                        {member.birth_date}
+                      </TableCell>
+                      <TableCell className="text-amber-400">
+                        {member.life_path_western || '-'}
+                      </TableCell>
+                      <TableCell className="text-blue-400">
+                        {member.life_path_chaldean || '-'}
+                      </TableCell>
+                      <TableCell className="text-purple-400">
+                        {member.expression_western || '-'}
+                      </TableCell>
+                      <TableCell className="text-red-400">
+                        {member.karmic_debt_number || '-'}
+                      </TableCell>
+                      <TableCell className="text-gray-300 text-sm">
+                        {member.sun_sign || '-'}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>
