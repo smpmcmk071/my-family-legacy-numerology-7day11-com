@@ -21,6 +21,10 @@ export default function AdminNumerology() {
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [isUpdatingMembers, setIsUpdatingMembers] = useState(false);
   const [memberStatus, setMemberStatus] = useState(null);
+  
+  // Import state
+  const [importData, setImportData] = useState('');
+  const [isImporting, setIsImporting] = useState(false);
 
   useEffect(() => {
     loadFamilyMembers();
@@ -85,6 +89,59 @@ export default function AdminNumerology() {
       return true;
     }
     return false;
+  };
+
+  const importMembers = async () => {
+    if (!importData.trim()) return;
+    
+    setIsImporting(true);
+    setMemberStatus('Importing members...');
+    
+    try {
+      // Parse CSV or line-by-line format: name, birthdate, relationship, generation
+      const lines = importData.trim().split('\n');
+      let imported = 0;
+      
+      // Get or create family
+      const user = await base44.auth.me();
+      let families = await base44.entities.Family.filter({ admin_email: user.email });
+      let family = families[0];
+      if (!family) {
+        family = await base44.entities.Family.create({
+          name: `${user.full_name?.split(' ').pop() || 'My'} Family`,
+          admin_email: user.email
+        });
+      }
+      
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        const parts = line.split(',').map(p => p.trim());
+        const [full_name, birth_date, relationship, generation, birth_time, birth_place] = parts;
+        
+        if (full_name && birth_date) {
+          await base44.entities.FamilyMember.create({
+            family_id: family.id,
+            full_name,
+            nickname: full_name.split(' ')[0],
+            birth_date,
+            relationship: relationship || 'self',
+            generation: generation ? parseInt(generation) : null,
+            birth_time: birth_time || '',
+            birth_place: birth_place || '',
+            is_active: true
+          });
+          imported++;
+        }
+      }
+      
+      setMemberStatus(`Imported ${imported} members!`);
+      setImportData('');
+      loadFamilyMembers();
+    } catch (e) {
+      setMemberStatus(`Error: ${e.message}`);
+    }
+    
+    setIsImporting(false);
   };
 
   const updateSelectedMembers = async () => {
@@ -339,6 +396,43 @@ export default function AdminNumerology() {
               onClick={() => { setStartDate('1950-01-01'); setEndDate('2050-12-31'); }}
             >
               1950-2050 (Big!)
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Import Family Members */}
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 mt-6">
+          <CardHeader>
+            <CardTitle className="text-white text-lg">Import Family Members</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-gray-400 text-sm">
+              One per line: Name, Birth Date (YYYY-MM-DD), Relationship, Generation, Birth Time, Birth Place
+            </p>
+            <textarea
+              value={importData}
+              onChange={(e) => setImportData(e.target.value)}
+              placeholder="John Francis Maher, 1940-11-22, grandparent, 2, morning, Philadelphia PA
+Elizabeth JoAnn Maher, 1942-07-26, grandparent, 2
+Stephen Maher, 1969-11-07, parent, 3, 11:06 PM EST, Drexel Hill PA"
+              className="w-full h-40 bg-white/10 border border-white/20 rounded-lg p-3 text-white placeholder:text-gray-500 text-sm font-mono"
+            />
+            <Button
+              onClick={importMembers}
+              disabled={!importData.trim() || isImporting}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              {isImporting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Importing...
+                </>
+              ) : (
+                <>
+                  <Users className="w-4 h-4 mr-2" />
+                  Import Members
+                </>
+              )}
             </Button>
           </CardContent>
         </Card>
