@@ -12,6 +12,7 @@ import GrandparentsLegacy from './pages/GrandparentsLegacy';
 import BrothersLegacy from './pages/BrothersLegacy';
 import ChristianLegacy from './pages/ChristianLegacy';
 import AdminNumerology from './pages/AdminNumerology';
+import AddFamilyMember from './pages/AddFamilyMember';
 
 
 export const PAGES = {
@@ -29,6 +30,7 @@ export const PAGES = {
     "BrothersLegacy": BrothersLegacy,
     "ChristianLegacy": ChristianLegacy,
     "AdminNumerology": AdminNumerology,
+    "AddFamilyMember": AddFamilyMember,
 }
 
 export const pagesConfig = {
