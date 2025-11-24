@@ -1288,16 +1288,110 @@ function calculateFullNameNumerology(fullName, birthDate = null, birthTime = nul
 // ============================================================================
 
 function calculateFamilyMember(name, birthDate) {
-  const dateCalc = calculateFullDateNumerology(birthDate);
-  const nameCalc = calculateFullNameNumerology(name, birthDate);
-  
-  return {
-    name,
-    birthDate,
-    ...nameCalc,
-    birth_date_numerology: dateCalc
-  };
-}
+    const dateCalc = calculateFullDateNumerology(birthDate);
+    const nameCalc = calculateFullNameNumerology(name, birthDate);
+
+    return {
+      name,
+      birthDate,
+      ...nameCalc,
+      birth_date_numerology: dateCalc
+    };
+  }
+
+  // ============================================================================
+  // DAY NUMBERS CALCULATION (Universal & Personal)
+  // ============================================================================
+
+  function calculateDayNumbers(dateStr, lifePath = null) {
+    const date = new Date(dateStr);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    // Universal Year = reduce current year to single digit
+    const universalYear = reduceToDigit(year);
+
+    // Universal Month = Universal Year + calendar month, reduced
+    const universalMonth = reduceToDigit(universalYear + month);
+
+    // Universal Day = Universal Month + calendar day, reduced
+    const universalDay = reduceToDigit(universalMonth + day);
+
+    // Format displays
+    const universalDayDisplay = formatWithReduction(universalMonth + day);
+
+    const result = {
+      date: dateStr,
+      day,
+      month,
+      year,
+      universalYear,
+      universalMonth,
+      universalDay,
+      universalDayDisplay,
+      vibeSummary: getUniversalDayVibe(universalDay),
+      recommendations: getUniversalDayRecommendations(universalDay)
+    };
+
+    // Personal cycles if life path provided
+    if (lifePath) {
+      // Personal Year = birth month + birth day + current year, reduced
+      // Since we don't have birth date here, we use life path directly
+      // Personal Year = Life Path + Universal Year, reduced
+      const personalYear = reduceToDigit(lifePath + universalYear);
+
+      // Personal Month = Personal Year + calendar month, reduced  
+      const personalMonth = reduceToDigit(personalYear + month);
+
+      // Personal Day = Personal Month + calendar day, reduced
+      const personalDay = reduceToDigit(personalMonth + day);
+
+      result.lifePath = lifePath;
+      result.personalYear = personalYear;
+      result.personalMonth = personalMonth;
+      result.personalDay = personalDay;
+      result.personalDayDisplay = formatWithReduction(personalMonth + day);
+    }
+
+    return result;
+  }
+
+  function getUniversalDayVibe(num) {
+    const vibes = {
+      1: "Day of new beginnings, leadership, and independence. Great for starting projects and taking initiative.",
+      2: "Day of partnerships, diplomacy, and cooperation. Ideal for collaboration and building relationships.",
+      3: "Day of creativity, self-expression, and joy. Perfect for communication, art, and social activities.",
+      4: "Day of foundation building, organization, and hard work. Focus on practical matters and structure.",
+      5: "Day of change, freedom, and adventure. Embrace flexibility and new experiences.",
+      6: "Day of responsibility, family, and nurturing. Focus on home, loved ones, and service.",
+      7: "Day of reflection, spirituality, and inner wisdom. Ideal for study, meditation, and solitude.",
+      8: "Day of abundance, power, and achievement. Great for business, finances, and manifestation.",
+      9: "Day of completion, compassion, and universal love. Time for letting go and humanitarian efforts.",
+      11: "Master Day of spiritual insight and intuition. Heightened awareness and inspiration available.",
+      22: "Master Builder Day. Exceptional for manifesting large-scale visions into reality.",
+      33: "Master Teacher Day. Profound healing and selfless service energy available."
+    };
+    return vibes[num] || vibes[reduceToDigit(num, false)];
+  }
+
+  function getUniversalDayRecommendations(num) {
+    const recs = {
+      1: "Start something new. Take the lead. Be independent. Trust your original ideas.",
+      2: "Collaborate with others. Practice patience. Listen more. Seek harmony.",
+      3: "Express yourself creatively. Socialize. Write, speak, or create art. Have fun.",
+      4: "Build foundations. Organize. Work steadily. Focus on practical goals.",
+      5: "Embrace change. Try something new. Travel or explore. Be adaptable.",
+      6: "Nurture family. Take responsibility. Create beauty at home. Serve others.",
+      7: "Spend time alone. Meditate or study. Trust your intuition. Seek deeper meaning.",
+      8: "Focus on business. Manage finances. Step into your power. Manifest abundance.",
+      9: "Let go of what no longer serves. Practice compassion. Give to others. Complete projects.",
+      11: "Trust your intuition. Seek spiritual insights. Inspire others. Stay grounded.",
+      22: "Think big. Build lasting structures. Turn dreams into reality. Lead by example.",
+      33: "Heal and teach. Practice unconditional love. Serve humanity. Embody compassion."
+    };
+    return recs[num] || recs[reduceToDigit(num, false)];
+  }
 
 // ============================================================================
 // MAIN HANDLER
@@ -1324,6 +1418,14 @@ Deno.serve(async (req) => {
           return Response.json({ error: 'Date required' }, { status: 400 });
         }
         result = calculateFullDateNumerology(date);
+        break;
+
+      case 'dayNumbers':
+        // Calculate universal and personal day numbers
+        if (!date) {
+          return Response.json({ error: 'Date required' }, { status: 400 });
+        }
+        result = calculateDayNumbers(date, body.lifePath);
         break;
         
       case 'name':

@@ -13,6 +13,7 @@ import BrothersLegacy from './pages/BrothersLegacy';
 import ChristianLegacy from './pages/ChristianLegacy';
 import AdminNumerology from './pages/AdminNumerology';
 import AddFamilyMember from './pages/AddFamilyMember';
+import CalendarEvents from './pages/CalendarEvents';
 
 
 export const PAGES = {
@@ -31,6 +32,7 @@ export const PAGES = {
     "ChristianLegacy": ChristianLegacy,
     "AdminNumerology": AdminNumerology,
     "AddFamilyMember": AddFamilyMember,
+    "CalendarEvents": CalendarEvents,
 }
 
 export const pagesConfig = {
