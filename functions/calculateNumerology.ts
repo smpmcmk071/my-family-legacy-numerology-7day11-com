@@ -633,14 +633,20 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
     // Add life path to master numbers if applicable
     if (lifePathIsMaster && !result.masterNumbers.includes(lifePath.total)) {
       result.masterNumbers.push(lifePath.total);
-      result.masterNumbers.sort((a, b) => a - b);
     }
     
-    // Add birthday to master numbers if applicable
+    // Add birthday day to master numbers if applicable (11, 22)
     if ([11, 22].includes(day) && !result.masterNumbers.includes(day)) {
       result.masterNumbers.push(day);
-      result.masterNumbers.sort((a, b) => a - b);
     }
+    
+    // Add birth month to master numbers if applicable (11 = November)
+    if (month === 11 && !result.masterNumbers.includes(11)) {
+      result.masterNumbers.push(11);
+    }
+    
+    // Sort and dedupe
+    result.masterNumbers = [...new Set(result.masterNumbers)].sort((a, b) => a - b);
   }
   
   return result;
