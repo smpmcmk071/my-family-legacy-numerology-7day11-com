@@ -33,8 +33,14 @@ function calculateDayNumbers(dateStr, lifePath = null) {
   const year = date.getFullYear();
 
   const universalYear = reduceToDigit(year);
-  const universalMonth = reduceToDigit(universalYear + month);
-  const universalDay = reduceToDigit(universalMonth + day);
+  
+  // For month calculation: show both master and reduced if month is 11 or 22
+  const monthSum = universalYear + month;
+  const universalMonthReduced = reduceToDigit(monthSum, false); // Always reduce
+  const universalMonthMaster = [11, 22].includes(month) ? month : null; // Preserve original master month
+  
+  // Use reduced for day calculation
+  const universalDay = reduceToDigit(universalMonthReduced + day);
 
   const result = {
     date: dateStr,
@@ -42,18 +48,22 @@ function calculateDayNumbers(dateStr, lifePath = null) {
     month,
     year,
     universalYear,
-    universalMonth,
+    universalMonth: universalMonthReduced,
+    universalMonthMaster, // Shows 11 or 22 if applicable
     universalDay
   };
 
   if (lifePath) {
     const personalYear = reduceToDigit(lifePath + universalYear);
-    const personalMonth = reduceToDigit(personalYear + month);
-    const personalDay = reduceToDigit(personalMonth + day);
+    const personalMonthSum = personalYear + month;
+    const personalMonthReduced = reduceToDigit(personalMonthSum, false);
+    const personalMonthMaster = [11, 22].includes(month) ? month : null;
+    const personalDay = reduceToDigit(personalMonthReduced + day);
 
     result.lifePath = lifePath;
     result.personalYear = personalYear;
-    result.personalMonth = personalMonth;
+    result.personalMonth = personalMonthReduced;
+    result.personalMonthMaster = personalMonthMaster;
     result.personalDay = personalDay;
   }
 
