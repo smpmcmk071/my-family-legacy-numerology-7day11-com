@@ -4,8 +4,34 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
-import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw } from 'lucide-react';
+import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw, MapPin } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
+
+// Simple ZIP code to City/State lookup (common US ZIP codes)
+const ZIP_LOOKUP = {
+  '19026': 'Drexel Hill, PA',
+  '19018': 'Clifton Heights, PA',
+  '19023': 'Darby, PA',
+  '19064': 'Springfield, PA',
+  '19082': 'Upper Darby, PA',
+  '19083': 'Havertown, PA',
+  '19010': 'Bryn Mawr, PA',
+  '19041': 'Haverford, PA',
+  '19087': 'Wayne, PA',
+  '19380': 'West Chester, PA',
+  '19103': 'Philadelphia, PA',
+  '19104': 'Philadelphia, PA',
+  '10001': 'New York, NY',
+  '10002': 'New York, NY',
+  '90210': 'Beverly Hills, CA',
+  '33101': 'Miami, FL',
+  '60601': 'Chicago, IL',
+  '02101': 'Boston, MA',
+  '75201': 'Dallas, TX',
+  '85001': 'Phoenix, AZ',
+  '98101': 'Seattle, WA',
+  '30301': 'Atlanta, GA'
+};
 
 export default function AddFamilyMember() {
   const [formData, setFormData] = useState({
