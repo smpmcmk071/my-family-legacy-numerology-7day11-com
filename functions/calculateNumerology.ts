@@ -445,44 +445,53 @@ function detectNameMasterNumbers(fullName, birthDate) {
   const masters = new Set();
   const locations = [];
   
-  // Expression
-  const expression = calculateExpression(fullName);
+  // Expression (Western - primary)
+  const expression = calculateExpressionWestern(fullName);
   if ([11, 22, 33].includes(expression.sum) || [11, 22, 33].includes(expression.reduced)) {
     const val = [11, 22, 33].includes(expression.sum) ? expression.sum : expression.reduced;
     masters.add(val);
     locations.push(`expression:${val}`);
   }
   
-  // Soul Urge
-  const soulUrge = calculateSoulUrge(fullName);
+  // Soul Urge (Western - primary)
+  const soulUrge = calculateSoulUrgeWestern(fullName);
   if ([11, 22, 33].includes(soulUrge.sum) || [11, 22, 33].includes(soulUrge.reduced)) {
     const val = [11, 22, 33].includes(soulUrge.sum) ? soulUrge.sum : soulUrge.reduced;
     masters.add(val);
     locations.push(`soulUrge:${val}`);
   }
   
-  // Personality
-  const personality = calculatePersonality(fullName);
+  // Personality (Western - primary)
+  const personality = calculatePersonalityWestern(fullName);
   if ([11, 22, 33].includes(personality.sum) || [11, 22, 33].includes(personality.reduced)) {
     const val = [11, 22, 33].includes(personality.sum) ? personality.sum : personality.reduced;
     masters.add(val);
     locations.push(`personality:${val}`);
   }
   
-  // Life Path
+  // Life Path (Western - primary)
   if (birthDate) {
-    const lifePath = calculateLifePath(birthDate);
+    const lifePath = calculateLifePathWestern(birthDate);
     if ([11, 22, 33].includes(lifePath.total) || [11, 22, 33].includes(lifePath.reduced)) {
       const val = [11, 22, 33].includes(lifePath.total) ? lifePath.total : lifePath.reduced;
       masters.add(val);
       locations.push(`lifePath:${val}`);
     }
     
-    // Birthday
-    const day = new Date(birthDate).getDate();
+    // Birthday day
+    const date = new Date(birthDate);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    
     if ([11, 22].includes(day)) {
       masters.add(day);
       locations.push(`birthday:${day}`);
+    }
+    
+    // Birthday month (November = 11)
+    if (month === 11) {
+      masters.add(11);
+      locations.push(`month:11`);
     }
   }
   
@@ -597,20 +606,28 @@ function generateCombinedSignal(easternVibe, westernVibe, hasMaster) {
 
 function calculateFullNameNumerology(fullName, birthDate = null) {
   const cleanedName = cleanName(fullName);
-  const expression = calculateExpression(cleanedName);
-  const soulUrge = calculateSoulUrge(cleanedName);
-  const personality = calculatePersonality(cleanedName);
+  
+  // Western calculations (Pythagorean-based) - PRIMARY for display
+  const expressionWestern = calculateExpressionWestern(cleanedName);
+  const soulUrgeWestern = calculateSoulUrgeWestern(cleanedName);
+  const personalityWestern = calculatePersonalityWestern(cleanedName);
+  
+  // Chaldean calculations - stored as secondary
+  const expressionChaldean = calculateExpressionChaldean(cleanedName);
+  const soulUrgeChaldean = calculateSoulUrgeChaldean(cleanedName);
+  const personalityChaldean = calculatePersonalityChaldean(cleanedName);
+  
   const vowelConsonant = vowelConsonantAnalysis(cleanedName);
   const masters = detectNameMasterNumbers(cleanedName, birthDate);
   
-  // Collect master numbers as array
+  // Collect master numbers as array (from Western calculations)
   const masterNumbersArray = [];
-  if ([11, 22, 33].includes(expression.sum)) masterNumbersArray.push(expression.sum);
-  else if ([11, 22, 33].includes(expression.reduced)) masterNumbersArray.push(expression.reduced);
-  if ([11, 22, 33].includes(soulUrge.sum)) masterNumbersArray.push(soulUrge.sum);
-  else if ([11, 22, 33].includes(soulUrge.reduced)) masterNumbersArray.push(soulUrge.reduced);
-  if ([11, 22, 33].includes(personality.sum)) masterNumbersArray.push(personality.sum);
-  else if ([11, 22, 33].includes(personality.reduced)) masterNumbersArray.push(personality.reduced);
+  if ([11, 22, 33].includes(expressionWestern.sum)) masterNumbersArray.push(expressionWestern.sum);
+  else if ([11, 22, 33].includes(expressionWestern.reduced)) masterNumbersArray.push(expressionWestern.reduced);
+  if ([11, 22, 33].includes(soulUrgeWestern.sum)) masterNumbersArray.push(soulUrgeWestern.sum);
+  else if ([11, 22, 33].includes(soulUrgeWestern.reduced)) masterNumbersArray.push(soulUrgeWestern.reduced);
+  if ([11, 22, 33].includes(personalityWestern.sum)) masterNumbersArray.push(personalityWestern.sum);
+  else if ([11, 22, 33].includes(personalityWestern.reduced)) masterNumbersArray.push(personalityWestern.reduced);
   
   const result = {
     // Name info
@@ -638,21 +655,38 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
       reverse: gematriaReverse(cleanedName)
     },
     
-    // Core numbers - structured for UI with master number preservation
+    // Western (Pythagorean) - PRIMARY for display
     expression: {
-      sum: expression.sum,
-      reduced: [11, 22, 33].includes(expression.sum) ? expression.sum : expression.reduced,
-      display: [11, 22, 33].includes(expression.sum) ? String(expression.sum) : expression.formatted
+      sum: expressionWestern.sum,
+      reduced: [11, 22, 33].includes(expressionWestern.sum) ? expressionWestern.sum : expressionWestern.reduced,
+      display: [11, 22, 33].includes(expressionWestern.sum) ? String(expressionWestern.sum) : expressionWestern.formatted
     },
     soulUrge: {
-      sum: soulUrge.sum,
-      reduced: [11, 22, 33].includes(soulUrge.sum) ? soulUrge.sum : soulUrge.reduced,
-      display: [11, 22, 33].includes(soulUrge.sum) ? String(soulUrge.sum) : soulUrge.formatted
+      sum: soulUrgeWestern.sum,
+      reduced: [11, 22, 33].includes(soulUrgeWestern.sum) ? soulUrgeWestern.sum : soulUrgeWestern.reduced,
+      display: [11, 22, 33].includes(soulUrgeWestern.sum) ? String(soulUrgeWestern.sum) : soulUrgeWestern.formatted
     },
     personality: {
-      sum: personality.sum,
-      reduced: [11, 22, 33].includes(personality.sum) ? personality.sum : personality.reduced,
-      display: [11, 22, 33].includes(personality.sum) ? String(personality.sum) : personality.formatted
+      sum: personalityWestern.sum,
+      reduced: [11, 22, 33].includes(personalityWestern.sum) ? personalityWestern.sum : personalityWestern.reduced,
+      display: [11, 22, 33].includes(personalityWestern.sum) ? String(personalityWestern.sum) : personalityWestern.formatted
+    },
+    
+    // Chaldean versions for storage
+    expressionChaldean: {
+      sum: expressionChaldean.sum,
+      reduced: [11, 22, 33].includes(expressionChaldean.sum) ? expressionChaldean.sum : expressionChaldean.reduced,
+      display: [11, 22, 33].includes(expressionChaldean.sum) ? String(expressionChaldean.sum) : expressionChaldean.formatted
+    },
+    soulUrgeChaldean: {
+      sum: soulUrgeChaldean.sum,
+      reduced: [11, 22, 33].includes(soulUrgeChaldean.sum) ? soulUrgeChaldean.sum : soulUrgeChaldean.reduced,
+      display: [11, 22, 33].includes(soulUrgeChaldean.sum) ? String(soulUrgeChaldean.sum) : soulUrgeChaldean.formatted
+    },
+    personalityChaldean: {
+      sum: personalityChaldean.sum,
+      reduced: [11, 22, 33].includes(personalityChaldean.sum) ? personalityChaldean.sum : personalityChaldean.reduced,
+      display: [11, 22, 33].includes(personalityChaldean.sum) ? String(personalityChaldean.sum) : personalityChaldean.formatted
     },
     
     // Vowel/Consonant analysis
@@ -673,17 +707,29 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
     const date = new Date(birthDate);
     const day = date.getDate();
     const month = date.getMonth() + 1;
-    const lifePath = calculateLifePath(birthDate);
+    
+    // Western life path (primary)
+    const lifePathWestern = calculateLifePathWestern(birthDate);
+    const lifePathChaldean = calculateLifePathChaldean(birthDate);
     const birthday = calculateBirthdayNumber(day);
     const birthdayMonth = { reduced: reduceToDigit(month), display: formatWithReduction(month) };
     
     // Check if life path is master number
-    const lifePathIsMaster = [11, 22, 33].includes(lifePath.total);
+    const lifePathWesternIsMaster = [11, 22, 33].includes(lifePathWestern.total);
+    const lifePathChaldeanIsMaster = [11, 22, 33].includes(lifePathChaldean.total);
     
+    // Western life path (primary for display)
     result.lifePath = {
-      total: lifePath.total,
-      reduced: lifePathIsMaster ? lifePath.total : lifePath.reduced,
-      display: lifePathIsMaster ? String(lifePath.total) : lifePath.formatted
+      total: lifePathWestern.total,
+      reduced: lifePathWesternIsMaster ? lifePathWestern.total : lifePathWestern.reduced,
+      display: lifePathWesternIsMaster ? String(lifePathWestern.total) : lifePathWestern.formatted
+    };
+    
+    // Chaldean life path (for storage)
+    result.lifePathChaldean = {
+      total: lifePathChaldean.total,
+      reduced: lifePathChaldeanIsMaster ? lifePathChaldean.total : lifePathChaldean.reduced,
+      display: lifePathChaldeanIsMaster ? String(lifePathChaldean.total) : lifePathChaldean.formatted
     };
     
     result.birthday = {
@@ -694,9 +740,9 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
     
     result.birthdayMonth = birthdayMonth;
     
-    // Add life path to master numbers if applicable
-    if (lifePathIsMaster && !result.masterNumbers.includes(lifePath.total)) {
-      result.masterNumbers.push(lifePath.total);
+    // Add life path to master numbers if applicable (use Western)
+    if (lifePathWesternIsMaster && !result.masterNumbers.includes(lifePathWestern.total)) {
+      result.masterNumbers.push(lifePathWestern.total);
     }
     
     // Add birthday day to master numbers if applicable (11, 22)
