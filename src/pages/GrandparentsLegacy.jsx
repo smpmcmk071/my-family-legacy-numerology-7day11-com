@@ -420,7 +420,7 @@ export default function GrandparentsLegacy() {
           <div className="space-y-4 text-gray-700 leading-relaxed text-lg">
             <p>
               John Francis and Elizabeth JoAnn built a numerological foundation of extraordinary power. 
-              Their combination of master numbers (22, 33, 11) creates a spiritual architecture that 
+              Their combination of master numbers (11, 22, 33) creates a spiritual architecture that 
               supports all future generations.
             </p>
             <p>
