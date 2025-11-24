@@ -374,8 +374,8 @@ export default function AddFamilyMember() {
                   </div>
                   <p className="text-xs text-gray-500 mb-4">
                     {displayMethod === 'western' 
-                      ? 'Western: Sum all digits (1+1+0+7+1+9+6+9=34/7)' 
-                      : 'Chaldean: Reduce each part first (11+7+7=25/7)'}
+                      ? 'Western: Add full numbers (11+7+1969=1987→25/7)' 
+                      : 'Chaldean: Sum all digits (1+1+0+7+1+9+6+9=34/7)'}
                   </p>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="p-3 bg-white/5 rounded-lg">

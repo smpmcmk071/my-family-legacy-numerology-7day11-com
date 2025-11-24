@@ -314,14 +314,33 @@ function vowelConsonantAnalysis(text) {
 }
 
 function calculateLifePathWestern(birthDate) {
-  // Western method: Sum ALL digits of the full date, then reduce
-  // Example: 11/07/1969 = 1+1+0+7+1+9+6+9 = 34 = 3+4 = 7
+  // Western/Pythagorean method: Add full numbers together, then reduce
+  // Example: 11/07/1969 = 11 + 7 + 1969 = 1987 → 1+9+8+7 = 25 → 2+5 = 7
+  // Preserves master numbers (11, 22, 33)
   const date = new Date(birthDate);
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
   
-  // Sum all individual digits
+  const total = month + day + year;
+  
+  return {
+    calculation: `${month}+${day}+${year}=${total}`,
+    total,
+    reduced: reduceToDigit(total),
+    formatted: formatWithReduction(total)
+  };
+}
+
+function calculateLifePathChaldean(birthDate) {
+  // Chaldean/Eastern method: Sum ALL individual digits
+  // Example: 11/07/1969 = 1+1+0+7+1+9+6+9 = 34 → 3+4 = 7
+  // Also preserves master numbers (11, 22, 33)
+  const date = new Date(birthDate);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  
   const allDigits = `${month}${day}${year}`;
   const total = allDigits.split('').reduce((sum, d) => sum + parseInt(d), 0);
   
@@ -331,17 +350,6 @@ function calculateLifePathWestern(birthDate) {
     reduced: reduceToDigit(total),
     formatted: formatWithReduction(total)
   };
-}
-
-function calculateLifePathChaldean(birthDate) {
-  // Chaldean/Eastern method: Reduce each component first, then sum
-  // Example: 11/07/1969 = 11 + 7 + (1+9+6+9=25=7) = 11+7+7 = 25/7
-  const date = new Date(birthDate);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  
-  return calculateDateEastern(day, month, year);
 }
 
 function calculateExpressionWestern(fullName) {
