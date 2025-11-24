@@ -103,7 +103,7 @@ export default function NumerologyPlaylists({ user, userMember }) {
           <div className="flex items-center justify-between">
             <CardTitle className="text-white flex items-center gap-2">
               <Music className="w-5 h-5 text-purple-400" />
-              Numerology Playlists & Themes
+              Create a Playlist
             </CardTitle>
             <Button 
               variant="outline" 
@@ -112,7 +112,7 @@ export default function NumerologyPlaylists({ user, userMember }) {
               className="border-white/20 text-white hover:bg-white/10"
             >
               <Plus className="w-4 h-4 mr-1" />
-              {showForm ? 'Cancel' : 'Create Playlist'}
+              {showForm ? 'Cancel' : 'New Playlist'}
             </Button>
           </div>
         </CardHeader>
@@ -130,9 +130,9 @@ export default function NumerologyPlaylists({ user, userMember }) {
               placeholder="Describe when to use this playlist..."
               className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
             />
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="flex gap-4 flex-wrap">
               <Select value={newPlaylist.theme_type} onValueChange={(v) => setNewPlaylist({ ...newPlaylist, theme_type: v })}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                <SelectTrigger className="bg-white/10 border-white/20 text-white w-48">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -145,7 +145,7 @@ export default function NumerologyPlaylists({ user, userMember }) {
                 value={newPlaylist.target_numbers}
                 onChange={(e) => setNewPlaylist({ ...newPlaylist, target_numbers: e.target.value })}
                 placeholder="Target numbers (e.g., 1,8,22)"
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 w-48"
               />
             </div>
             <Textarea
@@ -160,18 +160,18 @@ export default function NumerologyPlaylists({ user, userMember }) {
               placeholder="Affirmations for this theme..."
               className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
             />
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="flex gap-4 flex-wrap">
               <Input
                 value={newPlaylist.colors}
                 onChange={(e) => setNewPlaylist({ ...newPlaylist, colors: e.target.value })}
                 placeholder="Recommended colors"
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 flex-1 min-w-[150px]"
               />
               <Input
                 value={newPlaylist.crystals}
                 onChange={(e) => setNewPlaylist({ ...newPlaylist, crystals: e.target.value })}
                 placeholder="Recommended crystals"
-                className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 flex-1 min-w-[150px]"
               />
             </div>
             <div className="flex items-center gap-2">
