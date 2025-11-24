@@ -23,6 +23,7 @@ export default function Layout({ children, currentPageName }) {
 
   const navItems = [
     { name: 'Home', page: 'Home', icon: Home },
+    { name: 'My Dashboard', page: 'PersonalDashboard', icon: Sparkles },
     { name: 'Add Member', page: 'AddFamilyMember', icon: Users },
     { name: 'Calendar', page: 'CalendarEvents', icon: Calendar },
     { name: 'Admin', page: 'AdminNumerology', icon: Settings },
