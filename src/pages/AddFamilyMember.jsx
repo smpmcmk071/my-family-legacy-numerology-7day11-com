@@ -53,6 +53,13 @@ export default function AddFamilyMember() {
   const [editingMemberId, setEditingMemberId] = useState(null);
   const [displayMethod, setDisplayMethod] = useState('western'); // 'western' or 'chaldean'
 
+  // ZIP code lookup effect
+  useEffect(() => {
+    if (formData.zip_code?.length === 5 && ZIP_LOOKUP[formData.zip_code]) {
+      setFormData(prev => ({ ...prev, birth_place: ZIP_LOOKUP[formData.zip_code] }));
+    }
+  }, [formData.zip_code]);
+
   // Get current user and their family
   useEffect(() => {
     const loadUserFamily = async () => {
