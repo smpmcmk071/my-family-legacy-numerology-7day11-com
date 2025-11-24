@@ -938,8 +938,9 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
     master_locations: masters.masterLocations || null
   };
   
-  // Add karmic debt
+  // Add karmic debt and karmic lessons
   result.karmicDebt = detectKarmicDebt(birthDate, cleanedName);
+  result.karmicLessons = detectKarmicLessons(cleanedName);
   
   // Add life path if birthdate provided
   if (birthDate) {
