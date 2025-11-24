@@ -53,7 +53,7 @@ const familyData = [
     expression: 9,
     soulUrge: 22,
     personality: 5,
-    birthday: '22',
+    birthday: '22-25/7',
     masters: [7, 11, 22, 9],
     sign: 'Sag / Fire-Water',
     highlight: true
@@ -75,7 +75,7 @@ const familyData = [
     expression: 11,
     soulUrge: 8,
     personality: 9,
-    birthday: '7',
+    birthday: '25/7',
     masters: [7, 8, 9, 11],
     sign: 'Scorpio / Water-Air',
     highlight: true
