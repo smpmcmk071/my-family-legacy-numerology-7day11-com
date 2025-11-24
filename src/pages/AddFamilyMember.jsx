@@ -227,7 +227,7 @@ export default function AddFamilyMember() {
                     variant={editingMemberId === member.id ? "default" : "outline"}
                     size="sm"
                     onClick={() => loadMemberForEdit(member)}
-                    className={editingMemberId === member.id ? "bg-amber-600" : "border-white/20 text-white hover:bg-white/10"}
+                    className={editingMemberId === member.id ? "bg-amber-600" : "border-white/20 text-gray-300 bg-white/5 hover:bg-white/10"}
                   >
                     {member.nickname || member.full_name.split(' ')[0]}
                     {member.life_path && <span className="ml-1 text-xs opacity-70">LP:{member.life_path}</span>}
