@@ -459,7 +459,7 @@ function calculateBirthdayNumber(day) {
 // KARMIC DEBT DETECTION
 // ============================================================================
 
-const KARMIC_DEBT_NUMBERS = [13, 14, 16, 19];
+const KARMIC_DEBT_NUMBERS = [10, 12, 13, 14, 15, 16, 19];
 
 function detectKarmicDebt(birthDate, fullName) {
   const karmicNumbers = [];
