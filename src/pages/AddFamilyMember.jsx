@@ -4,8 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
-import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles } from 'lucide-react';
+import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
 
 export default function AddFamilyMember() {
@@ -13,6 +12,8 @@ export default function AddFamilyMember() {
     full_name: '',
     nickname: '',
     birth_date: '',
+    birth_time: '',
+    birth_place: '',
     relationship: '',
     generation: '',
     sun_sign: ''
@@ -22,6 +23,8 @@ export default function AddFamilyMember() {
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [userFamily, setUserFamily] = useState(null);
+  const [existingMembers, setExistingMembers] = useState([]);
+  const [editingMemberId, setEditingMemberId] = useState(null);
 
   // Get current user and their family
   useEffect(() => {
@@ -31,6 +34,9 @@ export default function AddFamilyMember() {
       const families = await base44.entities.Family.filter({ admin_email: user.email });
       if (families.length > 0) {
         setUserFamily(families[0]);
+        // Load existing members
+        const members = await base44.entities.FamilyMember.filter({ family_id: families[0].id });
+        setExistingMembers(members);
       } else {
         // Create family for this user
         const newFamily = await base44.entities.Family.create({
@@ -42,6 +48,37 @@ export default function AddFamilyMember() {
     };
     loadUserFamily();
   }, []);
+
+  const loadMemberForEdit = (member) => {
+    setEditingMemberId(member.id);
+    setFormData({
+      full_name: member.full_name || '',
+      nickname: member.nickname || '',
+      birth_date: member.birth_date || '',
+      birth_time: member.birth_time || '',
+      birth_place: member.birth_place || '',
+      relationship: member.relationship || '',
+      generation: member.generation?.toString() || '',
+      sun_sign: member.sun_sign || ''
+    });
+    setCalculatedData(null);
+  };
+
+  const clearForm = () => {
+    setEditingMemberId(null);
+    setFormData({
+      full_name: '',
+      nickname: '',
+      birth_date: '',
+      birth_time: '',
+      birth_place: '',
+      relationship: '',
+      generation: '',
+      sun_sign: ''
+    });
+    setCalculatedData(null);
+    setSaved(false);
+  };
 
   const handleCalculate = async () => {
     if (!formData.full_name || !formData.birth_date) return;
@@ -71,19 +108,23 @@ export default function AddFamilyMember() {
       full_name: formData.full_name,
       nickname: formData.nickname || formData.full_name.split(' ')[0],
       birth_date: formData.birth_date,
+      birth_time: formData.birth_time,
+      birth_place: formData.birth_place,
       relationship: formData.relationship,
       generation: formData.generation ? parseInt(formData.generation) : null,
       sun_sign: formData.sun_sign,
       life_path: calculatedData.lifePath?.reduced,
       life_path_master: calculatedData.lifePath?.display,
+      birthday_vibe: calculatedData.birthday?.display,
+      birthday_number: calculatedData.birthday?.reduced,
+      birthday_month_number: calculatedData.birthdayMonth?.reduced,
       expression: calculatedData.expression?.reduced,
       expression_master: calculatedData.expression?.display,
+      life_purpose: calculatedData.expression?.reduced,
       soul_urge: calculatedData.soulUrge?.reduced,
       soul_urge_master: calculatedData.soulUrge?.display,
       personality: calculatedData.personality?.reduced,
       personality_master: calculatedData.personality?.display,
-      birthday_number: calculatedData.birthday?.reduced,
-      birthday_display: calculatedData.birthday?.display,
       master_numbers: calculatedData.masterNumbers?.join(',') || '',
       pythagorean_total: calculatedData.pythagorean?.total,
       chaldean_total: calculatedData.chaldean?.total,
@@ -91,22 +132,22 @@ export default function AddFamilyMember() {
       is_active: true
     };
 
-    await base44.entities.FamilyMember.create(memberData);
+    if (editingMemberId) {
+      await base44.entities.FamilyMember.update(editingMemberId, memberData);
+    } else {
+      await base44.entities.FamilyMember.create(memberData);
+    }
+    
+    // Refresh members list
+    const members = await base44.entities.FamilyMember.filter({ family_id: userFamily.id });
+    setExistingMembers(members);
+    
     setIsSaving(false);
     setSaved(true);
 
     // Reset form after 2 seconds
     setTimeout(() => {
-      setFormData({
-        full_name: '',
-        nickname: '',
-        birth_date: '',
-        relationship: '',
-        generation: '',
-        sun_sign: ''
-      });
-      setCalculatedData(null);
-      setSaved(false);
+      clearForm();
     }, 2000);
   };
 
@@ -119,12 +160,47 @@ export default function AddFamilyMember() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 md:p-12">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Add Family Member</h1>
+          <h1 className="text-4xl font-bold text-white mb-2">
+            {editingMemberId ? 'Update Family Member' : 'Add Family Member'}
+          </h1>
           <p className="text-gray-300">Enter details and calculate numerology</p>
           {userFamily && (
             <p className="text-amber-400 mt-2">{userFamily.name}</p>
           )}
         </div>
+
+        {/* Existing Members */}
+        {existingMembers.length > 0 && (
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                Existing Members ({existingMembers.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                {existingMembers.map(member => (
+                  <Button
+                    key={member.id}
+                    variant={editingMemberId === member.id ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => loadMemberForEdit(member)}
+                    className={editingMemberId === member.id ? "bg-amber-600" : "border-white/20 text-white hover:bg-white/10"}
+                  >
+                    {member.nickname || member.full_name.split(' ')[0]}
+                    {member.life_path && <span className="ml-1 text-xs opacity-70">LP:{member.life_path}</span>}
+                  </Button>
+                ))}
+                {editingMemberId && (
+                  <Button variant="ghost" size="sm" onClick={clearForm} className="text-gray-400 hover:text-white">
+                    <RefreshCw className="w-4 h-4 mr-1" /> New
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Input Form */}
@@ -163,6 +239,26 @@ export default function AddFamilyMember() {
                   value={formData.birth_date}
                   onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
                   className="bg-white/10 border-white/20 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-300 mb-1 block">Birth Time</label>
+                <Input
+                  value={formData.birth_time}
+                  onChange={(e) => setFormData({ ...formData, birth_time: e.target.value })}
+                  placeholder="11:06 PM EST"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-300 mb-1 block">Birth Place</label>
+                <Input
+                  value={formData.birth_place}
+                  onChange={(e) => setFormData({ ...formData, birth_place: e.target.value })}
+                  placeholder="Drexel Hill, PA"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
                 />
               </div>
 
@@ -281,7 +377,7 @@ export default function AddFamilyMember() {
                       </div>
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg">
-                      <p className="text-xs text-gray-400 mb-1">Birthday</p>
+                      <p className="text-xs text-gray-400 mb-1">Birthday Vibe</p>
                       <div className="flex items-center gap-2">
                         <NumberBadge number={calculatedData.birthday?.reduced} size="lg" />
                         <span className="text-white text-sm">{calculatedData.birthday?.display}</span>
@@ -318,17 +414,17 @@ export default function AddFamilyMember() {
                     {saved ? (
                       <>
                         <CheckCircle2 className="w-4 h-4 mr-2" />
-                        Saved!
+                        {editingMemberId ? 'Updated!' : 'Saved!'}
                       </>
                     ) : isSaving ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Saving...
+                        {editingMemberId ? 'Updating...' : 'Saving...'}
                       </>
                     ) : (
                       <>
                         <UserPlus className="w-4 h-4 mr-2" />
-                        Save Family Member
+                        {editingMemberId ? 'Update Member' : 'Save Family Member'}
                       </>
                     )}
                   </Button>
