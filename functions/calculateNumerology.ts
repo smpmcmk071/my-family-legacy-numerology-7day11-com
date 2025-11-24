@@ -313,8 +313,26 @@ function vowelConsonantAnalysis(text) {
   return { vowelSum, consonantSum, ratio };
 }
 
-function calculateLifePath(birthDate) {
-  // Life Path from full birthdate using Eastern method
+function calculateLifePathWestern(birthDate) {
+  // Western method: Add full numbers together, then reduce
+  // Example: 11/07/1969 = 11 + 7 + 1969 = 1987 = 1+9+8+7 = 25/7
+  const date = new Date(birthDate);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  
+  const total = day + month + year;
+  return {
+    calculation: `${month}+${day}+${year}=${total}`,
+    total,
+    reduced: reduceToDigit(total),
+    formatted: formatWithReduction(total)
+  };
+}
+
+function calculateLifePathChaldean(birthDate) {
+  // Chaldean/Eastern method: Reduce each component first, then sum
+  // Example: 11/07/1969 = 11 + 7 + (1+9+6+9=25=7) = 11+7+7 = 25/7
   const date = new Date(birthDate);
   const day = date.getDate();
   const month = date.getMonth() + 1;
@@ -323,8 +341,8 @@ function calculateLifePath(birthDate) {
   return calculateDateEastern(day, month, year);
 }
 
-function calculateExpression(fullName) {
-  // Expression = Full name Pythagorean reduced
+function calculateExpressionWestern(fullName) {
+  // Western Expression = Full name Pythagorean sum, then reduce
   const sum = pythagoreanSum(fullName);
   return {
     sum,
@@ -333,8 +351,18 @@ function calculateExpression(fullName) {
   };
 }
 
-function calculateSoulUrge(fullName) {
-  // Soul Urge = Vowels only
+function calculateExpressionChaldean(fullName) {
+  // Chaldean Expression = Full name Chaldean sum, then reduce
+  const sum = chaldeanSum(fullName);
+  return {
+    sum,
+    reduced: reduceToDigit(sum),
+    formatted: formatWithReduction(sum)
+  };
+}
+
+function calculateSoulUrgeWestern(fullName) {
+  // Soul Urge Western = Vowels only using Pythagorean
   if (!fullName) return { sum: 0, reduced: 0, formatted: '0' };
   
   let sum = 0;
@@ -351,14 +379,50 @@ function calculateSoulUrge(fullName) {
   };
 }
 
-function calculatePersonality(fullName) {
-  // Personality = Consonants only
+function calculateSoulUrgeChaldean(fullName) {
+  // Soul Urge Chaldean = Vowels only using Chaldean
+  if (!fullName) return { sum: 0, reduced: 0, formatted: '0' };
+  
+  let sum = 0;
+  for (const ch of fullName.toUpperCase()) {
+    if (VOWELS.includes(ch) && CHALDEAN[ch]) {
+      sum += CHALDEAN[ch];
+    }
+  }
+  
+  return {
+    sum,
+    reduced: reduceToDigit(sum),
+    formatted: formatWithReduction(sum)
+  };
+}
+
+function calculatePersonalityWestern(fullName) {
+  // Personality Western = Consonants only using Pythagorean
   if (!fullName) return { sum: 0, reduced: 0, formatted: '0' };
   
   let sum = 0;
   for (const ch of fullName.toUpperCase()) {
     if (!VOWELS.includes(ch) && PYTHAGOREAN[ch]) {
       sum += PYTHAGOREAN[ch];
+    }
+  }
+  
+  return {
+    sum,
+    reduced: reduceToDigit(sum),
+    formatted: formatWithReduction(sum)
+  };
+}
+
+function calculatePersonalityChaldean(fullName) {
+  // Personality Chaldean = Consonants only using Chaldean
+  if (!fullName) return { sum: 0, reduced: 0, formatted: '0' };
+  
+  let sum = 0;
+  for (const ch of fullName.toUpperCase()) {
+    if (!VOWELS.includes(ch) && CHALDEAN[ch]) {
+      sum += CHALDEAN[ch];
     }
   }
   
