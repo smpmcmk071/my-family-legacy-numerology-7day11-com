@@ -406,9 +406,21 @@ export default function GrandparentsLegacy() {
                 <h3 className="text-xl font-bold text-gray-900">The Achievement Power</h3>
               </div>
               <p className="text-gray-700">
-                Elizabeth JoAnn (Birthday 26/8) → Stephen (Soul Urge 8) → Christian (Double 8)
+                Mary Agnes (Expression 8) → Elizabeth JoAnn (Birthday 26/8) → Stephen (Soul Urge 8) + Kyle (Expression 8) → Christian (Double 8)
                 <br />
                 <span className="text-sm italic">The family's collective power to build and achieve lasting impact</span>
+              </p>
+            </div>
+
+            <div className="p-6 bg-cyan-50 rounded-lg border-l-4 border-cyan-600">
+              <div className="flex items-center gap-2 mb-3">
+                <NumberBadge number={5} onClick={setSelectedNumber} size="lg" />
+                <h3 className="text-xl font-bold text-gray-900">The Freedom Line</h3>
+              </div>
+              <p className="text-gray-700">
+                Thomas Francis (Soul Urge 5) → Kenneth (Expression 5) + Amy (Expression 5) → Kyle (Life Path 5)
+                <br />
+                <span className="text-sm italic">The adventurous spirit that keeps the family adaptable and open to change</span>
               </p>
             </div>
           </div>
