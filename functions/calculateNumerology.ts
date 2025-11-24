@@ -455,6 +455,183 @@ function calculateBirthdayNumber(day) {
   };
 }
 
+// ============================================================================
+// KARMIC DEBT DETECTION
+// ============================================================================
+
+const KARMIC_DEBT_NUMBERS = [13, 14, 16, 19];
+
+function detectKarmicDebt(birthDate, fullName) {
+  const karmicNumbers = [];
+  const locations = [];
+  
+  if (birthDate) {
+    const date = new Date(birthDate);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    
+    // Check birthday day
+    if (KARMIC_DEBT_NUMBERS.includes(day)) {
+      karmicNumbers.push(day);
+      locations.push(`birthday:${day}`);
+    }
+    
+    // Check life path calculation intermediates
+    const sumTotal = month + day + year;
+    const firstReduction = String(sumTotal).split('').reduce((sum, d) => sum + parseInt(d), 0);
+    
+    if (KARMIC_DEBT_NUMBERS.includes(firstReduction)) {
+      karmicNumbers.push(firstReduction);
+      locations.push(`lifePath:${firstReduction}`);
+    }
+  }
+  
+  if (fullName) {
+    // Check expression number intermediate
+    const expressionSum = pythagoreanSum(fullName);
+    const expressionFirstReduction = String(expressionSum).split('').reduce((sum, d) => sum + parseInt(d), 0);
+    
+    if (KARMIC_DEBT_NUMBERS.includes(expressionFirstReduction)) {
+      karmicNumbers.push(expressionFirstReduction);
+      locations.push(`expression:${expressionFirstReduction}`);
+    }
+    
+    // Check soul urge intermediate
+    let soulSum = 0;
+    for (const ch of fullName.toUpperCase()) {
+      if (VOWELS.includes(ch) && PYTHAGOREAN[ch]) {
+        soulSum += PYTHAGOREAN[ch];
+      }
+    }
+    const soulFirstReduction = String(soulSum).split('').reduce((sum, d) => sum + parseInt(d), 0);
+    
+    if (KARMIC_DEBT_NUMBERS.includes(soulFirstReduction)) {
+      karmicNumbers.push(soulFirstReduction);
+      locations.push(`soulUrge:${soulFirstReduction}`);
+    }
+    
+    // Check personality intermediate
+    let personalitySum = 0;
+    for (const ch of fullName.toUpperCase()) {
+      if (!VOWELS.includes(ch) && PYTHAGOREAN[ch]) {
+        personalitySum += PYTHAGOREAN[ch];
+      }
+    }
+    const personalityFirstReduction = String(personalitySum).split('').reduce((sum, d) => sum + parseInt(d), 0);
+    
+    if (KARMIC_DEBT_NUMBERS.includes(personalityFirstReduction)) {
+      karmicNumbers.push(personalityFirstReduction);
+      locations.push(`personality:${personalityFirstReduction}`);
+    }
+  }
+  
+  return {
+    hasKarmicDebt: karmicNumbers.length > 0,
+    numbers: [...new Set(karmicNumbers)].sort((a, b) => a - b),
+    locations: locations.join('; ')
+  };
+}
+
+// ============================================================================
+// BASIC ASTROLOGY CALCULATIONS
+// ============================================================================
+
+function calculateSunSign(birthDate) {
+  const date = new Date(birthDate);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  
+  const signs = [
+    { sign: 'Capricorn', element: 'Earth', modality: 'Cardinal', ruler: 'Saturn', start: [12, 22], end: [1, 19] },
+    { sign: 'Aquarius', element: 'Air', modality: 'Fixed', ruler: 'Uranus', start: [1, 20], end: [2, 18] },
+    { sign: 'Pisces', element: 'Water', modality: 'Mutable', ruler: 'Neptune', start: [2, 19], end: [3, 20] },
+    { sign: 'Aries', element: 'Fire', modality: 'Cardinal', ruler: 'Mars', start: [3, 21], end: [4, 19] },
+    { sign: 'Taurus', element: 'Earth', modality: 'Fixed', ruler: 'Venus', start: [4, 20], end: [5, 20] },
+    { sign: 'Gemini', element: 'Air', modality: 'Mutable', ruler: 'Mercury', start: [5, 21], end: [6, 20] },
+    { sign: 'Cancer', element: 'Water', modality: 'Cardinal', ruler: 'Moon', start: [6, 21], end: [7, 22] },
+    { sign: 'Leo', element: 'Fire', modality: 'Fixed', ruler: 'Sun', start: [7, 23], end: [8, 22] },
+    { sign: 'Virgo', element: 'Earth', modality: 'Mutable', ruler: 'Mercury', start: [8, 23], end: [9, 22] },
+    { sign: 'Libra', element: 'Air', modality: 'Cardinal', ruler: 'Venus', start: [9, 23], end: [10, 22] },
+    { sign: 'Scorpio', element: 'Water', modality: 'Fixed', ruler: 'Pluto', start: [10, 23], end: [11, 21] },
+    { sign: 'Sagittarius', element: 'Fire', modality: 'Mutable', ruler: 'Jupiter', start: [11, 22], end: [12, 21] }
+  ];
+  
+  for (const s of signs) {
+    const [startMonth, startDay] = s.start;
+    const [endMonth, endDay] = s.end;
+    
+    // Handle Capricorn which spans year boundary
+    if (startMonth > endMonth) {
+      if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay)) {
+        return s;
+      }
+    } else {
+      if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay) ||
+          (month > startMonth && month < endMonth)) {
+        return s;
+      }
+    }
+  }
+  
+  return signs[0]; // Default to Capricorn
+}
+
+function estimateAscendant(birthTime) {
+  // Rough estimation based on time of day (actual requires exact time + location)
+  const timeToSign = {
+    'late_night': 'Aries',      // 12am-6am
+    'morning': 'Cancer',        // 6am-12pm
+    'midday': 'Libra',          // 12pm-2pm
+    'afternoon': 'Scorpio',     // 2pm-6pm
+    'evening': 'Sagittarius',   // 6pm-9pm
+    'night': 'Aquarius',        // 9pm-12am
+    'unknown': null
+  };
+  
+  return timeToSign[birthTime] || null;
+}
+
+function calculateBasicHouses(sunSign, ascendant) {
+  const signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 
+                 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+  
+  if (!ascendant) return null;
+  
+  const ascIndex = signs.indexOf(ascendant);
+  if (ascIndex === -1) return null;
+  
+  const houses = {};
+  for (let i = 0; i < 12; i++) {
+    const houseNum = i + 1;
+    const signIndex = (ascIndex + i) % 12;
+    houses[`house${houseNum}`] = {
+      sign: signs[signIndex],
+      meaning: getHouseMeaning(houseNum)
+    };
+  }
+  
+  return houses;
+}
+
+function getHouseMeaning(houseNum) {
+  const meanings = {
+    1: 'Self, appearance, first impressions',
+    2: 'Money, possessions, values',
+    3: 'Communication, siblings, short trips',
+    4: 'Home, family, roots',
+    5: 'Creativity, romance, children',
+    6: 'Health, daily work, service',
+    7: 'Partnerships, marriage, contracts',
+    8: 'Transformation, shared resources, death/rebirth',
+    9: 'Higher learning, travel, philosophy',
+    10: 'Career, public image, authority',
+    11: 'Friends, groups, hopes/wishes',
+    12: 'Subconscious, hidden matters, spirituality'
+  };
+  return meanings[houseNum];
+}
+
 function detectNameMasterNumbers(fullName, birthDate) {
   const masters = new Set();
   const locations = [];
@@ -716,6 +893,9 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
     master_locations: masters.masterLocations || null
   };
   
+  // Add karmic debt
+  result.karmicDebt = detectKarmicDebt(birthDate, cleanedName);
+  
   // Add life path if birthdate provided
   if (birthDate) {
     const date = new Date(birthDate);
@@ -771,6 +951,15 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
     
     // Sort and dedupe
     result.masterNumbers = [...new Set(result.masterNumbers)].sort((a, b) => a - b);
+    
+    // Add astrology data
+    const sunSignData = calculateSunSign(birthDate);
+    result.astrology = {
+      sunSign: sunSignData.sign,
+      element: sunSignData.element,
+      modality: sunSignData.modality,
+      rulingPlanet: sunSignData.ruler
+    };
   }
   
   return result;

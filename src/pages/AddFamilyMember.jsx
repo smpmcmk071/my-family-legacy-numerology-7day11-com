@@ -142,7 +142,7 @@ export default function AddFamilyMember() {
       full_name: formData.full_name,
       nickname: formData.nickname || formData.full_name.split(' ')[0],
       birth_date: formData.birth_date,
-      birth_time: formData.birth_time,
+      birth_time: formData.birth_time_exact || formData.birth_time,
       birth_place: formData.birth_place,
       relationship: formData.relationship,
       generation: formData.generation ? parseInt(formData.generation) : null,
@@ -168,6 +168,7 @@ export default function AddFamilyMember() {
       pythagorean_total: calculatedData.pythagorean?.total,
       chaldean_total: calculatedData.chaldean?.total,
       gematria_total: calculatedData.gematria?.total,
+      karmic_debt_number: calculatedData.karmicDebt?.numbers?.join(',') || '',
       is_active: true
     };
 
@@ -475,6 +476,18 @@ export default function AddFamilyMember() {
                         {calculatedData.masterNumbers?.length > 0 ? (
                           calculatedData.masterNumbers.map((num, i) => (
                             <NumberBadge key={i} number={num} size="sm" />
+                          ))
+                        ) : (
+                          <span className="text-gray-500 text-sm">None</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="p-3 bg-white/5 rounded-lg">
+                      <p className="text-xs text-gray-400 mb-1">Karmic Debt</p>
+                      <div className="flex gap-1 flex-wrap">
+                        {calculatedData.karmicDebt?.numbers?.length > 0 ? (
+                          calculatedData.karmicDebt.numbers.map((num, i) => (
+                            <span key={i} className="px-2 py-1 bg-red-500/20 text-red-300 rounded text-sm">{num}</span>
                           ))
                         ) : (
                           <span className="text-gray-500 text-sm">None</span>
