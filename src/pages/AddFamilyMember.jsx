@@ -250,22 +250,45 @@ export default function AddFamilyMember() {
 
               <div>
                 <label className="text-sm text-gray-300 mb-1 block">Birth Time</label>
+                <Select value={formData.birth_time} onValueChange={(v) => setFormData({ ...formData, birth_time: v })}>
+                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                    <SelectValue placeholder="Select time of day" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="morning">Morning (6am - 12pm)</SelectItem>
+                    <SelectItem value="midday">Midday (12pm - 2pm)</SelectItem>
+                    <SelectItem value="afternoon">Afternoon (2pm - 6pm)</SelectItem>
+                    <SelectItem value="evening">Evening (6pm - 9pm)</SelectItem>
+                    <SelectItem value="night">Night (9pm - 12am)</SelectItem>
+                    <SelectItem value="late_night">Late Night (12am - 6am)</SelectItem>
+                    <SelectItem value="unknown">Unknown</SelectItem>
+                  </SelectContent>
+                </Select>
                 <Input
-                  value={formData.birth_time}
-                  onChange={(e) => setFormData({ ...formData, birth_time: e.target.value })}
-                  placeholder="11:06 PM EST"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                  value={formData.birth_time_exact || ''}
+                  onChange={(e) => setFormData({ ...formData, birth_time_exact: e.target.value })}
+                  placeholder="Or enter exact time (e.g., 11:06 PM EST)"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 mt-2"
                 />
               </div>
 
               <div>
                 <label className="text-sm text-gray-300 mb-1 block">Birth Place</label>
-                <Input
-                  value={formData.birth_place}
-                  onChange={(e) => setFormData({ ...formData, birth_place: e.target.value })}
-                  placeholder="Drexel Hill, PA"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
-                />
+                <div className="flex gap-2">
+                  <Input
+                    value={formData.zip_code || ''}
+                    onChange={(e) => setFormData({ ...formData, zip_code: e.target.value })}
+                    placeholder="ZIP Code"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 w-28"
+                    maxLength={5}
+                  />
+                  <Input
+                    value={formData.birth_place}
+                    onChange={(e) => setFormData({ ...formData, birth_place: e.target.value })}
+                    placeholder="City, State"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 flex-1"
+                  />
+                </div>
               </div>
 
               <div>
