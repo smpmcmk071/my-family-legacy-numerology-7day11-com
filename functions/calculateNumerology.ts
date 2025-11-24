@@ -677,6 +677,51 @@ function getHouseMeaning(houseNum) {
   return meanings[houseNum];
 }
 
+// Estimate moon sign based on birth date and approximate time
+function estimateMoonSign(birthDate, birthTime) {
+  const date = new Date(birthDate);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const year = date.getFullYear();
+  
+  // Convert time period to approximate hour (midpoint of range)
+  const timeToHour = {
+    'late_night': 3,      // 12am-6am, mid = 3am
+    'morning': 9,         // 6am-12pm, mid = 9am
+    'midday': 13,         // 12pm-2pm, mid = 1pm
+    'afternoon': 16,      // 2pm-6pm, mid = 4pm
+    'evening': 19.5,      // 6pm-9pm, mid = 7:30pm
+    'night': 22.5,        // 9pm-12am, mid = 10:30pm
+    'unknown': 12         // Default to noon
+  };
+  
+  const hour = timeToHour[birthTime] || 12;
+  
+  // Moon cycle is ~29.5 days, moves through all 12 signs
+  // Each sign ~2.5 days. This is an approximation.
+  // Calculate days since a known new moon (Jan 6, 2000 was new moon in Capricorn)
+  const knownNewMoon = new Date(2000, 0, 6, 18, 14); // Jan 6, 2000 6:14 PM
+  const birthDateTime = new Date(year, month - 1, day, hour);
+  
+  const daysSinceNewMoon = (birthDateTime - knownNewMoon) / (1000 * 60 * 60 * 24);
+  const lunarCycle = 29.530588853; // Synodic month in days
+  
+  // Position in current lunar cycle (0-29.5)
+  const positionInCycle = ((daysSinceNewMoon % lunarCycle) + lunarCycle) % lunarCycle;
+  
+  // Each sign takes ~2.46 days (29.5 / 12)
+  const daysPerSign = lunarCycle / 12;
+  const signIndex = Math.floor(positionInCycle / daysPerSign);
+  
+  // Moon signs starting from the sign at known new moon (Capricorn)
+  const moonSigns = [
+    'Capricorn', 'Aquarius', 'Pisces', 'Aries', 'Taurus', 'Gemini',
+    'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius'
+  ];
+  
+  return moonSigns[signIndex % 12];
+}
+
 // Get element from Life Path number (numerology-based secondary element)
 function getElementFromLifePath(lifePathNum) {
   // Fire: 1, 3, 9 - Action, creativity, passion
@@ -1028,8 +1073,12 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
     const lifePathNum = result.lifePath.reduced;
     const secondaryElement = getElementFromLifePath(lifePathNum);
     
+    // Estimate moon sign (requires birth time for accuracy)
+    const moonSign = estimateMoonSign(birthDate, null);
+    
     result.astrology = {
       sunSign: sunSignData.sign,
+      moonSign: moonSign,
       element: sunSignData.element,
       secondaryElement: secondaryElement,
       modality: sunSignData.modality,

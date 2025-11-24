@@ -24,6 +24,7 @@ export function buildMemberDataFromCalc(calc) {
     karmic_debt_number: calc.karmicDebt?.numbers?.join(',') || '',
     karmic_lessons: calc.karmicLessons?.lessons?.join(',') || '',
     sun_sign: calc.astrology?.sunSign || '',
+    moon_sign: calc.astrology?.moonSign || '',
     zodiac_sign: calc.astrology?.sunSign || '',
     ruling_planet: calc.astrology?.rulingPlanet || '',
     element: calc.astrology?.element || '',

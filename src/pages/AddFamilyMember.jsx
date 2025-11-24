@@ -503,10 +503,11 @@ export default function AddFamilyMember() {
                                             <p className="text-xs text-gray-400 mb-2">Astrology</p>
                                             <div className="flex gap-4 text-sm text-gray-300 flex-wrap">
                                               <span>☉ {calculatedData.astrology?.sunSign || '-'}</span>
+                                              <span>☽ {calculatedData.astrology?.moonSign || '-'}</span>
                                               <span>♇ {calculatedData.astrology?.rulingPlanet || '-'}</span>
                                               <span className="text-xs text-gray-400">{calculatedData.astrology?.modality || '-'}</span>
                                             </div>
-                                            <div className="flex gap-2 mt-2">
+                                            <div className="flex gap-2 mt-2 flex-wrap">
                                               <span className={`px-2 py-1 rounded text-xs font-medium ${
                                                 calculatedData.astrology?.element === 'Water' ? 'bg-blue-500/30 text-blue-300' :
                                                 calculatedData.astrology?.element === 'Fire' ? 'bg-red-500/30 text-red-300' :
