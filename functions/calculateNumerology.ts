@@ -456,7 +456,52 @@ function calculateBirthdayNumber(day) {
 }
 
 // ============================================================================
-// KARMIC DEBT DETECTION
+// KARMIC LESSONS DETECTION (Missing numbers in name)
+// ============================================================================
+
+function detectKarmicLessons(fullName) {
+  if (!fullName) return { lessons: [], presentNumbers: [] };
+  
+  const presentNumbers = new Set();
+  
+  // Check all letters in name using Pythagorean values
+  for (const ch of fullName.toUpperCase()) {
+    if (PYTHAGOREAN[ch]) {
+      presentNumbers.add(PYTHAGOREAN[ch]);
+    }
+  }
+  
+  // Find missing numbers 1-9
+  const allNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const lessons = allNumbers.filter(n => !presentNumbers.has(n));
+  
+  return {
+    lessons,
+    presentNumbers: Array.from(presentNumbers).sort((a, b) => a - b),
+    lessonMeanings: lessons.map(n => ({
+      number: n,
+      meaning: getKarmicLessonMeaning(n)
+    }))
+  };
+}
+
+function getKarmicLessonMeaning(num) {
+  const meanings = {
+    1: 'Independence, self-confidence, leadership - learning to stand on your own',
+    2: 'Cooperation, patience, diplomacy - learning to work with others',
+    3: 'Self-expression, creativity, joy - learning to communicate freely',
+    4: 'Discipline, hard work, stability - learning structure and persistence',
+    5: 'Freedom, adaptability, change - learning to embrace life experiences',
+    6: 'Responsibility, harmony, nurturing - learning family and domestic balance',
+    7: 'Spirituality, introspection, wisdom - learning to trust inner knowing',
+    8: 'Material mastery, power, abundance - learning to manage resources',
+    9: 'Compassion, humanitarianism, completion - learning universal love'
+  };
+  return meanings[num] || '';
+}
+
+// ============================================================================
+// KARMIC DEBT DETECTION (13, 14, 16, 19 in calculations)
 // ============================================================================
 
 const KARMIC_DEBT_NUMBERS = [10, 12, 13, 14, 15, 16, 19];
