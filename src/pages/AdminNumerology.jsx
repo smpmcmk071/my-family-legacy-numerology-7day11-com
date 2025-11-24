@@ -417,23 +417,47 @@ Elizabeth JoAnn Maher, 1942-07-26, grandparent, 2
 Stephen Maher, 1969-11-07, parent, 3, 11:06 PM EST, Drexel Hill PA"
               className="w-full h-40 bg-white/10 border border-white/20 rounded-lg p-3 text-white placeholder:text-gray-500 text-sm font-mono"
             />
-            <Button
-              onClick={importMembers}
-              disabled={!importData.trim() || isImporting}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              {isImporting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Importing...
-                </>
-              ) : (
-                <>
-                  <Users className="w-4 h-4 mr-2" />
-                  Import Members
-                </>
-              )}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={importMembers}
+                disabled={!importData.trim() || isImporting}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {isImporting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Importing...
+                  </>
+                ) : (
+                  <>
+                    <Users className="w-4 h-4 mr-2" />
+                    Import Members
+                  </>
+                )}
+              </Button>
+              <Button
+                onClick={async () => {
+                  const members = await base44.entities.FamilyMember.list();
+                  setFamilyMembers(members);
+                  setSelectedMembers(members.map(m => m.id));
+                  await updateSelectedMembers();
+                }}
+                disabled={familyMembers.length === 0 || isUpdatingMembers}
+                className="bg-amber-600 hover:bg-amber-700"
+              >
+                {isUpdatingMembers ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Calculating...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Recalculate All
+                  </>
+                )}
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
