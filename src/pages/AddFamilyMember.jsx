@@ -25,6 +25,7 @@ export default function AddFamilyMember() {
   const [userFamily, setUserFamily] = useState(null);
   const [existingMembers, setExistingMembers] = useState([]);
   const [editingMemberId, setEditingMemberId] = useState(null);
+  const [displayMethod, setDisplayMethod] = useState('western'); // 'western' or 'chaldean'
 
   // Get current user and their family
   useEffect(() => {
@@ -352,33 +353,52 @@ export default function AddFamilyMember() {
                 </div>
               ) : (
                 <div className="space-y-4">
+                  {/* Method Toggle */}
+                  <div className="flex gap-2 mb-4">
+                    <Button
+                      variant={displayMethod === 'western' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setDisplayMethod('western')}
+                      className={displayMethod === 'western' ? 'bg-amber-600' : 'border-white/20 text-white'}
+                    >
+                      Western
+                    </Button>
+                    <Button
+                      variant={displayMethod === 'chaldean' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setDisplayMethod('chaldean')}
+                      className={displayMethod === 'chaldean' ? 'bg-amber-600' : 'border-white/20 text-white'}
+                    >
+                      Chaldean
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="p-3 bg-white/5 rounded-lg">
                       <p className="text-xs text-gray-400 mb-1">Life Path</p>
                       <div className="flex items-center gap-2">
-                        <NumberBadge number={calculatedData.lifePath?.reduced} size="lg" />
-                        <span className="text-white text-sm">{calculatedData.lifePath?.display}</span>
+                        <NumberBadge number={displayMethod === 'western' ? calculatedData.lifePath?.reduced : calculatedData.lifePathChaldean?.reduced} size="lg" />
+                        <span className="text-white text-sm">{displayMethod === 'western' ? calculatedData.lifePath?.display : calculatedData.lifePathChaldean?.display}</span>
                       </div>
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg">
                       <p className="text-xs text-gray-400 mb-1">Expression</p>
                       <div className="flex items-center gap-2">
-                        <NumberBadge number={calculatedData.expression?.reduced} size="lg" />
-                        <span className="text-white text-sm">{calculatedData.expression?.display}</span>
+                        <NumberBadge number={displayMethod === 'western' ? calculatedData.expression?.reduced : calculatedData.expressionChaldean?.reduced} size="lg" />
+                        <span className="text-white text-sm">{displayMethod === 'western' ? calculatedData.expression?.display : calculatedData.expressionChaldean?.display}</span>
                       </div>
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg">
                       <p className="text-xs text-gray-400 mb-1">Soul Urge</p>
                       <div className="flex items-center gap-2">
-                        <NumberBadge number={calculatedData.soulUrge?.reduced} size="lg" />
-                        <span className="text-white text-sm">{calculatedData.soulUrge?.display}</span>
+                        <NumberBadge number={displayMethod === 'western' ? calculatedData.soulUrge?.reduced : calculatedData.soulUrgeChaldean?.reduced} size="lg" />
+                        <span className="text-white text-sm">{displayMethod === 'western' ? calculatedData.soulUrge?.display : calculatedData.soulUrgeChaldean?.display}</span>
                       </div>
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg">
                       <p className="text-xs text-gray-400 mb-1">Personality</p>
                       <div className="flex items-center gap-2">
-                        <NumberBadge number={calculatedData.personality?.reduced} size="lg" />
-                        <span className="text-white text-sm">{calculatedData.personality?.display}</span>
+                        <NumberBadge number={displayMethod === 'western' ? calculatedData.personality?.reduced : calculatedData.personalityChaldean?.reduced} size="lg" />
+                        <span className="text-white text-sm">{displayMethod === 'western' ? calculatedData.personality?.display : calculatedData.personalityChaldean?.display}</span>
                       </div>
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg">
