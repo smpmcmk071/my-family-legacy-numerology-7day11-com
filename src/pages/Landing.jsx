@@ -1,9 +1,15 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Heart, Users, BookOpen, ArrowRight } from 'lucide-react';
+import { Sparkles, Heart, Users, BookOpen, ArrowRight, LogIn } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { base44 } from '@/api/base44Client';
+import { createPageUrl } from '@/utils';
 
 export default function Landing() {
+  const handleLogin = () => {
+    base44.auth.redirectToLogin(createPageUrl('Home'));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Hero Section */}
@@ -24,9 +30,13 @@ export default function Landing() {
             <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
               Uncover the hidden patterns of wisdom, power, and purpose flowing through your family tree
             </p>
-            <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-lg px-8 py-6 rounded-full shadow-2xl hover:scale-105 transition-transform">
-              Explore Your Legacy
-              <ArrowRight className="ml-2 w-5 h-5" />
+            <Button 
+              size="lg" 
+              onClick={handleLogin}
+              className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-lg px-8 py-6 rounded-full shadow-2xl hover:scale-105 transition-transform"
+            >
+              <LogIn className="mr-2 w-5 h-5" />
+              Sign In to Explore Your Legacy
             </Button>
           </div>
         </div>
@@ -186,9 +196,13 @@ export default function Landing() {
         <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
           Create personalized legacy documents for your entire family
         </p>
-        <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white text-lg px-8 py-6 rounded-full shadow-2xl hover:scale-105 transition-transform">
-          Get Started Now
-          <ArrowRight className="ml-2 w-5 h-5" />
+        <Button 
+          size="lg" 
+          onClick={handleLogin}
+          className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white text-lg px-8 py-6 rounded-full shadow-2xl hover:scale-105 transition-transform"
+        >
+          <LogIn className="mr-2 w-5 h-5" />
+          Sign In to Get Started
         </Button>
       </div>
     </div>
