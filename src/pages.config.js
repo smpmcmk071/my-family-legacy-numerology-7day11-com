@@ -11,6 +11,7 @@ import FamilyTree from './pages/FamilyTree';
 import GrandparentsLegacy from './pages/GrandparentsLegacy';
 import BrothersLegacy from './pages/BrothersLegacy';
 import ChristianLegacy from './pages/ChristianLegacy';
+import AdminNumerology from './pages/AdminNumerology';
 
 
 export const PAGES = {
@@ -27,6 +28,7 @@ export const PAGES = {
     "GrandparentsLegacy": GrandparentsLegacy,
     "BrothersLegacy": BrothersLegacy,
     "ChristianLegacy": ChristianLegacy,
+    "AdminNumerology": AdminNumerology,
 }
 
 export const pagesConfig = {
