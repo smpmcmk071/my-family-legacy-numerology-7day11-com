@@ -359,19 +359,24 @@ export default function AddFamilyMember() {
                       variant={displayMethod === 'western' ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setDisplayMethod('western')}
-                      className={displayMethod === 'western' ? 'bg-amber-600' : 'border-white/20 text-white'}
+                      className={displayMethod === 'western' ? 'bg-amber-600' : 'border-white/20 text-white hover:bg-white/10'}
                     >
-                      Western
+                      Western (Pythagorean)
                     </Button>
                     <Button
                       variant={displayMethod === 'chaldean' ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setDisplayMethod('chaldean')}
-                      className={displayMethod === 'chaldean' ? 'bg-amber-600' : 'border-white/20 text-white'}
+                      className={displayMethod === 'chaldean' ? 'bg-amber-600' : 'border-white/20 text-white hover:bg-white/10'}
                     >
-                      Chaldean
+                      Chaldean (Eastern)
                     </Button>
                   </div>
+                  <p className="text-xs text-gray-500 mb-4">
+                    {displayMethod === 'western' 
+                      ? 'Western: Sum all digits (1+1+0+7+1+9+6+9=34/7)' 
+                      : 'Chaldean: Reduce each part first (11+7+7=25/7)'}
+                  </p>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="p-3 bg-white/5 rounded-lg">
                       <p className="text-xs text-gray-400 mb-1">Life Path</p>
