@@ -677,49 +677,223 @@ function getHouseMeaning(houseNum) {
   return meanings[houseNum];
 }
 
-// Estimate moon sign based on birth date and approximate time
+// Parse birth time string to decimal hours
+function parseBirthTimeToHours(birthTime) {
+  if (!birthTime) return 12; // Default to noon
+  
+  // Handle period-based times (morning, afternoon, etc.)
+  const periodToHour = {
+    'late_night': 3,
+    'morning': 9,
+    'midday': 13,
+    'afternoon': 16,
+    'evening': 19.5,
+    'night': 22.5,
+    'unknown': 12
+  };
+  
+  if (periodToHour[birthTime] !== undefined) {
+    return periodToHour[birthTime];
+  }
+  
+  // Try to parse exact time formats like "11:06 PM", "23:06", "11:06 PM EST"
+  const timeStr = birthTime.toUpperCase().trim();
+  
+  // Match patterns: "HH:MM AM/PM", "HH:MM", with optional timezone
+  const match12 = timeStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  const match24 = timeStr.match(/^(\d{1,2}):(\d{2})/);
+  
+  if (match12) {
+    let hours = parseInt(match12[1]);
+    const minutes = parseInt(match12[2]);
+    const period = match12[3].toUpperCase();
+    
+    if (period === 'PM' && hours !== 12) hours += 12;
+    if (period === 'AM' && hours === 12) hours = 0;
+    
+    return hours + (minutes / 60);
+  }
+  
+  if (match24) {
+    const hours = parseInt(match24[1]);
+    const minutes = parseInt(match24[2]);
+    return hours + (minutes / 60);
+  }
+  
+  return 12; // Default to noon if can't parse
+}
+
+// Estimate moon sign based on birth date and time
 function estimateMoonSign(birthDate, birthTime) {
   const date = new Date(birthDate);
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const year = date.getFullYear();
   
-  // Convert time period to approximate hour (midpoint of range)
-  const timeToHour = {
-    'late_night': 3,      // 12am-6am, mid = 3am
-    'morning': 9,         // 6am-12pm, mid = 9am
-    'midday': 13,         // 12pm-2pm, mid = 1pm
-    'afternoon': 16,      // 2pm-6pm, mid = 4pm
-    'evening': 19.5,      // 6pm-9pm, mid = 7:30pm
-    'night': 22.5,        // 9pm-12am, mid = 10:30pm
-    'unknown': 12         // Default to noon
-  };
-  
-  const hour = timeToHour[birthTime] || 12;
+  const hour = parseBirthTimeToHours(birthTime);
   
   // Moon cycle is ~29.5 days, moves through all 12 signs
-  // Each sign ~2.5 days. This is an approximation.
   // Calculate days since a known new moon (Jan 6, 2000 was new moon in Capricorn)
-  const knownNewMoon = new Date(2000, 0, 6, 18, 14); // Jan 6, 2000 6:14 PM
-  const birthDateTime = new Date(year, month - 1, day, hour);
+  const knownNewMoon = new Date(2000, 0, 6, 18, 14);
+  const birthDateTime = new Date(year, month - 1, day, Math.floor(hour), (hour % 1) * 60);
   
   const daysSinceNewMoon = (birthDateTime - knownNewMoon) / (1000 * 60 * 60 * 24);
-  const lunarCycle = 29.530588853; // Synodic month in days
+  const lunarCycle = 29.530588853;
   
-  // Position in current lunar cycle (0-29.5)
   const positionInCycle = ((daysSinceNewMoon % lunarCycle) + lunarCycle) % lunarCycle;
-  
-  // Each sign takes ~2.46 days (29.5 / 12)
   const daysPerSign = lunarCycle / 12;
   const signIndex = Math.floor(positionInCycle / daysPerSign);
   
-  // Moon signs starting from the sign at known new moon (Capricorn)
   const moonSigns = [
     'Capricorn', 'Aquarius', 'Pisces', 'Aries', 'Taurus', 'Gemini',
     'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius'
   ];
   
   return moonSigns[signIndex % 12];
+}
+
+// Calculate Ascendant (Rising Sign) based on birth time and approximate location
+function calculateAscendant(birthDate, birthTime, birthPlace) {
+  const date = new Date(birthDate);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const year = date.getFullYear();
+  
+  const hour = parseBirthTimeToHours(birthTime);
+  
+  // Get approximate latitude from birth place (simplified US-centric lookup)
+  const latitudeLookup = {
+    // Northeast US
+    'pa': 40, 'ny': 41, 'nj': 40, 'ma': 42, 'ct': 41, 'ri': 41, 'nh': 43, 'vt': 44, 'me': 45,
+    'philadelphia': 40, 'new york': 41, 'boston': 42, 'drexel hill': 40,
+    // Southeast
+    'fl': 28, 'ga': 33, 'nc': 35, 'sc': 34, 'va': 37, 'md': 39, 'dc': 39,
+    'miami': 26, 'atlanta': 34,
+    // Midwest
+    'il': 40, 'oh': 40, 'mi': 43, 'in': 40, 'wi': 44, 'mn': 45,
+    'chicago': 42, 'detroit': 42,
+    // Southwest
+    'tx': 31, 'az': 34, 'nm': 35, 'co': 39, 'nv': 39,
+    'dallas': 33, 'phoenix': 33, 'denver': 40,
+    // West
+    'ca': 36, 'wa': 47, 'or': 44,
+    'los angeles': 34, 'san francisco': 38, 'seattle': 47,
+    // Default
+    'default': 40
+  };
+  
+  let latitude = 40; // Default to mid-US
+  if (birthPlace) {
+    const place = birthPlace.toLowerCase();
+    for (const [key, lat] of Object.entries(latitudeLookup)) {
+      if (place.includes(key)) {
+        latitude = lat;
+        break;
+      }
+    }
+  }
+  
+  // Calculate Local Sidereal Time (simplified)
+  // Julian Day calculation
+  const a = Math.floor((14 - month) / 12);
+  const y = year + 4800 - a;
+  const m = month + 12 * a - 3;
+  const JD = day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+  
+  // Days since J2000.0
+  const D = JD - 2451545.0 + (hour / 24);
+  
+  // Greenwich Mean Sidereal Time (in hours)
+  let GMST = 18.697374558 + 24.06570982441908 * D;
+  GMST = ((GMST % 24) + 24) % 24;
+  
+  // Approximate longitude offset (rough US estimate based on latitude)
+  const longitude = latitude > 42 ? -90 : latitude > 38 ? -80 : latitude > 34 ? -85 : -100;
+  
+  // Local Sidereal Time
+  let LST = GMST + (longitude / 15);
+  LST = ((LST % 24) + 24) % 24;
+  
+  // Convert LST to degrees (0-360)
+  const lstDegrees = LST * 15;
+  
+  // Ascendant calculation (simplified - actual requires more complex math)
+  // This uses the RAMC (Right Ascension of Midheaven) method
+  const obliquity = 23.4397; // Earth's axial tilt
+  const latRad = latitude * Math.PI / 180;
+  const oblRad = obliquity * Math.PI / 180;
+  
+  // Simplified ascendant calculation
+  let ascDegrees = lstDegrees + 90; // Very simplified
+  
+  // Adjust for latitude (higher latitudes have longer/shorter rising times)
+  const latFactor = Math.cos(latRad);
+  ascDegrees = ascDegrees * (0.8 + 0.2 * latFactor);
+  
+  ascDegrees = ((ascDegrees % 360) + 360) % 360;
+  
+  // Convert degrees to zodiac sign
+  const signs = [
+    'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+  ];
+  
+  const signIndex = Math.floor(ascDegrees / 30);
+  const signDegree = Math.floor(ascDegrees % 30);
+  
+  return {
+    sign: signs[signIndex],
+    degree: signDegree,
+    display: `${signs[signIndex]} ${signDegree}°`
+  };
+}
+
+// Get element for a zodiac sign
+function getSignElement(sign) {
+  const elements = {
+    'Aries': 'Fire', 'Leo': 'Fire', 'Sagittarius': 'Fire',
+    'Taurus': 'Earth', 'Virgo': 'Earth', 'Capricorn': 'Earth',
+    'Gemini': 'Air', 'Libra': 'Air', 'Aquarius': 'Air',
+    'Cancer': 'Water', 'Scorpio': 'Water', 'Pisces': 'Water'
+  };
+  return elements[sign] || null;
+}
+
+// Get modality for a zodiac sign
+function getSignModality(sign) {
+  const modalities = {
+    'Aries': 'Cardinal', 'Cancer': 'Cardinal', 'Libra': 'Cardinal', 'Capricorn': 'Cardinal',
+    'Taurus': 'Fixed', 'Leo': 'Fixed', 'Scorpio': 'Fixed', 'Aquarius': 'Fixed',
+    'Gemini': 'Mutable', 'Virgo': 'Mutable', 'Sagittarius': 'Mutable', 'Pisces': 'Mutable'
+  };
+  return modalities[sign] || null;
+}
+
+// Calculate the dominant element and modality from Sun, Moon, Rising
+function calculateDominantTraits(sunSign, moonSign, ascendant) {
+  const elements = {};
+  const modalities = {};
+  
+  [sunSign, moonSign, ascendant].forEach((sign, idx) => {
+    if (!sign) return;
+    const weight = idx === 0 ? 3 : idx === 1 ? 2 : 2; // Sun=3, Moon=2, Rising=2
+    
+    const element = getSignElement(sign);
+    const modality = getSignModality(sign);
+    
+    if (element) elements[element] = (elements[element] || 0) + weight;
+    if (modality) modalities[modality] = (modalities[modality] || 0) + weight;
+  });
+  
+  const dominantElement = Object.entries(elements).sort((a, b) => b[1] - a[1])[0];
+  const dominantModality = Object.entries(modalities).sort((a, b) => b[1] - a[1])[0];
+  
+  return {
+    dominantElement: dominantElement ? dominantElement[0] : null,
+    dominantModality: dominantModality ? dominantModality[0] : null,
+    elementBreakdown: elements,
+    modalityBreakdown: modalities
+  };
 }
 
 // Get element from Life Path number (numerology-based secondary element)
@@ -908,7 +1082,7 @@ function generateCombinedSignal(easternVibe, westernVibe, hasMaster) {
   return signals.join('; ') || 'NEUTRAL';
 }
 
-function calculateFullNameNumerology(fullName, birthDate = null) {
+function calculateFullNameNumerology(fullName, birthDate = null, birthTime = null, birthPlace = null) {
   const cleanedName = cleanName(fullName);
   
   // Western calculations (Pythagorean-based) - PRIMARY for display
@@ -1073,16 +1247,36 @@ function calculateFullNameNumerology(fullName, birthDate = null) {
     const lifePathNum = result.lifePath.reduced;
     const secondaryElement = getElementFromLifePath(lifePathNum);
     
-    // Estimate moon sign (requires birth time for accuracy)
-    const moonSign = estimateMoonSign(birthDate, null);
+    // Calculate moon sign (more accurate with birth time)
+    const moonSign = estimateMoonSign(birthDate, birthTime);
+    
+    // Calculate Ascendant/Rising sign (requires birth time and location)
+    const ascendantData = calculateAscendant(birthDate, birthTime, birthPlace);
+    
+    // Calculate dominant traits from the Big 3
+    const dominantTraits = calculateDominantTraits(sunSignData.sign, moonSign, ascendantData.sign);
     
     result.astrology = {
       sunSign: sunSignData.sign,
+      sunElement: sunSignData.element,
+      sunModality: sunSignData.modality,
       moonSign: moonSign,
+      moonElement: getSignElement(moonSign),
+      moonModality: getSignModality(moonSign),
+      ascendant: ascendantData.sign,
+      ascendantDegree: ascendantData.degree,
+      ascendantDisplay: ascendantData.display,
+      ascendantElement: getSignElement(ascendantData.sign),
+      ascendantModality: getSignModality(ascendantData.sign),
       element: sunSignData.element,
       secondaryElement: secondaryElement,
       modality: sunSignData.modality,
-      rulingPlanet: sunSignData.ruler
+      rulingPlanet: sunSignData.ruler,
+      dominantElement: dominantTraits.dominantElement,
+      dominantModality: dominantTraits.dominantModality,
+      elementBreakdown: dominantTraits.elementBreakdown,
+      modalityBreakdown: dominantTraits.modalityBreakdown,
+      bigThree: `${sunSignData.sign}/${moonSign}/${ascendantData.sign}`
     };
   }
   
@@ -1133,12 +1327,12 @@ Deno.serve(async (req) => {
         break;
         
       case 'name':
-        // Calculate numerology for a name
-        if (!name) {
-          return Response.json({ error: 'Name required' }, { status: 400 });
-        }
-        result = calculateFullNameNumerology(name, birthDate);
-        break;
+                // Calculate numerology for a name
+                if (!name) {
+                  return Response.json({ error: 'Name required' }, { status: 400 });
+                }
+                result = calculateFullNameNumerology(name, birthDate, body.birthTime, body.birthPlace);
+                break;
         
       case 'family':
         // Calculate for multiple family members

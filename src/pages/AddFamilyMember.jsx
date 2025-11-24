@@ -116,22 +116,24 @@ export default function AddFamilyMember() {
   };
 
   const handleCalculate = async () => {
-    if (!formData.full_name || !formData.birth_date) return;
-    
-    setIsCalculating(true);
-    setCalculatedData(null);
+        if (!formData.full_name || !formData.birth_date) return;
 
-    const response = await base44.functions.invoke('calculateNumerology', {
-      type: 'name',
-      name: formData.full_name,
-      birthDate: formData.birth_date
-    });
+        setIsCalculating(true);
+        setCalculatedData(null);
 
-    if (response.data?.success) {
-      setCalculatedData(response.data.data);
-    }
-    setIsCalculating(false);
-  };
+        const response = await base44.functions.invoke('calculateNumerology', {
+          type: 'name',
+          name: formData.full_name,
+          birthDate: formData.birth_date,
+          birthTime: formData.birth_time_exact || formData.birth_time,
+          birthPlace: formData.birth_place
+        });
+
+        if (response.data?.success) {
+          setCalculatedData(response.data.data);
+        }
+        setIsCalculating(false);
+      };
 
   const handleSave = async () => {
     if (!calculatedData || !userFamily) return;
@@ -500,23 +502,64 @@ export default function AddFamilyMember() {
                                             </div>
 
                   <div className="pt-4 border-t border-white/10">
-                                            <p className="text-xs text-gray-400 mb-2">Astrology</p>
-                                            <div className="flex gap-4 text-sm text-gray-300 flex-wrap">
-                                              <span>☉ {calculatedData.astrology?.sunSign || '-'}</span>
-                                              <span>☽ {calculatedData.astrology?.moonSign || '-'}</span>
+                                            <p className="text-xs text-gray-400 mb-2">Astrology - Big Three</p>
+                                            <div className="flex gap-4 text-sm text-gray-300 flex-wrap mb-2">
+                                              <span title="Sun Sign">☉ {calculatedData.astrology?.sunSign || '-'}</span>
+                                              <span title="Moon Sign">☽ {calculatedData.astrology?.moonSign || '-'}</span>
+                                              <span title="Rising/Ascendant">↑ {calculatedData.astrology?.ascendantDisplay || calculatedData.astrology?.ascendant || '-'}</span>
+                                            </div>
+                                            {calculatedData.astrology?.bigThree && (
+                                              <p className="text-amber-400 text-sm font-medium mb-2">
+                                                {calculatedData.astrology.bigThree}
+                                              </p>
+                                            )}
+                                            <div className="flex gap-4 text-xs text-gray-400 mb-2">
                                               <span>♇ {calculatedData.astrology?.rulingPlanet || '-'}</span>
-                                              <span className="text-xs text-gray-400">{calculatedData.astrology?.modality || '-'}</span>
+                                              <span>{calculatedData.astrology?.modality || '-'}</span>
                                             </div>
                                             <div className="flex gap-2 mt-2 flex-wrap">
                                               <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                calculatedData.astrology?.element === 'Water' ? 'bg-blue-500/30 text-blue-300' :
-                                                calculatedData.astrology?.element === 'Fire' ? 'bg-red-500/30 text-red-300' :
-                                                calculatedData.astrology?.element === 'Air' ? 'bg-cyan-500/30 text-cyan-300' :
+                                                calculatedData.astrology?.sunElement === 'Water' ? 'bg-blue-500/30 text-blue-300' :
+                                                calculatedData.astrology?.sunElement === 'Fire' ? 'bg-red-500/30 text-red-300' :
+                                                calculatedData.astrology?.sunElement === 'Air' ? 'bg-cyan-500/30 text-cyan-300' :
                                                 'bg-green-500/30 text-green-300'
                                               }`}>
-                                                {calculatedData.astrology?.element || '-'} (Sun)
+                                                {calculatedData.astrology?.sunElement || calculatedData.astrology?.element || '-'} ☉
                                               </span>
-                                              {calculatedData.astrology?.secondaryElement && calculatedData.astrology?.secondaryElement !== calculatedData.astrology?.element && (
+                                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                                calculatedData.astrology?.moonElement === 'Water' ? 'bg-blue-500/30 text-blue-300' :
+                                                calculatedData.astrology?.moonElement === 'Fire' ? 'bg-red-500/30 text-red-300' :
+                                                calculatedData.astrology?.moonElement === 'Air' ? 'bg-cyan-500/30 text-cyan-300' :
+                                                'bg-green-500/30 text-green-300'
+                                              }`}>
+                                                {calculatedData.astrology?.moonElement || '-'} ☽
+                                              </span>
+                                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                                calculatedData.astrology?.ascendantElement === 'Water' ? 'bg-blue-500/30 text-blue-300' :
+                                                calculatedData.astrology?.ascendantElement === 'Fire' ? 'bg-red-500/30 text-red-300' :
+                                                calculatedData.astrology?.ascendantElement === 'Air' ? 'bg-cyan-500/30 text-cyan-300' :
+                                                'bg-green-500/30 text-green-300'
+                                              }`}>
+                                                {calculatedData.astrology?.ascendantElement || '-'} ↑
+                                              </span>
+                                            </div>
+                                            {calculatedData.astrology?.dominantElement && (
+                                              <div className="mt-3 p-2 bg-white/5 rounded">
+                                                <p className="text-xs text-gray-400">Dominant Traits</p>
+                                                <p className="text-sm text-white">
+                                                  <span className={`font-medium ${
+                                                    calculatedData.astrology?.dominantElement === 'Water' ? 'text-blue-300' :
+                                                    calculatedData.astrology?.dominantElement === 'Fire' ? 'text-red-300' :
+                                                    calculatedData.astrology?.dominantElement === 'Air' ? 'text-cyan-300' :
+                                                    'text-green-300'
+                                                  }`}>{calculatedData.astrology?.dominantElement}</span>
+                                                  {' + '}
+                                                  <span className="text-purple-300">{calculatedData.astrology?.dominantModality}</span>
+                                                </p>
+                                              </div>
+                                            )}
+                                            {calculatedData.astrology?.secondaryElement && calculatedData.astrology?.secondaryElement !== calculatedData.astrology?.element && (
+                                              <div className="mt-2">
                                                 <span className={`px-2 py-1 rounded text-xs font-medium ${
                                                   calculatedData.astrology?.secondaryElement === 'Water' ? 'bg-blue-500/30 text-blue-300' :
                                                   calculatedData.astrology?.secondaryElement === 'Fire' ? 'bg-red-500/30 text-red-300' :
@@ -525,8 +568,8 @@ export default function AddFamilyMember() {
                                                 }`}>
                                                   {calculatedData.astrology?.secondaryElement} (Life Path)
                                                 </span>
-                                              )}
-                                            </div>
+                                              </div>
+                                            )}
                                           </div>
 
                                           <div className="pt-4 border-t border-white/10">

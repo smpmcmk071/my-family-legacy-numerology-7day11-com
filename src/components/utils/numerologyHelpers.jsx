@@ -25,10 +25,15 @@ export function buildMemberDataFromCalc(calc) {
     karmic_lessons: calc.karmicLessons?.lessons?.join(',') || '',
     sun_sign: calc.astrology?.sunSign || '',
     moon_sign: calc.astrology?.moonSign || '',
+    ascendant: calc.astrology?.ascendant || '',
+    ascendant_degree: calc.astrology?.ascendantDegree || null,
+    big_three: calc.astrology?.bigThree || '',
     zodiac_sign: calc.astrology?.sunSign || '',
     ruling_planet: calc.astrology?.rulingPlanet || '',
     element: calc.astrology?.element || '',
     secondary_element: calc.astrology?.secondaryElement || '',
+    dominant_element: calc.astrology?.dominantElement || '',
+    dominant_modality: calc.astrology?.dominantModality || '',
     modality: calc.astrology?.modality || ''
   };
 }

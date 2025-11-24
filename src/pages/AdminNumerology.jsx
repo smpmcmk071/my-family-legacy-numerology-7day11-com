@@ -56,7 +56,9 @@ export default function AdminNumerology() {
     const response = await base44.functions.invoke('calculateNumerology', {
       type: 'name',
       name: member.full_name,
-      birthDate: member.birth_date
+      birthDate: member.birth_date,
+      birthTime: member.birth_time,
+      birthPlace: member.birth_place
     });
 
     if (response.data?.success) {
@@ -510,7 +512,11 @@ Stephen Maher, 1969-11-07, parent, 3, 11:06 PM EST, Drexel Hill PA"
                                       <TableHead className="text-gray-300">Karmic Lessons</TableHead>
                                       <TableHead className="text-gray-300">Sun</TableHead>
                                       <TableHead className="text-gray-300">Moon</TableHead>
-                                      <TableHead className="text-gray-300">Element</TableHead>
+                                                                <TableHead className="text-gray-300">Rising</TableHead>
+                                                                <TableHead className="text-gray-300">Big Three</TableHead>
+                                                                <TableHead className="text-gray-300">Dom Element</TableHead>
+                                                                <TableHead className="text-gray-300">Dom Modality</TableHead>
+                                                                <TableHead className="text-gray-300">Element</TableHead>
                                       <TableHead className="text-gray-300">2nd Element</TableHead>
                                       <TableHead className="text-gray-300">Modality</TableHead>
                                       <TableHead className="text-gray-300">Ruler</TableHead>
@@ -565,11 +571,23 @@ Stephen Maher, 1969-11-07, parent, 3, 11:06 PM EST, Drexel Hill PA"
                                           {member.sun_sign || '-'}
                                         </TableCell>
                                         <TableCell className="text-gray-300 text-sm whitespace-nowrap">
-                                          {member.moon_sign || '-'}
-                                        </TableCell>
-                                        <TableCell className="text-green-400 text-sm">
-                                          {member.element || '-'}
-                                        </TableCell>
+                                                                      {member.moon_sign || '-'}
+                                                                    </TableCell>
+                                                                    <TableCell className="text-gray-300 text-sm whitespace-nowrap">
+                                                                      {member.ascendant || '-'}
+                                                                    </TableCell>
+                                                                    <TableCell className="text-amber-400 text-sm whitespace-nowrap">
+                                                                      {member.big_three || '-'}
+                                                                    </TableCell>
+                                                                    <TableCell className="text-emerald-400 text-sm">
+                                                                      {member.dominant_element || '-'}
+                                                                    </TableCell>
+                                                                    <TableCell className="text-violet-400 text-sm">
+                                                                      {member.dominant_modality || '-'}
+                                                                    </TableCell>
+                                                                    <TableCell className="text-green-400 text-sm">
+                                                                      {member.element || '-'}
+                                                                    </TableCell>
                                         <TableCell className="text-teal-400 text-sm">
                                           {member.secondary_element || '-'}
                                         </TableCell>
