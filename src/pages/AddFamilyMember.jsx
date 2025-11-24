@@ -142,7 +142,7 @@ export default function AddFamilyMember() {
       full_name: formData.full_name,
       nickname: formData.nickname || formData.full_name.split(' ')[0],
       birth_date: formData.birth_date,
-      birth_time: formData.birth_time_exact || formData.birth_time,
+      birth_time: formData.birth_time_exact || formData.birth_time || '',
       birth_place: formData.birth_place,
       relationship: formData.relationship,
       generation: formData.generation ? parseInt(formData.generation) : null,
