@@ -4,8 +4,9 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { base44 } from '@/api/base44Client';
-import { Calendar, Database, Loader2, CheckCircle2, AlertCircle, Users, RefreshCw, ShieldAlert } from 'lucide-react';
+import { Calendar, Database, Loader2, CheckCircle2, AlertCircle, Users, RefreshCw, ShieldAlert, Sparkles, Star } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { buildMemberDataFromCalc } from '../components/utils/numerologyHelpers';
 
@@ -26,6 +27,14 @@ export default function AdminNumerology() {
   // Import state
   const [importData, setImportData] = useState('');
   const [isImporting, setIsImporting] = useState(false);
+  
+  // Calendar predictions state
+  const [predictionStart, setPredictionStart] = useState('2025-01-01');
+  const [predictionEnd, setPredictionEnd] = useState('2025-01-31');
+  const [selectedMemberForPrediction, setSelectedMemberForPrediction] = useState('');
+  const [predictions, setPredictions] = useState(null);
+  const [predictionSummary, setPredictionSummary] = useState(null);
+  const [isLoadingPredictions, setIsLoadingPredictions] = useState(false);
   
   // Admin check
   const [isAdmin, setIsAdmin] = useState(null);
@@ -439,18 +448,16 @@ export default function AdminNumerology() {
           <CardHeader>
             <CardTitle className="text-white text-lg">Import Family Members</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-gray-400 text-sm">
-              One per line: Name, Birth Date (YYYY-MM-DD), Relationship, Generation, Birth Time, Birth Place
-            </p>
+          <CardContent className="space-y-2">
+                          <p className="text-gray-500 text-xs">
+                            Format: Name, YYYY-MM-DD, Relationship, Gen, Time, Place
+                          </p>
             <textarea
-              value={importData}
-              onChange={(e) => setImportData(e.target.value)}
-              placeholder="John Francis Maher, 1940-11-22, grandparent, 2, morning, Philadelphia PA
-Elizabeth JoAnn Maher, 1942-07-26, grandparent, 2
-Stephen Maher, 1969-11-07, parent, 3, 11:06 PM EST, Drexel Hill PA"
-              className="w-full h-40 bg-white/10 border border-white/20 rounded-lg p-3 text-white placeholder:text-gray-500 text-sm font-mono"
-            />
+                              value={importData}
+                              onChange={(e) => setImportData(e.target.value)}
+                              placeholder="Name, YYYY-MM-DD, relationship, gen, time, place"
+                              className="w-full h-16 bg-white/10 border border-white/20 rounded-lg p-2 text-white placeholder:text-gray-500 text-xs font-mono"
+                            />
             <div className="flex gap-2">
               <Button
                 onClick={importMembers}
@@ -492,6 +499,142 @@ Stephen Maher, 1969-11-07, parent, 3, 11:06 PM EST, Drexel Hill PA"
                 )}
               </Button>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Premium Calendar Predictions */}
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 mt-6">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-amber-400" />
+              Premium Calendar Predictions
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid md:grid-cols-3 gap-4">
+              <div>
+                <label className="text-sm text-gray-300 mb-1 block">Start Date</label>
+                <Input
+                  type="date"
+                  value={predictionStart}
+                  onChange={(e) => setPredictionStart(e.target.value)}
+                  className="bg-white/10 border-white/20 text-white"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-gray-300 mb-1 block">End Date</label>
+                <Input
+                  type="date"
+                  value={predictionEnd}
+                  onChange={(e) => setPredictionEnd(e.target.value)}
+                  className="bg-white/10 border-white/20 text-white"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-gray-300 mb-1 block">Family Member</label>
+                <Select value={selectedMemberForPrediction} onValueChange={setSelectedMemberForPrediction}>
+                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                    <SelectValue placeholder="Universal only" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="universal">Universal Only</SelectItem>
+                    {familyMembers.map(m => (
+                      <SelectItem key={m.id} value={m.id}>
+                        {m.nickname || m.full_name} (LP: {m.life_path_western || '?'})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <Button
+              onClick={async () => {
+                setIsLoadingPredictions(true);
+                const response = await base44.functions.invoke('populateCalendarPredictions', {
+                  startDate: predictionStart,
+                  endDate: predictionEnd,
+                  familyMemberId: selectedMemberForPrediction && selectedMemberForPrediction !== 'universal' ? selectedMemberForPrediction : null
+                });
+                if (response.data?.success) {
+                  setPredictions(response.data.data.predictions);
+                  setPredictionSummary(response.data.data.summary);
+                }
+                setIsLoadingPredictions(false);
+              }}
+              disabled={isLoadingPredictions}
+              className="bg-amber-600 hover:bg-amber-700"
+            >
+              {isLoadingPredictions ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Generate Predictions
+                </>
+              )}
+            </Button>
+
+            {predictionSummary && (
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-2 p-3 bg-white/5 rounded-lg">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-white">{predictionSummary.total_days}</p>
+                  <p className="text-xs text-gray-400">Total Days</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-amber-400">{predictionSummary.master_days}</p>
+                  <p className="text-xs text-gray-400">Master Days</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-green-400">{predictionSummary.aligned_days}</p>
+                  <p className="text-xs text-gray-400">Aligned Days</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-purple-400">{predictionSummary.power_days}</p>
+                  <p className="text-xs text-gray-400">Power Days</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-cyan-400">{predictionSummary.best_days_for_new_starts?.length || 0}</p>
+                  <p className="text-xs text-gray-400">New Start Days</p>
+                </div>
+              </div>
+            )}
+
+            {predictions && predictions.length > 0 && (
+              <div className="overflow-x-auto rounded-lg border border-white/10 max-h-[400px] overflow-y-auto">
+                <Table>
+                  <TableHeader className="sticky top-0 bg-slate-900 z-10">
+                    <TableRow className="border-white/10">
+                      <TableHead className="text-gray-300">Date</TableHead>
+                      <TableHead className="text-gray-300">U-Day</TableHead>
+                      <TableHead className="text-gray-300">P-Day</TableHead>
+                      <TableHead className="text-gray-300">Universal Vibe</TableHead>
+                      <TableHead className="text-gray-300">Special</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {predictions.map(p => (
+                      <TableRow key={p.date} className={`border-white/10 ${p.is_master_day ? 'bg-amber-500/10' : p.is_aligned ? 'bg-green-500/10' : p.is_power_day ? 'bg-purple-500/10' : ''}`}>
+                        <TableCell className="text-white font-medium">{p.date}</TableCell>
+                        <TableCell className="text-amber-400 font-bold">{p.universal_day_number}</TableCell>
+                        <TableCell className="text-purple-400 font-bold">{p.personal_day_number || '-'}</TableCell>
+                        <TableCell className="text-gray-300 text-xs">{p.universal_vibe}</TableCell>
+                        <TableCell>
+                          <div className="flex gap-1">
+                            {p.is_master_day && <Star className="w-4 h-4 text-amber-400" />}
+                            {p.is_aligned && <CheckCircle2 className="w-4 h-4 text-green-400" />}
+                            {p.is_power_day && <Sparkles className="w-4 h-4 text-purple-400" />}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
           </CardContent>
         </Card>
 
