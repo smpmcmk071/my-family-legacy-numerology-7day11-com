@@ -483,18 +483,41 @@ export default function AddFamilyMember() {
                       </div>
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg">
-                      <p className="text-xs text-gray-400 mb-1">Karmic Debt</p>
-                      <div className="flex gap-1 flex-wrap">
-                        {calculatedData.karmicDebt?.numbers?.length > 0 ? (
-                          calculatedData.karmicDebt.numbers.map((num, i) => (
-                            <span key={i} className="px-2 py-1 bg-red-500/20 text-red-300 rounded text-sm">{num}</span>
-                          ))
-                        ) : (
-                          <span className="text-gray-500 text-sm">None</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                                                <p className="text-xs text-gray-400 mb-1">Karmic Debt</p>
+                                                <div className="flex gap-1 flex-wrap">
+                                                  {calculatedData.karmicDebt?.numbers?.length > 0 ? (
+                                                    calculatedData.karmicDebt.numbers.map((num, i) => (
+                                                      <span key={i} className="px-2 py-1 bg-red-500/20 text-red-300 rounded text-sm">{num}</span>
+                                                    ))
+                                                  ) : (
+                                                    <span className="text-gray-500 text-sm">None</span>
+                                                  )}
+                                                </div>
+                                              </div>
+                                              <div className="p-3 bg-white/5 rounded-lg col-span-2">
+                                                <p className="text-xs text-gray-400 mb-1">Karmic Lessons (Missing Numbers)</p>
+                                                <div className="flex gap-1 flex-wrap">
+                                                  {calculatedData.karmicLessons?.lessons?.length > 0 ? (
+                                                    calculatedData.karmicLessons.lessons.map((num, i) => (
+                                                      <span key={i} className="px-2 py-1 bg-orange-500/20 text-orange-300 rounded text-sm" title={calculatedData.karmicLessons.lessonMeanings?.find(l => l.number === num)?.meaning}>
+                                                        {num}
+                                                      </span>
+                                                    ))
+                                                  ) : (
+                                                    <span className="text-gray-500 text-sm">None - all numbers present!</span>
+                                                  )}
+                                                </div>
+                                                {calculatedData.karmicLessons?.lessons?.length > 0 && (
+                                                  <div className="mt-2 text-xs text-gray-400">
+                                                    {calculatedData.karmicLessons.lessonMeanings?.map((lesson, i) => (
+                                                      <p key={i} className="mt-1">
+                                                        <span className="text-orange-400">{lesson.number}:</span> {lesson.meaning}
+                                                      </p>
+                                                    ))}
+                                                  </div>
+                                                )}
+                                              </div>
+                                            </div>
 
                   <div className="pt-4 border-t border-white/10">
                     <p className="text-xs text-gray-400 mb-2">Name Totals</p>
