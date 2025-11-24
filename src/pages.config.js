@@ -14,6 +14,7 @@ import ChristianLegacy from './pages/ChristianLegacy';
 import AdminNumerology from './pages/AdminNumerology';
 import AddFamilyMember from './pages/AddFamilyMember';
 import CalendarEvents from './pages/CalendarEvents';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -38,4 +39,5 @@ export const PAGES = {
 export const pagesConfig = {
     mainPage: "MaherLegacy",
     Pages: PAGES,
+    Layout: __Layout,
 };
