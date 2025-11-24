@@ -169,7 +169,8 @@ export default function AddFamilyMember() {
       chaldean_total: calculatedData.chaldean?.total,
       gematria_total: calculatedData.gematria?.total,
       karmic_debt_number: calculatedData.karmicDebt?.numbers?.join(',') || '',
-      is_active: true
+              karmic_lessons: calculatedData.karmicLessons?.lessons?.join(',') || '',
+              is_active: true
     };
 
     if (editingMemberId) {
