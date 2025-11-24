@@ -7,6 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { Calendar, Database, Loader2, CheckCircle2, AlertCircle, Users, RefreshCw } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
+import { buildMemberDataFromCalc } from '../components/utils/numerologyHelpers';
 
 export default function AdminNumerology() {
   const [startDate, setStartDate] = useState('2025-01-01');
@@ -60,33 +61,8 @@ export default function AdminNumerology() {
 
     if (response.data?.success) {
       const calc = response.data.data;
-      await base44.entities.FamilyMember.update(member.id, {
-        life_path_western: calc.lifePath?.reduced,
-        life_path_chaldean: calc.lifePathChaldean?.reduced,
-        life_path_master: calc.lifePath?.display,
-        birthday_vibe: calc.birthday?.display,
-        birthday_number: calc.birthday?.reduced,
-        birthday_month_number: calc.birthdayMonth?.reduced,
-        expression_western: calc.expression?.reduced,
-        expression_chaldean: calc.expressionChaldean?.reduced,
-        expression_master: calc.expression?.display,
-        life_purpose: calc.expression?.reduced,
-        soul_urge_western: calc.soulUrge?.reduced,
-        soul_urge_chaldean: calc.soulUrgeChaldean?.reduced,
-        soul_urge_master: calc.soulUrge?.display,
-        personality_western: calc.personality?.reduced,
-        personality_chaldean: calc.personalityChaldean?.reduced,
-        personality_master: calc.personality?.display,
-        master_numbers: calc.masterNumbers?.join(',') || '',
-        pythagorean_total: calc.pythagorean?.total,
-        chaldean_total: calc.chaldean?.total,
-        gematria_total: calc.gematria?.total,
-        karmic_debt_number: calc.karmicDebt?.numbers?.join(',') || '',
-                  karmic_lessons: calc.karmicLessons?.lessons?.join(',') || '',
-                  sun_sign: calc.astrology?.sunSign || member.sun_sign,
-        element: calc.astrology?.element,
-        ruling_planet: calc.astrology?.rulingPlanet
-      });
+      const memberData = buildMemberDataFromCalc(calc);
+      await base44.entities.FamilyMember.update(member.id, memberData);
       return true;
     }
     return false;

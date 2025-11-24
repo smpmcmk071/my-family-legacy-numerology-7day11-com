@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { base44 } from '@/api/base44Client';
 import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw, MapPin } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
+import { buildMemberDataFromCalc } from '../components/utils/numerologyHelpers';
 
 // Simple ZIP code to City/State lookup (common US ZIP codes)
 const ZIP_LOOKUP = {
@@ -137,47 +138,19 @@ export default function AddFamilyMember() {
 
     setIsSaving(true);
 
-    const memberData = {
-      family_id: userFamily.id,
-      full_name: formData.full_name,
-      nickname: formData.nickname || formData.full_name.split(' ')[0],
-      birth_date: formData.birth_date,
-      birth_time: formData.birth_time_exact || formData.birth_time || '',
-      birth_place: formData.birth_place,
-      relationship: formData.relationship,
-      generation: formData.generation ? parseInt(formData.generation) : null,
-      sun_sign: formData.sun_sign,
-      // Western (primary)
-      life_path_western: calculatedData.lifePath?.reduced,
-      life_path_chaldean: calculatedData.lifePathChaldean?.reduced,
-      life_path_master: calculatedData.lifePath?.display,
-      birthday_vibe: calculatedData.birthday?.display,
-      birthday_number: calculatedData.birthday?.reduced,
-      birthday_month_number: calculatedData.birthdayMonth?.reduced,
-      expression_western: calculatedData.expression?.reduced,
-      expression_chaldean: calculatedData.expressionChaldean?.reduced,
-      expression_master: calculatedData.expression?.display,
-      life_purpose: calculatedData.expression?.reduced,
-      soul_urge_western: calculatedData.soulUrge?.reduced,
-      soul_urge_chaldean: calculatedData.soulUrgeChaldean?.reduced,
-      soul_urge_master: calculatedData.soulUrge?.display,
-      personality_western: calculatedData.personality?.reduced,
-      personality_chaldean: calculatedData.personalityChaldean?.reduced,
-      personality_master: calculatedData.personality?.display,
-      master_numbers: calculatedData.masterNumbers?.join(',') || '',
-      pythagorean_total: calculatedData.pythagorean?.total,
-      chaldean_total: calculatedData.chaldean?.total,
-      gematria_total: calculatedData.gematria?.total,
-      karmic_debt_number: calculatedData.karmicDebt?.numbers?.join(',') || '',
-              karmic_lessons: calculatedData.karmicLessons?.lessons?.join(',') || '',
-              sun_sign: calculatedData.astrology?.sunSign || '',
-                      zodiac_sign: calculatedData.astrology?.sunSign || '', // Same as sun sign
-                      ruling_planet: calculatedData.astrology?.rulingPlanet || '',
-                      element: calculatedData.astrology?.element || '',
-                      secondary_element: calculatedData.astrology?.secondaryElement || '',
-                      modality: calculatedData.astrology?.modality || '',
-                      is_active: true
-    };
+    const calcData = buildMemberDataFromCalc(calculatedData);
+      const memberData = {
+        family_id: userFamily.id,
+        full_name: formData.full_name,
+        nickname: formData.nickname || formData.full_name.split(' ')[0],
+        birth_date: formData.birth_date,
+        birth_time: formData.birth_time_exact || formData.birth_time || '',
+        birth_place: formData.birth_place,
+        relationship: formData.relationship,
+        generation: formData.generation ? parseInt(formData.generation) : null,
+        ...calcData,
+        is_active: true
+      };
 
     if (editingMemberId) {
       await base44.entities.FamilyMember.update(editingMemberId, memberData);
