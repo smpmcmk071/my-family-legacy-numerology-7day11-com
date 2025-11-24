@@ -43,7 +43,6 @@ export default function AddFamilyMember() {
     birth_place: '',
     relationship: '',
     generation: '',
-    sun_sign: ''
   });
   const [isCalculating, setIsCalculating] = useState(false);
   const [calculatedData, setCalculatedData] = useState(null);
@@ -93,8 +92,7 @@ export default function AddFamilyMember() {
       birth_time: member.birth_time || '',
       birth_place: member.birth_place || '',
       relationship: member.relationship || '',
-      generation: member.generation?.toString() || '',
-      sun_sign: member.sun_sign || ''
+      generation: member.generation?.toString() || ''
     });
     setCalculatedData(null);
   };
@@ -108,8 +106,7 @@ export default function AddFamilyMember() {
       birth_time: '',
       birth_place: '',
       relationship: '',
-      generation: '',
-      sun_sign: ''
+      generation: ''
     });
     setCalculatedData(null);
     setSaved(false);
@@ -172,11 +169,6 @@ export default function AddFamilyMember() {
       clearForm();
     }, 2000);
   };
-
-  const sunSigns = [
-    'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
-    'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 md:p-12">
@@ -339,20 +331,6 @@ export default function AddFamilyMember() {
                     <SelectItem value="2">2 - Grandparents</SelectItem>
                     <SelectItem value="3">3 - Parents</SelectItem>
                     <SelectItem value="4">4 - Children</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="text-sm text-gray-300 mb-1 block">Sun Sign</label>
-                <Select value={formData.sun_sign} onValueChange={(v) => setFormData({ ...formData, sun_sign: v })}>
-                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                    <SelectValue placeholder="Select sun sign" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sunSigns.map(sign => (
-                      <SelectItem key={sign} value={sign}>{sign}</SelectItem>
-                    ))}
                   </SelectContent>
                 </Select>
               </div>
