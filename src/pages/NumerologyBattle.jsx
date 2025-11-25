@@ -849,13 +849,13 @@ export default function NumerologyBattle() {
                   
                   {/* Battle Summary */}
                   <div className="grid md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/20">
-                    {battleSummary.isTeamBattle && battleSummary.team1Final && battleSummary.team2Final ? (
+                    {battleSummary.isTeamBattle ? (
                       <>
                         {/* Team 1 Summary */}
                         <div className="p-4 bg-blue-900/30 rounded-lg">
                           <h3 className="text-white font-bold mb-2">Team 1 {battleSummary.winningTeam === 1 && '🏆'}</h3>
                           <div className="space-y-2">
-                            {battleSummary.team1Final.map((f, i) => (
+                            {battleSummary.team1Final?.map((f, i) => (
                               <div key={i} className="flex justify-between text-sm">
                                 <span className="text-gray-300">{f.name}</span>
                                 <span className={f.hp > 0 ? 'text-green-400' : 'text-red-400'}>
@@ -869,7 +869,7 @@ export default function NumerologyBattle() {
                         <div className="p-4 bg-red-900/30 rounded-lg">
                           <h3 className="text-white font-bold mb-2">Team 2 {battleSummary.winningTeam === 2 && '🏆'}</h3>
                           <div className="space-y-2">
-                            {battleSummary.team2Final.map((f, i) => (
+                            {battleSummary.team2Final?.map((f, i) => (
                               <div key={i} className="flex justify-between text-sm">
                                 <span className="text-gray-300">{f.name}</span>
                                 <span className={f.hp > 0 ? 'text-green-400' : 'text-red-400'}>
@@ -880,7 +880,7 @@ export default function NumerologyBattle() {
                           </div>
                         </div>
                       </>
-                    ) : !battleSummary.isTeamBattle ? (
+                    ) : (
                       <>
                         {/* Player 1 Summary */}
                         <div className="p-4 bg-blue-900/30 rounded-lg">
@@ -918,7 +918,7 @@ export default function NumerologyBattle() {
                           )}
                         </div>
                       </>
-                    ) : null}
+                    )}
                   </div>
                 </CardContent>
               </Card>
