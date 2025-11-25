@@ -768,21 +768,43 @@ export default function NumerologyBattle() {
         {/* Battle Arena */}
         {(battleState === 'ready' || battleState === 'fighting' || battleState === 'finished') && (
           <>
-            {/* Player Cards */}
+            {/* Player/Team Cards */}
             <div className="flex gap-4 mb-6">
-              <PlayerCard 
-                stats={player1Stats} 
-                member={familyMembers.find(m => m.id === player1Id)}
-                isLeft={true}
-              />
-              <div className="flex items-center">
-                <span className="text-4xl font-bold text-amber-400">VS</span>
-              </div>
-              <PlayerCard 
-                stats={player2Stats} 
-                member={familyMembers.find(m => m.id === player2Id)}
-                isLeft={false}
-              />
+              {battleMode === '1v1' ? (
+                <>
+                  <PlayerCard 
+                    stats={player1Stats} 
+                    member={familyMembers.find(m => m.id === player1Id)}
+                    isLeft={true}
+                  />
+                  <div className="flex items-center">
+                    <span className="text-4xl font-bold text-amber-400">VS</span>
+                  </div>
+                  <PlayerCard 
+                    stats={player2Stats} 
+                    member={familyMembers.find(m => m.id === player2Id)}
+                    isLeft={false}
+                  />
+                </>
+              ) : (
+                <>
+                  <TeamCard
+                    team={team1Stats}
+                    members={familyMembers}
+                    isLeft={true}
+                    teamNumber={1}
+                  />
+                  <div className="flex items-center">
+                    <span className="text-4xl font-bold text-amber-400">VS</span>
+                  </div>
+                  <TeamCard
+                    team={team2Stats}
+                    members={familyMembers}
+                    isLeft={false}
+                    teamNumber={2}
+                  />
+                </>
+              )}
             </div>
 
             {/* Battle Controls */}
