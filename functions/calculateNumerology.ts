@@ -1099,13 +1099,27 @@ function calculateFullNameNumerology(fullName, birthDate = null, birthTime = nul
   const masters = detectNameMasterNumbers(cleanedName, birthDate);
   
   // Collect master numbers as array (from Western calculations)
+  // Include higher master numbers: 44, 55, 66, 77, 88, 99
+  const ALL_MASTER_NUMBERS = [11, 22, 33, 44, 55, 66, 77, 88, 99];
   const masterNumbersArray = [];
-  if ([11, 22, 33].includes(expressionWestern.sum)) masterNumbersArray.push(expressionWestern.sum);
-  else if ([11, 22, 33].includes(expressionWestern.reduced)) masterNumbersArray.push(expressionWestern.reduced);
-  if ([11, 22, 33].includes(soulUrgeWestern.sum)) masterNumbersArray.push(soulUrgeWestern.sum);
-  else if ([11, 22, 33].includes(soulUrgeWestern.reduced)) masterNumbersArray.push(soulUrgeWestern.reduced);
-  if ([11, 22, 33].includes(personalityWestern.sum)) masterNumbersArray.push(personalityWestern.sum);
-  else if ([11, 22, 33].includes(personalityWestern.reduced)) masterNumbersArray.push(personalityWestern.reduced);
+  
+  if (ALL_MASTER_NUMBERS.includes(expressionWestern.sum)) masterNumbersArray.push(expressionWestern.sum);
+  else if (ALL_MASTER_NUMBERS.includes(expressionWestern.reduced)) masterNumbersArray.push(expressionWestern.reduced);
+  if (ALL_MASTER_NUMBERS.includes(soulUrgeWestern.sum)) masterNumbersArray.push(soulUrgeWestern.sum);
+  else if (ALL_MASTER_NUMBERS.includes(soulUrgeWestern.reduced)) masterNumbersArray.push(soulUrgeWestern.reduced);
+  if (ALL_MASTER_NUMBERS.includes(personalityWestern.sum)) masterNumbersArray.push(personalityWestern.sum);
+  else if (ALL_MASTER_NUMBERS.includes(personalityWestern.reduced)) masterNumbersArray.push(personalityWestern.reduced);
+  
+  // Also check Chaldean for higher master numbers (like 77)
+  if (ALL_MASTER_NUMBERS.includes(expressionChaldean.sum) && !masterNumbersArray.includes(expressionChaldean.sum)) {
+    masterNumbersArray.push(expressionChaldean.sum);
+  }
+  if (ALL_MASTER_NUMBERS.includes(soulUrgeChaldean.sum) && !masterNumbersArray.includes(soulUrgeChaldean.sum)) {
+    masterNumbersArray.push(soulUrgeChaldean.sum);
+  }
+  if (ALL_MASTER_NUMBERS.includes(personalityChaldean.sum) && !masterNumbersArray.includes(personalityChaldean.sum)) {
+    masterNumbersArray.push(personalityChaldean.sum);
+  }
   
   const result = {
     // Name info
