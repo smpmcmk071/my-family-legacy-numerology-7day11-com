@@ -7,6 +7,17 @@ import { base44 } from '@/api/base44Client';
 import { Swords, Zap, Shield, Heart, Wind, Sparkles, Trophy, RotateCcw, Loader2, History } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import NumberBadge from '../components/legacy/NumberBadge';
+import { 
+  AI_PERSONALITIES, 
+  SPECIAL_ABILITIES,
+  determinePersonality, 
+  makeAIDecision, 
+  calculateAIDamage,
+  calculateAIDefense,
+  getAICritChance,
+  shouldAIHeal,
+  getAIRegenAmount
+} from '../components/battle/BattleAI';
 
 export default function NumerologyBattle() {
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -22,6 +33,9 @@ export default function NumerologyBattle() {
   const [accessDenied, setAccessDenied] = useState(false);
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [battleHistory, setBattleHistory] = useState([]);
+  const [player1Personality, setPlayer1Personality] = useState('balanced');
+  const [player2Personality, setPlayer2Personality] = useState('balanced');
+  const [activeBuffs, setActiveBuffs] = useState({ p1: {}, p2: {} });
 
   useEffect(() => {
     loadFamilyMembers();
@@ -70,16 +84,28 @@ export default function NumerologyBattle() {
     if (response.data?.success) {
       const p1Data = response.data.data.player1;
       const p2Data = response.data.data.player2;
+      const p1Member = familyMembers.find(m => m.id === player1Id);
+      const p2Member = familyMembers.find(m => m.id === player2Id);
+      
+      // Determine AI personalities based on numerology
+      const p1Pers = determinePersonality(p1Member);
+      const p2Pers = determinePersonality(p2Member);
+      setPlayer1Personality(p1Pers);
+      setPlayer2Personality(p2Pers);
+      
       setPlayer1Stats({ 
         ...p1Data.stats, 
         name: p1Data.name,
-        abilities: p1Data.stats.specialAbilities 
+        abilities: p1Data.stats.specialAbilities,
+        personality: p1Pers
       });
       setPlayer2Stats({ 
         ...p2Data.stats, 
         name: p2Data.name,
-        abilities: p2Data.stats.specialAbilities 
+        abilities: p2Data.stats.specialAbilities,
+        personality: p2Pers
       });
+      setActiveBuffs({ p1: {}, p2: {} });
       setBattleState('ready');
     }
     setIsLoading(false);
@@ -103,24 +129,94 @@ export default function NumerologyBattle() {
     const log = [];
     let turn = 0;
     const maxTurns = 20;
+    let buffs = { p1: {}, p2: {} };
+    
+    // Get personalities
+    const p1Pers = player1Personality;
+    const p2Pers = player2Personality;
     
     // Determine who goes first based on speed
     let attacker = p1.speed >= p2.speed ? p1 : p2;
     let defender = attacker === p1 ? p2 : p1;
+    let attackerPers = attacker === p1 ? p1Pers : p2Pers;
+    let defenderPers = attacker === p1 ? p2Pers : p1Pers;
+    let attackerBuffKey = attacker === p1 ? 'p1' : 'p2';
+    let defenderBuffKey = attacker === p1 ? 'p2' : 'p1';
     
-    log.push({ type: 'info', text: `⚔️ Battle begins! ${attacker.name} has higher speed and attacks first!` });
+    log.push({ type: 'info', text: `⚔️ Battle begins! ${attacker.name} (${AI_PERSONALITIES[attackerPers].name}) attacks first!` });
+    log.push({ type: 'info', text: `🎭 ${p1.name}: ${AI_PERSONALITIES[p1Pers].name} | ${p2.name}: ${AI_PERSONALITIES[p2Pers].name}` });
     
     while (p1.currentHp > 0 && p2.currentHp > 0 && turn < maxTurns) {
       turn++;
       
-      // Calculate damage
+      // Decrement buff durations
+      Object.keys(buffs[attackerBuffKey]).forEach(key => {
+        if (buffs[attackerBuffKey][key]?.duration) {
+          buffs[attackerBuffKey][key].duration--;
+          if (buffs[attackerBuffKey][key].duration <= 0) {
+            delete buffs[attackerBuffKey][key];
+          }
+        }
+      });
+      
+      // AI Decision Making
+      const decision = makeAIDecision(
+        attacker, defender, attackerPers, turn, buffs[attackerBuffKey]
+      );
+      
+      // Log special ability activation
+      if (decision.specialTriggered) {
+        log.push({ type: 'special', text: decision.message });
+        
+        // Apply buff effects
+        const ability = decision.specialTriggered;
+        if (ability.type === 'buff') {
+          if (ability.attackBoost) buffs[attackerBuffKey].attackBoost = ability.attackBoost;
+          if (ability.defenseBoost) buffs[attackerBuffKey].defenseBoost = ability.defenseBoost;
+          if (ability.critBoost) buffs[attackerBuffKey].critFocusActive = true;
+          if (ability.evasionBoost) attacker.evasion += ability.evasionBoost;
+          if (ability.duration) buffs[attackerBuffKey].duration = ability.duration;
+          if (ability.oneTime) buffs[attackerBuffKey][ability.name + '_used'] = true;
+        }
+        if (ability.type === 'debuff') {
+          buffs[defenderBuffKey].enemyDebuffed = true;
+          if (ability.enemyDefenseReduce) buffs[defenderBuffKey].defenseReduction = ability.enemyDefenseReduce;
+        }
+        if (ability.type === 'defensive') {
+          buffs[attackerBuffKey].shieldActive = true;
+          buffs[attackerBuffKey].shieldDuration = ability.duration;
+        }
+        if (ability.type === 'heal') {
+          const healAmount = Math.floor(attacker.health * ability.healPercent);
+          attacker.currentHp = Math.min(attacker.health, attacker.currentHp + healAmount);
+          log.push({ type: 'heal', text: `💚 ${attacker.name} heals for ${healAmount} HP!` });
+        }
+      }
+      
+      // Calculate damage with AI modifiers
       const baseDamage = attacker.attack + Math.floor(Math.random() * 10);
-      const defense = defender.defense * 0.5;
+      const aiDamage = calculateAIDamage(baseDamage, attacker, defender, decision, buffs[attackerBuffKey]);
+      
+      // Calculate defense with modifiers
+      let defenseValue = calculateAIDefense(defender.defense, defenderPers, buffs[defenderBuffKey], defender.currentHp / defender.health);
+      if (buffs[defenderBuffKey].defenseReduction) {
+        defenseValue *= buffs[defenderBuffKey].defenseReduction;
+      }
+      const defense = defenseValue * 0.5;
+      
+      // Get AI crit chance
+      const critChance = getAICritChance(attacker.critChance, attackerPers, buffs[attackerBuffKey]);
       const evasionRoll = Math.random() * 100;
       
       // Check for critical hit
       const critRoll = Math.random();
-      const isCrit = critRoll < attacker.critChance;
+      const isCrit = critRoll < critChance;
+      
+      // Check for counter attack
+      let counterTriggered = false;
+      if (buffs[defenderBuffKey].counterStance && Math.random() < 0.5) {
+        counterTriggered = true;
+      }
       
       // Check for evasion
       if (evasionRoll < defender.evasion) {
@@ -130,7 +226,7 @@ export default function NumerologyBattle() {
           text: `${defender.name} evades ${attacker.name}'s attack! 💨` 
         });
       } else {
-        let damage = Math.max(1, Math.floor(baseDamage - defense));
+        let damage = Math.max(1, Math.floor(aiDamage - defense));
         if (isCrit) {
           damage = Math.floor(damage * 1.5);
           log.push({ 
@@ -148,27 +244,37 @@ export default function NumerologyBattle() {
           });
         }
         defender.currentHp -= damage;
+        
+        // Counter attack
+        if (counterTriggered && defender.currentHp > 0) {
+          const counterDamage = Math.floor(attacker.attack * 0.6);
+          attacker.currentHp -= counterDamage;
+          log.push({ type: 'counter', text: `⚡ ${defender.name} counters for ${counterDamage} damage!` });
+        }
       }
       
-      // Regeneration
-      if (attacker.regen > 0 && attacker.currentHp < attacker.health) {
-        const healAmount = Math.min(attacker.regen, attacker.health - attacker.currentHp);
+      // AI Regeneration decision
+      if (shouldAIHeal(attacker, attackerPers, buffs[attackerBuffKey]) && attacker.currentHp < attacker.health) {
+        const healAmount = Math.min(attacker.regen * 2, attacker.health - attacker.currentHp);
         attacker.currentHp += healAmount;
         log.push({ 
           type: 'heal', 
           attacker: attacker.name,
           text: `✨ ${attacker.name} regenerates ${healAmount} HP!` 
         });
+      } else if (attacker.regen > 0 && attacker.currentHp < attacker.health) {
+        // Normal regen
+        const healAmount = Math.min(attacker.regen, attacker.health - attacker.currentHp);
+        attacker.currentHp += healAmount;
+        if (healAmount > 0) {
+          log.push({ type: 'heal', attacker: attacker.name, text: `✨ ${attacker.name} regenerates ${healAmount} HP!` });
+        }
       }
       
       // Update UI
-      if (attacker === p1) {
-        setPlayer1Stats(prev => ({ ...prev, currentHp: p1.currentHp }));
-        setPlayer2Stats(prev => ({ ...prev, currentHp: p2.currentHp }));
-      } else {
-        setPlayer1Stats(prev => ({ ...prev, currentHp: p1.currentHp }));
-        setPlayer2Stats(prev => ({ ...prev, currentHp: p2.currentHp }));
-      }
+      setPlayer1Stats(prev => ({ ...prev, currentHp: p1.currentHp }));
+      setPlayer2Stats(prev => ({ ...prev, currentHp: p2.currentHp }));
+      setActiveBuffs({ ...buffs });
       
       setBattleLog([...log]);
       setCurrentTurn(turn);
@@ -178,6 +284,8 @@ export default function NumerologyBattle() {
       
       // Swap attacker/defender
       [attacker, defender] = [defender, attacker];
+      [attackerPers, defenderPers] = [defenderPers, attackerPers];
+      [attackerBuffKey, defenderBuffKey] = [defenderBuffKey, attackerBuffKey];
     }
     
     // Determine winner
@@ -224,6 +332,7 @@ export default function NumerologyBattle() {
     setBattleLog([]);
     setWinner(null);
     setCurrentTurn(0);
+    setActiveBuffs({ p1: {}, p2: {} });
     // Reset HP to full
     setPlayer1Stats(prev => ({ ...prev, currentHp: prev.health }));
     setPlayer2Stats(prev => ({ ...prev, currentHp: prev.health }));
@@ -321,6 +430,25 @@ export default function NumerologyBattle() {
               <span className="text-purple-400 font-bold">{stats.evasion}%</span>
             </div>
           </div>
+          
+          {/* AI Personality */}
+          {stats.personality && (
+            <div className="pt-2 border-t border-white/10">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-xs text-gray-400">AI Style</p>
+                <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                  stats.personality === 'aggressive' ? 'bg-red-500/30 text-red-300' :
+                  stats.personality === 'defensive' ? 'bg-blue-500/30 text-blue-300' :
+                  stats.personality === 'berserker' ? 'bg-orange-500/30 text-orange-300' :
+                  stats.personality === 'tactician' ? 'bg-purple-500/30 text-purple-300' :
+                  'bg-gray-500/30 text-gray-300'
+                }`}>
+                  {AI_PERSONALITIES[stats.personality]?.name || 'Balanced'}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500">{AI_PERSONALITIES[stats.personality]?.description}</p>
+            </div>
+          )}
           
           {/* Special Abilities */}
           {stats.abilities && stats.abilities.length > 0 && (
@@ -528,6 +656,8 @@ export default function NumerologyBattle() {
                           entry.type === 'miss' ? 'bg-gray-500/20 text-gray-400' :
                           entry.type === 'heal' ? 'bg-green-500/20 text-green-300' :
                           entry.type === 'info' ? 'bg-blue-500/20 text-blue-300' :
+                          entry.type === 'special' ? 'bg-purple-500/20 text-purple-300' :
+                          entry.type === 'counter' ? 'bg-orange-500/20 text-orange-300' :
                           'bg-white/5 text-gray-300'
                         }`}
                       >
