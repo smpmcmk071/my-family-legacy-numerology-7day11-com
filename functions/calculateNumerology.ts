@@ -1128,26 +1128,50 @@ function calculateFullNameNumerology(fullName, birthDate = null, birthTime = nul
   
   // Collect master numbers as array (from Western calculations)
   // Include higher master numbers: 44, 55, 66, 77, 88, 99
+  // ALSO capture master numbers that appear DURING the reduction process (e.g., 74 -> 11 -> 2)
   const ALL_MASTER_NUMBERS = [11, 22, 33, 44, 55, 66, 77, 88, 99];
   const masterNumbersArray = [];
   
-  if (ALL_MASTER_NUMBERS.includes(expressionWestern.sum)) masterNumbersArray.push(expressionWestern.sum);
-  else if (ALL_MASTER_NUMBERS.includes(expressionWestern.reduced)) masterNumbersArray.push(expressionWestern.reduced);
-  if (ALL_MASTER_NUMBERS.includes(soulUrgeWestern.sum)) masterNumbersArray.push(soulUrgeWestern.sum);
-  else if (ALL_MASTER_NUMBERS.includes(soulUrgeWestern.reduced)) masterNumbersArray.push(soulUrgeWestern.reduced);
-  if (ALL_MASTER_NUMBERS.includes(personalityWestern.sum)) masterNumbersArray.push(personalityWestern.sum);
-  else if (ALL_MASTER_NUMBERS.includes(personalityWestern.reduced)) masterNumbersArray.push(personalityWestern.reduced);
+  // Check Expression for master numbers (raw sum AND any masters found during reduction)
+  const expressionReduction = reduceWithMasters(expressionWestern.sum);
+  expressionReduction.masters.forEach(m => {
+    if (!masterNumbersArray.includes(m)) masterNumbersArray.push(m);
+  });
+  if (ALL_MASTER_NUMBERS.includes(expressionWestern.sum) && !masterNumbersArray.includes(expressionWestern.sum)) {
+    masterNumbersArray.push(expressionWestern.sum);
+  }
+  
+  // Check Soul Urge for master numbers
+  const soulUrgeReduction = reduceWithMasters(soulUrgeWestern.sum);
+  soulUrgeReduction.masters.forEach(m => {
+    if (!masterNumbersArray.includes(m)) masterNumbersArray.push(m);
+  });
+  if (ALL_MASTER_NUMBERS.includes(soulUrgeWestern.sum) && !masterNumbersArray.includes(soulUrgeWestern.sum)) {
+    masterNumbersArray.push(soulUrgeWestern.sum);
+  }
+  
+  // Check Personality for master numbers
+  const personalityReduction = reduceWithMasters(personalityWestern.sum);
+  personalityReduction.masters.forEach(m => {
+    if (!masterNumbersArray.includes(m)) masterNumbersArray.push(m);
+  });
+  if (ALL_MASTER_NUMBERS.includes(personalityWestern.sum) && !masterNumbersArray.includes(personalityWestern.sum)) {
+    masterNumbersArray.push(personalityWestern.sum);
+  }
   
   // Also check Chaldean for higher master numbers (like 77)
-  if (ALL_MASTER_NUMBERS.includes(expressionChaldean.sum) && !masterNumbersArray.includes(expressionChaldean.sum)) {
-    masterNumbersArray.push(expressionChaldean.sum);
-  }
-  if (ALL_MASTER_NUMBERS.includes(soulUrgeChaldean.sum) && !masterNumbersArray.includes(soulUrgeChaldean.sum)) {
-    masterNumbersArray.push(soulUrgeChaldean.sum);
-  }
-  if (ALL_MASTER_NUMBERS.includes(personalityChaldean.sum) && !masterNumbersArray.includes(personalityChaldean.sum)) {
-    masterNumbersArray.push(personalityChaldean.sum);
-  }
+  const expressionChaldeanReduction = reduceWithMasters(expressionChaldean.sum);
+  expressionChaldeanReduction.masters.forEach(m => {
+    if (!masterNumbersArray.includes(m)) masterNumbersArray.push(m);
+  });
+  const soulUrgeChaldeanReduction = reduceWithMasters(soulUrgeChaldean.sum);
+  soulUrgeChaldeanReduction.masters.forEach(m => {
+    if (!masterNumbersArray.includes(m)) masterNumbersArray.push(m);
+  });
+  const personalityChaldeanReduction = reduceWithMasters(personalityChaldean.sum);
+  personalityChaldeanReduction.masters.forEach(m => {
+    if (!masterNumbersArray.includes(m)) masterNumbersArray.push(m);
+  });
   
   const result = {
     // Name info
