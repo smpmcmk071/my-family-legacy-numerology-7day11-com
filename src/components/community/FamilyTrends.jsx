@@ -19,7 +19,10 @@ const KARMIC_LESSON_MEANINGS = {
   6: 'Responsibility & Love - Nurture others while maintaining healthy boundaries',
   7: 'Faith & Inner Wisdom - Trust intuition and seek deeper spiritual understanding',
   8: 'Power & Abundance - Master material world while staying ethically grounded',
-  9: 'Compassion & Release - Let go of attachments and serve humanity selflessly'
+  9: 'Compassion & Release - Let go of attachments and serve humanity selflessly',
+  11: 'Spiritual Illumination - Develop intuition and trust your visionary gifts',
+  22: 'Master Building - Learn to manifest grand visions into physical reality',
+  33: 'Master Teaching - Embrace healing gifts and teach through unconditional love'
 };
 
 const ELEMENT_ICONS = {
