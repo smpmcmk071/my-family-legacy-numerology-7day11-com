@@ -280,14 +280,56 @@ export default function AddFamilyMember() {
 
               <div>
                 <label className="text-sm text-gray-300 mb-1 block">Birth Date *</label>
-                <Input
-                  type="text"
-                  value={formData.birth_date}
-                  onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
-                  placeholder="YYYY-MM-DD (e.g., 1965-03-15)"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
-                />
-                <p className="text-xs text-gray-500 mt-1">Format: YYYY-MM-DD</p>
+                <div className="flex gap-2">
+                  <Select 
+                    value={formData.birth_date?.split('-')[0] || ''} 
+                    onValueChange={(year) => {
+                      const parts = (formData.birth_date || '--').split('-');
+                      setFormData({ ...formData, birth_date: `${year}-${parts[1] || ''}-${parts[2] || ''}` });
+                    }}
+                  >
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white flex-1">
+                      <SelectValue placeholder="Year" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                        <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select 
+                    value={formData.birth_date?.split('-')[1] || ''} 
+                    onValueChange={(month) => {
+                      const parts = (formData.birth_date || '--').split('-');
+                      setFormData({ ...formData, birth_date: `${parts[0] || ''}-${month}-${parts[2] || ''}` });
+                    }}
+                  >
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white flex-1">
+                      <SelectValue placeholder="Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {['01-Jan','02-Feb','03-Mar','04-Apr','05-May','06-Jun','07-Jul','08-Aug','09-Sep','10-Oct','11-Nov','12-Dec'].map(m => (
+                        <SelectItem key={m.split('-')[0]} value={m.split('-')[0]}>{m.split('-')[1]}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select 
+                    value={formData.birth_date?.split('-')[2] || ''} 
+                    onValueChange={(day) => {
+                      const parts = (formData.birth_date || '--').split('-');
+                      setFormData({ ...formData, birth_date: `${parts[0] || ''}-${parts[1] || ''}-${day}` });
+                    }}
+                  >
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white flex-1">
+                      <SelectValue placeholder="Day" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0')).map(day => (
+                        <SelectItem key={day} value={day}>{day}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div>
