@@ -91,9 +91,10 @@ export default function AdminNumerology() {
   
   const loadFamilySettings = async (familyId) => {
     if (!familyId) return;
-    const families = await base44.entities.Family.filter({ id: familyId });
-    if (families.length > 0) {
-      setFamily(families[0]);
+    const allFamilies = await base44.entities.Family.list();
+    const family = allFamilies.find(f => f.id === familyId);
+    if (family) {
+      setFamily(family);
     }
   };
   
