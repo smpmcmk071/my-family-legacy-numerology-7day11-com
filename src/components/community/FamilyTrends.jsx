@@ -51,6 +51,9 @@ export default function FamilyTrends({ familyMembers }) {
   const karmicLessonCounts = {};
   const karmicLessonMembers = {};
   
+  // Track all unique master numbers per member
+  const ALL_MASTER_NUMBERS = [11, 22, 33, 44, 55, 66, 77, 88, 99];
+  
   familyMembers.forEach(m => {
     if (m.life_path_western) {
       lifePathCounts[m.life_path_western] = (lifePathCounts[m.life_path_western] || 0) + 1;
@@ -61,8 +64,42 @@ export default function FamilyTrends({ familyMembers }) {
     if (m.element) {
       elementCounts[m.element] = (elementCounts[m.element] || 0) + 1;
     }
+    
+    // Collect ALL master numbers from this member (life path, expression, soul urge, personality, birthday)
+    const memberMasters = new Set();
+    
+    // Check stored master_numbers field first
     if (m.master_numbers) {
-      masterNumberMembers.push({ name: m.nickname || m.full_name?.split(' ')[0], masters: m.master_numbers });
+      m.master_numbers.split(',').forEach(n => {
+        const num = parseInt(n.trim());
+        if (ALL_MASTER_NUMBERS.includes(num)) memberMasters.add(num);
+      });
+    }
+    
+    // Check life path (both western and chaldean)
+    if (ALL_MASTER_NUMBERS.includes(m.life_path_western)) memberMasters.add(m.life_path_western);
+    if (ALL_MASTER_NUMBERS.includes(m.life_path_chaldean)) memberMasters.add(m.life_path_chaldean);
+    
+    // Check expression (both western and chaldean for higher masters like 77)
+    if (ALL_MASTER_NUMBERS.includes(m.expression_western)) memberMasters.add(m.expression_western);
+    if (ALL_MASTER_NUMBERS.includes(m.expression_chaldean)) memberMasters.add(m.expression_chaldean);
+    
+    // Check soul urge
+    if (ALL_MASTER_NUMBERS.includes(m.soul_urge_western)) memberMasters.add(m.soul_urge_western);
+    if (ALL_MASTER_NUMBERS.includes(m.soul_urge_chaldean)) memberMasters.add(m.soul_urge_chaldean);
+    
+    // Check personality
+    if (ALL_MASTER_NUMBERS.includes(m.personality_western)) memberMasters.add(m.personality_western);
+    if (ALL_MASTER_NUMBERS.includes(m.personality_chaldean)) memberMasters.add(m.personality_chaldean);
+    
+    // Check birthday number (11, 22 only for days)
+    if ([11, 22].includes(m.birthday_number)) memberMasters.add(m.birthday_number);
+    
+    if (memberMasters.size > 0) {
+      masterNumberMembers.push({ 
+        name: m.nickname || m.full_name?.split(' ')[0], 
+        masters: Array.from(memberMasters).sort((a, b) => a - b).join(',')
+      });
     }
     // Karmic Debt tracking
     if (m.karmic_debt_number) {
