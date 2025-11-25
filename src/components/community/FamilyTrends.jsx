@@ -46,6 +46,10 @@ export default function FamilyTrends({ familyMembers }) {
   const expressionCounts = {};
   const elementCounts = {};
   const masterNumberMembers = [];
+  const karmicDebtCounts = {};
+  const karmicDebtMembers = {};
+  const karmicLessonCounts = {};
+  const karmicLessonMembers = {};
   
   familyMembers.forEach(m => {
     if (m.life_path_western) {
@@ -60,7 +64,32 @@ export default function FamilyTrends({ familyMembers }) {
     if (m.master_numbers) {
       masterNumberMembers.push({ name: m.nickname || m.full_name?.split(' ')[0], masters: m.master_numbers });
     }
+    // Karmic Debt tracking
+    if (m.karmic_debt_number) {
+      const debts = m.karmic_debt_number.split(',').map(d => d.trim());
+      debts.forEach(debt => {
+        if (debt) {
+          karmicDebtCounts[debt] = (karmicDebtCounts[debt] || 0) + 1;
+          if (!karmicDebtMembers[debt]) karmicDebtMembers[debt] = [];
+          karmicDebtMembers[debt].push(m.nickname || m.full_name?.split(' ')[0]);
+        }
+      });
+    }
+    // Karmic Lessons tracking
+    if (m.karmic_lessons) {
+      const lessons = m.karmic_lessons.split(',').map(l => l.trim());
+      lessons.forEach(lesson => {
+        if (lesson) {
+          karmicLessonCounts[lesson] = (karmicLessonCounts[lesson] || 0) + 1;
+          if (!karmicLessonMembers[lesson]) karmicLessonMembers[lesson] = [];
+          karmicLessonMembers[lesson].push(m.nickname || m.full_name?.split(' ')[0]);
+        }
+      });
+    }
   });
+
+  const sortedKarmicDebts = Object.entries(karmicDebtCounts).sort((a, b) => b[1] - a[1]);
+  const sortedKarmicLessons = Object.entries(karmicLessonCounts).sort((a, b) => b[1] - a[1]);
 
   const sortedLifePaths = Object.entries(lifePathCounts).sort((a, b) => b[1] - a[1]);
   const sortedExpressions = Object.entries(expressionCounts).sort((a, b) => b[1] - a[1]);
