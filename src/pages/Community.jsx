@@ -24,22 +24,10 @@ export default function Community() {
     const currentUser = await base44.auth.me();
     setUser(currentUser);
     
-    // First find the user's family member record to get their family_id
-    let members = await base44.entities.FamilyMember.filter({ email: currentUser.email });
-    let selfMember = members.find(m => m.relationship === 'self') || members[0];
-    
-    // If no member found by email, check by created_by
-    if (!selfMember) {
-      members = await base44.entities.FamilyMember.filter({ created_by: currentUser.email });
-      selfMember = members.find(m => m.relationship === 'self') || members[0];
-    }
-    
-    // If we have a family_id, load ALL members from that family
-    if (selfMember?.family_id) {
-      members = await base44.entities.FamilyMember.filter({ family_id: selfMember.family_id });
-    }
-    
+    const members = await base44.entities.FamilyMember.filter({ created_by: currentUser.email });
     setFamilyMembers(members);
+    
+    const selfMember = members.find(m => m.relationship === 'self') || members[0];
     setUserMember(selfMember);
     
     setIsLoading(false);
