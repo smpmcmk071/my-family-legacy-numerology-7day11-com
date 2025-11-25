@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, Sun, Moon, Calendar, TrendingUp, Heart, Briefcase, Users, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Sparkles, Sun, Moon, Calendar, TrendingUp, Heart, Briefcase, Users, Loader2, ChevronLeft, ChevronRight, User, X } from 'lucide-react';
+import { createPageUrl } from '../utils';
 import NumberBadge from '../components/legacy/NumberBadge';
 import DailySongs from '../components/legacy/DailySongs';
 
@@ -171,14 +172,50 @@ export default function PersonalDashboard() {
 
   if (!userMember) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 flex items-center justify-center">
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20 max-w-md">
-          <CardContent className="py-8 text-center">
-            <Sparkles className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-white mb-2">Set Up Your Profile</h2>
-            <p className="text-gray-300">Add yourself as a family member to see your personalized numerology dashboard.</p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Profile Setup Prompt */}
+          <Card className="bg-amber-500/20 backdrop-blur-sm border-amber-500/30 mb-6">
+            <CardContent className="py-6">
+              <div className="flex items-start justify-between">
+                <div className="flex items-start gap-4">
+                  <Sparkles className="w-10 h-10 text-amber-400 flex-shrink-0" />
+                  <div>
+                    <h2 className="text-xl font-bold text-white mb-2">Create Your Numerology Profile</h2>
+                    <p className="text-gray-300 mb-4">Get personalized daily insights, life path analysis, and weekly forecasts based on your birth date and name.</p>
+                    <div className="flex gap-3">
+                      <Button 
+                        onClick={() => window.location.href = createPageUrl('AddFamilyMember') + '?setupSelf=true'}
+                        className="bg-amber-600 hover:bg-amber-700"
+                      >
+                        <User className="w-4 h-4 mr-2" />
+                        Create My Profile
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* General Info for users without profile */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">Numerology Dashboard</h1>
+            <p className="text-gray-400">Create your profile above to unlock personalized insights</p>
+          </div>
+
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Sun className="w-5 h-5 text-yellow-400" />
+                Today's Universal Energy
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-300">Set up your profile to see how today's energy affects you personally.</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
