@@ -92,7 +92,7 @@ const familyData = [
     highlight: true
   },
   {
-    name: 'Christian (You)',
+    name: 'Christian',
     lifePath: 8,
     expression: 8,
     soulUrge: 11,
@@ -170,7 +170,7 @@ export default function FamilyTable({ onNumberClick, highlightPerson }) {
         </TableHeader>
         <TableBody>
           {familyData.map((person, idx) => {
-            const isHighlighted = highlightPerson ? person.name === highlightPerson : person.name === 'Christian (You)';
+            const isHighlighted = highlightPerson ? person.name === highlightPerson : person.name === 'Christian';
             return (
               <TableRow 
                 key={idx} 
