@@ -833,7 +833,7 @@ export default function NumerologyBattle() {
             </div>
 
             {/* Winner Display & Battle Summary */}
-            {winner && battleSummary && (
+            {battleState === 'finished' && battleSummary && (
               <Card className="bg-gradient-to-r from-amber-600/30 to-yellow-600/30 border-amber-500/50 mb-6">
                 <CardContent className="py-6">
                   <div className="text-center mb-6">
