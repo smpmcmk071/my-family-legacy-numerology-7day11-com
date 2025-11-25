@@ -81,18 +81,33 @@ export default function AddFamilyMember() {
         }));
       }
       
-      // Check if user has a family or is admin
+      // First check if user already has a family member profile with a family_id
+      let existingMemberWithFamily = await base44.entities.FamilyMember.filter({ email: user.email });
+      if (existingMemberWithFamily.length > 0 && existingMemberWithFamily[0].family_id) {
+        // User already belongs to a family
+        const familyId = existingMemberWithFamily[0].family_id;
+        const families = await base44.entities.Family.filter({ id: familyId });
+        if (families.length > 0) {
+          setUserFamily(families[0]);
+          const members = await base44.entities.FamilyMember.filter({ family_id: familyId });
+          setExistingMembers(members);
+          return;
+        }
+      }
+      
+      // Check if user is admin of a family
       const families = await base44.entities.Family.filter({ admin_email: user.email });
       if (families.length > 0) {
         setUserFamily(families[0]);
         // Load existing members
         const members = await base44.entities.FamilyMember.filter({ family_id: families[0].id });
         setExistingMembers(members);
-      } else {
-        // Create family for this user
+      } else if (isSetupSelf) {
+        // Only create a new family if this is self-setup (new user creating profile)
         const newFamily = await base44.entities.Family.create({
           name: `${user.full_name?.split(' ').pop() || 'My'} Family`,
-          admin_email: user.email
+          admin_email: user.email,
+          description: `Family group for ${user.full_name || user.email}`
         });
         setUserFamily(newFamily);
       }
