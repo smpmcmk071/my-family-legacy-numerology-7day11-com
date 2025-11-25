@@ -66,6 +66,21 @@ export default function AddFamilyMember() {
   useEffect(() => {
     const loadUserFamily = async () => {
       const user = await base44.auth.me();
+      
+      // Check if this is a self-setup flow
+      const urlParams = new URLSearchParams(window.location.search);
+      const isSetupSelf = urlParams.get('setupSelf') === 'true';
+      
+      if (isSetupSelf) {
+        // Pre-fill with user's info for self-setup
+        setFormData(prev => ({
+          ...prev,
+          full_name: user.full_name || '',
+          email: user.email,
+          relationship: 'self'
+        }));
+      }
+      
       // Check if user has a family or is admin
       const families = await base44.entities.Family.filter({ admin_email: user.email });
       if (families.length > 0) {
