@@ -54,8 +54,9 @@ export default function NumerologyBlackjack() {
     }
     
     if (selfMember?.family_id) {
-      const families = await base44.entities.Family.filter({ id: selfMember.family_id });
-      if (families.length > 0 && families[0].enable_blackjack === false) {
+      const allFamilies = await base44.entities.Family.list();
+      const family = allFamilies.find(f => f.id === selfMember.family_id);
+      if (family && family.enable_blackjack === false) {
         setAccessDenied(true);
         setCheckingAccess(false);
         return;
