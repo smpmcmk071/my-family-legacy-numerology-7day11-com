@@ -918,7 +918,7 @@ export default function NumerologyBattle() {
                           )}
                         </div>
                       </>
-                    )}
+                    ) : null}
                   </div>
                 </CardContent>
               </Card>
