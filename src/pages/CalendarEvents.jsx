@@ -17,13 +17,12 @@ const getESTDate = () => {
 
 export default function CalendarEvents() {
   const [selectedDate, setSelectedDate] = useState(() => {
-  // Force current EST date
-  const now = new Date();
-  const year = now.toLocaleString('en-US', { timeZone: 'America/New_York', year: 'numeric' });
-  const month = now.toLocaleString('en-US', { timeZone: 'America/New_York', month: '2-digit' });
-  const day = now.toLocaleString('en-US', { timeZone: 'America/New_York', day: '2-digit' });
-  return `${year}-${month}-${day}`;
-});
+    const now = new Date();
+    const year = now.toLocaleString('en-US', { timeZone: 'America/New_York', year: 'numeric' });
+    const month = now.toLocaleString('en-US', { timeZone: 'America/New_York', month: '2-digit' });
+    const day = now.toLocaleString('en-US', { timeZone: 'America/New_York', day: '2-digit' });
+    return `${year}-${month}-${day}`;
+  });
   const [events, setEvents] = useState([]);
   const [dayCalc, setDayCalc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +37,8 @@ export default function CalendarEvents() {
     attach_numerology: true
   });
   const [isAdding, setIsAdding] = useState(false);
+  const [accessDenied, setAccessDenied] = useState(false);
+  const [checkingAccess, setCheckingAccess] = useState(true);
 
   useEffect(() => {
     loadUserAndMember();
@@ -65,8 +66,18 @@ export default function CalendarEvents() {
     }
     
     if (selfMember) {
+      // Check family settings
+      if (selfMember.family_id) {
+        const families = await base44.entities.Family.filter({ id: selfMember.family_id });
+        if (families.length > 0 && families[0].enable_calendar === false) {
+          setAccessDenied(true);
+          setCheckingAccess(false);
+          return;
+        }
+      }
       setUserMember(selfMember);
     }
+    setCheckingAccess(false);
   };
 
   const calculateDayNumbers = async () => {
@@ -169,6 +180,28 @@ export default function CalendarEvents() {
   };
 
   const eventTypes = ['birthday', 'anniversary', 'holiday', 'personal', 'family', 'work', 'spiritual', 'game'];
+
+  if (checkingAccess) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+      </div>
+    );
+  }
+
+  if (accessDenied) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 flex items-center justify-center">
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 max-w-md">
+          <CardContent className="py-12 text-center">
+            <Calendar className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-white mb-2">Calendar Disabled</h2>
+            <p className="text-gray-300">Calendar features have been disabled by your family admin.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 md:p-12">

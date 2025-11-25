@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, RotateCcw, Plus, Hand, Trophy, Skull, BookOpen } from 'lucide-react';
+import { Sparkles, RotateCcw, Plus, Hand, Trophy, Skull, BookOpen, Loader2, Gamepad2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const PYTHAGOREAN = {
@@ -36,14 +36,35 @@ export default function NumerologyBlackjack() {
   const [showLearning, setShowLearning] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [stats, setStats] = useState({ wins: 0, losses: 0, pushes: 0 });
+  const [accessDenied, setAccessDenied] = useState(false);
+  const [checkingAccess, setCheckingAccess] = useState(true);
 
   useEffect(() => {
-    loadCards();
+    checkAccessAndLoadCards();
   }, []);
 
-  const loadCards = async () => {
+  const checkAccessAndLoadCards = async () => {
+    const user = await base44.auth.me();
+    let members = await base44.entities.FamilyMember.filter({ email: user.email });
+    let selfMember = members.find(m => m.relationship === 'self') || members[0];
+    
+    if (!selfMember) {
+      const createdMembers = await base44.entities.FamilyMember.filter({ created_by: user.email });
+      selfMember = createdMembers[0];
+    }
+    
+    if (selfMember?.family_id) {
+      const families = await base44.entities.Family.filter({ id: selfMember.family_id });
+      if (families.length > 0 && families[0].enable_blackjack === false) {
+        setAccessDenied(true);
+        setCheckingAccess(false);
+        return;
+      }
+    }
+    
     const cards = await base44.entities.NumerologyCard.list();
     setAllCards(cards);
+    setCheckingAccess(false);
   };
 
   const getPlayerTotal = () => playerHand.reduce((sum, card) => sum + card.reduced_value, 0);
@@ -178,6 +199,28 @@ export default function NumerologyBlackjack() {
   };
 
   const resultInfo = getResultMessage();
+
+  if (checkingAccess) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-900 via-emerald-900 to-green-950 p-6 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+      </div>
+    );
+  }
+
+  if (accessDenied) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-900 via-emerald-900 to-green-950 p-6 flex items-center justify-center">
+        <Card className="bg-black/30 border-green-700 max-w-md">
+          <CardContent className="py-12 text-center">
+            <Gamepad2 className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-white mb-2">Blackjack Disabled</h2>
+            <p className="text-green-200">This game has been disabled by your family admin.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-900 via-emerald-900 to-green-950 p-6">
