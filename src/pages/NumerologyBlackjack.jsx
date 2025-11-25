@@ -46,8 +46,8 @@ export default function NumerologyBlackjack() {
     setAllCards(cards);
   };
 
-  const getPlayerTotal = () => playerHand.reduce((sum, card) => sum + card.raw_value, 0);
-  const getDealerTotal = () => dealerHand.reduce((sum, card) => sum + card.raw_value, 0);
+  const getPlayerTotal = () => playerHand.reduce((sum, card) => sum + card.reduced_value, 0);
+  const getDealerTotal = () => dealerHand.reduce((sum, card) => sum + card.reduced_value, 0);
 
   const shuffleDeck = (cards) => {
     const shuffled = [...cards];
@@ -91,7 +91,7 @@ export default function NumerologyBlackjack() {
     setPlayerHand(newHand);
     setDeck([...deck]);
 
-    const total = newHand.reduce((sum, card) => sum + card.raw_value, 0);
+    const total = newHand.reduce((sum, card) => sum + card.reduced_value, 0);
     if (total > 21) {
       endGame('bust');
     }
@@ -107,15 +107,15 @@ export default function NumerologyBlackjack() {
     let currentDeck = [...deck];
     
     // Dealer hits until 17 or higher
-    while (dHand.reduce((sum, card) => sum + card.raw_value, 0) < 17 && currentDeck.length > 0) {
+    while (dHand.reduce((sum, card) => sum + card.reduced_value, 0) < 17 && currentDeck.length > 0) {
       dHand.push(currentDeck.pop());
     }
     
     setDealerHand(dHand);
     setDeck(currentDeck);
     
-    const dealerTotal = dHand.reduce((sum, card) => sum + card.raw_value, 0);
-    const playerTotal = playerHand.reduce((sum, card) => sum + card.raw_value, 0);
+    const dealerTotal = dHand.reduce((sum, card) => sum + card.reduced_value, 0);
+    const playerTotal = playerHand.reduce((sum, card) => sum + card.reduced_value, 0);
 
     if (dealerTotal > 21) {
       endGame('dealerBust');
