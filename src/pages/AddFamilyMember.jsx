@@ -281,11 +281,13 @@ export default function AddFamilyMember() {
               <div>
                 <label className="text-sm text-gray-300 mb-1 block">Birth Date *</label>
                 <Input
-                  type="date"
+                  type="text"
                   value={formData.birth_date}
                   onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
-                  className="bg-white/10 border-white/20 text-white"
+                  placeholder="YYYY-MM-DD (e.g., 1965-03-15)"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
                 />
+                <p className="text-xs text-gray-500 mt-1">Format: YYYY-MM-DD</p>
               </div>
 
               <div>
