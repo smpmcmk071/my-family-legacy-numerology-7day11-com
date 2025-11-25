@@ -267,23 +267,219 @@ function deriveBattleStats(member, familyMembers, customMappings = []) {
   stats.ancestralBonus = ancestral;
   
   // Master number bonuses
-  if (member.master_numbers) {
-    const masters = member.master_numbers.split(',').map(m => parseInt(m.trim()));
-    if (masters.includes(11)) {
+  const masters = member.master_numbers ? member.master_numbers.split(',').map(m => parseInt(m.trim())) : [];
+  
+  if (masters.includes(11)) {
+    stats.wisdom += 2;
+    stats.critChance += 0.05;
+    stats.specialAbilities.push('Intuitive Strike (11)');
+  }
+  if (masters.includes(22)) {
+    stats.health += 3;
+    stats.defense += 1;
+    stats.specialAbilities.push('Master Builder Shield (22)');
+  }
+  if (masters.includes(33)) {
+    stats.regen += 2;
+    stats.charisma += 2;
+    stats.specialAbilities.push('Healing Aura (33)');
+  }
+  if (masters.includes(44)) {
+    stats.defense += 3;
+    stats.health += 2;
+    stats.specialAbilities.push('Foundation Wall (44)');
+  }
+  if (masters.includes(55)) {
+    stats.speed += 4;
+    stats.evasion += 3;
+    stats.specialAbilities.push('Chaos Wind (55)');
+  }
+  if (masters.includes(66)) {
+    stats.regen += 3;
+    stats.health += 2;
+    stats.specialAbilities.push('Divine Protection (66)');
+  }
+  if (masters.includes(77)) {
+    stats.wisdom += 6;
+    stats.evasion += 2;
+    stats.critChance += 0.1;
+    stats.specialAbilities.push('Mystic Insight (77)');
+  }
+  if (masters.includes(88)) {
+    stats.attack += 4;
+    stats.charisma += 3;
+    stats.specialAbilities.push('Power Manifestation (88)');
+  }
+  if (masters.includes(99)) {
+    stats.wisdom += 4;
+    stats.regen += 3;
+    stats.specialAbilities.push('Universal Completion (99)');
+  }
+
+  // COMBO ABILITIES - Special synergies based on numerological patterns
+  const lp = member.life_path_western;
+  const expr = member.expression_western;
+  const soul = member.soul_urge_western;
+  const pers = member.personality_western;
+  const bday = member.birthday_number;
+
+  // 7 + 11 = Mystic Visionary (deep intuition + spiritual sight)
+  if ((lp === 7 || lp === 11) && masters.includes(11)) {
+    stats.wisdom += 3;
+    stats.critChance += 0.08;
+    stats.specialAbilities.push('Mystic Visionary (7+11)');
+  }
+
+  // 7 + 22 = Wisdom Builder (spiritual architect)
+  if (lp === 7 && masters.includes(22)) {
+    stats.wisdom += 2;
+    stats.defense += 2;
+    stats.specialAbilities.push('Wisdom Builder (7+22)');
+  }
+
+  // 7 + 33 = Enlightened Healer 
+  if (lp === 7 && masters.includes(33)) {
+    stats.wisdom += 3;
+    stats.regen += 2;
+    stats.specialAbilities.push('Enlightened Healer (7+33)');
+  }
+
+  // Double 8 (Life Path 8 + Expression 8) = Power Magnate
+  if (lp === 8 && expr === 8) {
+    stats.attack += 3;
+    stats.charisma += 2;
+    stats.specialAbilities.push('Power Magnate (8+8)');
+  }
+
+  // Triple Threat - Any 3 matching core numbers
+  const coreNums = [lp, expr, soul, pers].filter(n => n);
+  const numCounts = {};
+  coreNums.forEach(n => { numCounts[n] = (numCounts[n] || 0) + 1; });
+  Object.entries(numCounts).forEach(([num, count]) => {
+    if (count >= 3) {
+      stats.attack += 2;
+      stats.defense += 2;
       stats.wisdom += 2;
-      stats.critChance += 0.05;
-      stats.specialAbilities.push('Intuitive Strike (11)');
+      stats.specialAbilities.push(`Triple ${num} Force`);
     }
-    if (masters.includes(22)) {
-      stats.health += 3;
-      stats.defense += 1;
-      stats.specialAbilities.push('Master Builder Shield (22)');
-    }
-    if (masters.includes(33)) {
-      stats.regen += 2;
-      stats.charisma += 2;
-      stats.specialAbilities.push('Healing Aura (33)');
-    }
+  });
+
+  // 11 + 22 = Master Architect (vision + manifestation)
+  if (masters.includes(11) && masters.includes(22)) {
+    stats.attack += 2;
+    stats.health += 2;
+    stats.critChance += 0.05;
+    stats.specialAbilities.push('Master Architect (11+22)');
+  }
+
+  // 11 + 33 = Illuminated Teacher
+  if (masters.includes(11) && masters.includes(33)) {
+    stats.wisdom += 3;
+    stats.charisma += 3;
+    stats.specialAbilities.push('Illuminated Teacher (11+33)');
+  }
+
+  // 22 + 33 = Divine Builder
+  if (masters.includes(22) && masters.includes(33)) {
+    stats.health += 3;
+    stats.regen += 3;
+    stats.specialAbilities.push('Divine Builder (22+33)');
+  }
+
+  // Triple Master (11+22+33) = Ascended Master
+  if (masters.includes(11) && masters.includes(22) && masters.includes(33)) {
+    stats.attack += 3;
+    stats.defense += 3;
+    stats.wisdom += 5;
+    stats.critChance += 0.1;
+    stats.specialAbilities.push('⭐ Ascended Master (11+22+33)');
+  }
+
+  // 7 Life Path with 7 Birthday = Deep Seeker (double 7)
+  if (lp === 7 && bday === 7) {
+    stats.wisdom += 4;
+    stats.evasion += 2;
+    stats.specialAbilities.push('Deep Seeker (7+7)');
+  }
+
+  // 8 with 1 = Alpha Leader (power + independence)
+  if ((lp === 8 && expr === 1) || (lp === 1 && expr === 8)) {
+    stats.attack += 2;
+    stats.speed += 2;
+    stats.specialAbilities.push('Alpha Leader (8+1)');
+  }
+
+  // 9 + 11 = Humanitarian Visionary
+  if (lp === 9 && masters.includes(11)) {
+    stats.wisdom += 3;
+    stats.charisma += 2;
+    stats.regen += 1;
+    stats.specialAbilities.push('Humanitarian Visionary (9+11)');
+  }
+
+  // 6 + 33 = Ultimate Nurturer
+  if (lp === 6 && masters.includes(33)) {
+    stats.regen += 4;
+    stats.health += 2;
+    stats.specialAbilities.push('Ultimate Nurturer (6+33)');
+  }
+
+  // 5 + 11 = Freedom Visionary (change + intuition)
+  if (lp === 5 && masters.includes(11)) {
+    stats.speed += 3;
+    stats.evasion += 2;
+    stats.critChance += 0.05;
+    stats.specialAbilities.push('Freedom Visionary (5+11)');
+  }
+
+  // Birthday 25/7 special (the seeker's birthday)
+  if (member.birthday_vibe === '25/7' || bday === 25) {
+    stats.wisdom += 2;
+    stats.evasion += 1;
+    stats.specialAbilities.push('Seeker\'s Mark (25/7)');
+  }
+
+  // Expression 11 + Soul Urge 11 = Double Vision
+  if (expr === 11 && soul === 11) {
+    stats.wisdom += 4;
+    stats.critChance += 0.1;
+    stats.specialAbilities.push('Double Vision (11+11)');
+  }
+
+  // Water + 7 = Mystic Depths
+  if (member.element === 'Water' && lp === 7) {
+    stats.wisdom += 2;
+    stats.regen += 2;
+    stats.specialAbilities.push('Mystic Depths (Water+7)');
+  }
+
+  // Fire + 1 = Blazing Pioneer
+  if (member.element === 'Fire' && lp === 1) {
+    stats.attack += 2;
+    stats.speed += 2;
+    stats.specialAbilities.push('Blazing Pioneer (Fire+1)');
+  }
+
+  // Earth + 4 = Unshakeable Foundation
+  if (member.element === 'Earth' && lp === 4) {
+    stats.defense += 3;
+    stats.health += 2;
+    stats.specialAbilities.push('Unshakeable Foundation (Earth+4)');
+  }
+
+  // Air + 3 = Creative Windstorm
+  if (member.element === 'Air' && lp === 3) {
+    stats.charisma += 3;
+    stats.speed += 2;
+    stats.specialAbilities.push('Creative Windstorm (Air+3)');
+  }
+
+  // Scorpio (Water) + Life Path 8 = Power from Depths
+  if (member.sun_sign === 'Scorpio' && lp === 8) {
+    stats.attack += 2;
+    stats.wisdom += 2;
+    stats.critChance += 0.05;
+    stats.specialAbilities.push('Power from Depths (Scorpio+8)');
   }
   
   // Apply custom mappings from database
