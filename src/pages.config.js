@@ -17,6 +17,7 @@ import CalendarEvents from './pages/CalendarEvents';
 import PersonalDashboard from './pages/PersonalDashboard';
 import Community from './pages/Community';
 import NumerologyBlackjack from './pages/NumerologyBlackjack';
+import NumerologyBattle from './pages/NumerologyBattle';
 import __Layout from './Layout.jsx';
 
 
@@ -40,6 +41,7 @@ export const PAGES = {
     "PersonalDashboard": PersonalDashboard,
     "Community": Community,
     "NumerologyBlackjack": NumerologyBlackjack,
+    "NumerologyBattle": NumerologyBattle,
 }
 
 export const pagesConfig = {

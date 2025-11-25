@@ -24,6 +24,7 @@ export default function Layout({ children, currentPageName }) {
   const navItems = [
     { name: 'Home', page: 'Home', icon: Home },
     { name: 'My Dashboard', page: 'PersonalDashboard', icon: Sparkles },
+    { name: 'Battle', page: 'NumerologyBattle', icon: Sparkles },
     { name: 'Blackjack', page: 'NumerologyBlackjack', icon: Sparkles },
     { name: 'Community', page: 'Community', icon: Users },
     { name: 'Add Member', page: 'AddFamilyMember', icon: Users },
