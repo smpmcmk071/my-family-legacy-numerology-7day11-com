@@ -195,7 +195,7 @@ export default function AdminNumerology() {
       
       setMemberStatus(`Imported ${imported} members!`);
       setImportData('');
-      loadFamilyMembers();
+      loadFamilyMembers(selectedFamilyForImport);
     } catch (e) {
       setMemberStatus(`Error: ${e.message}`);
     }
