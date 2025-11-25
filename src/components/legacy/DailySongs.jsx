@@ -51,29 +51,29 @@ export default function DailySongs() {
   }
 
   return (
-    <Card className="bg-gradient-to-br from-purple-100 to-pink-100 border-purple-200">
+    <Card className="bg-white/10 backdrop-blur-sm border-white/20">
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-purple-900">
-          <Music className="w-5 h-5" />
+        <CardTitle className="flex items-center gap-2 text-white">
+          <Music className="w-5 h-5 text-purple-400" />
           Today's Playlist
           <NumberBadge number={dayNumber} size="sm" />
         </CardTitle>
-        <p className="text-sm text-purple-600">
+        <p className="text-sm text-gray-400">
           Songs for {new Date(todayDate + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
+        <div className="grid md:grid-cols-3 gap-3">
           {songs.map((item, idx) => (
-            <div key={idx} className="p-3 bg-white/60 rounded-lg border border-purple-200">
+            <div key={idx} className="p-3 bg-purple-500/20 rounded-lg border border-purple-500/30">
               <div className="flex items-center gap-2">
                 <span className="text-lg">🎵</span>
                 <div className="flex-1">
-                  <p className="font-semibold text-purple-900">"{item.song}"</p>
-                  <p className="text-sm text-purple-700">{item.artist}</p>
+                  <p className="font-semibold text-white">"{item.song}"</p>
+                  <p className="text-sm text-purple-300">{item.artist}</p>
                 </div>
               </div>
-              <p className="text-xs text-purple-600 mt-1 italic">{item.reason}</p>
+              <p className="text-xs text-gray-400 mt-1 italic">{item.reason}</p>
             </div>
           ))}
         </div>
