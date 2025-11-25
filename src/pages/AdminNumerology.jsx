@@ -4,10 +4,11 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { base44 } from '@/api/base44Client';
-import { Calendar, Database, Loader2, CheckCircle2, AlertCircle, Users, RefreshCw, ShieldAlert, Sparkles, Star } from 'lucide-react';
+import { Calendar, Database, Loader2, CheckCircle2, AlertCircle, Users, RefreshCw, ShieldAlert, Sparkles, Star, Settings, Swords, Gamepad2, MessageSquare } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import { buildMemberDataFromCalc } from '../components/utils/numerologyHelpers';
 
 export default function AdminNumerology() {
@@ -39,6 +40,10 @@ export default function AdminNumerology() {
   // Admin check
   const [isAdmin, setIsAdmin] = useState(null);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
+  
+  // Family settings
+  const [family, setFamily] = useState(null);
+  const [savingSettings, setSavingSettings] = useState(false);
 
   useEffect(() => {
     checkAdminAccess();
@@ -69,10 +74,27 @@ export default function AdminNumerology() {
     if (selfMember?.is_admin === true) {
       setIsAdmin(true);
       loadFamilyMembers(selfMember.family_id);
+      loadFamilySettings(selfMember.family_id);
     } else {
       setIsAdmin(false);
     }
     setCheckingAdmin(false);
+  };
+  
+  const loadFamilySettings = async (familyId) => {
+    if (!familyId) return;
+    const families = await base44.entities.Family.filter({ id: familyId });
+    if (families.length > 0) {
+      setFamily(families[0]);
+    }
+  };
+  
+  const updateFamilySetting = async (setting, value) => {
+    if (!family) return;
+    setSavingSettings(true);
+    await base44.entities.Family.update(family.id, { [setting]: value });
+    setFamily(prev => ({ ...prev, [setting]: value }));
+    setSavingSettings(false);
   };
 
   const loadFamilyMembers = async (familyId) => {
@@ -318,6 +340,65 @@ export default function AdminNumerology() {
           <h1 className="text-4xl font-bold text-white mb-2">Numerology Admin</h1>
           <p className="text-gray-300">Populate the DateNumerology calendar database</p>
         </div>
+
+        {/* Family App Settings */}
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Settings className="w-5 h-5" />
+              Family App Settings
+              {savingSettings && <Loader2 className="w-4 h-4 animate-spin text-amber-400" />}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {family ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Swords className="w-4 h-4 text-red-400" />
+                    <span className="text-white text-sm">Battle</span>
+                  </div>
+                  <Switch
+                    checked={family.enable_battle !== false}
+                    onCheckedChange={(v) => updateFamilySetting('enable_battle', v)}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Gamepad2 className="w-4 h-4 text-green-400" />
+                    <span className="text-white text-sm">Blackjack</span>
+                  </div>
+                  <Switch
+                    checked={family.enable_blackjack !== false}
+                    onCheckedChange={(v) => updateFamilySetting('enable_blackjack', v)}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-blue-400" />
+                    <span className="text-white text-sm">Community</span>
+                  </div>
+                  <Switch
+                    checked={family.enable_community !== false}
+                    onCheckedChange={(v) => updateFamilySetting('enable_community', v)}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-purple-400" />
+                    <span className="text-white text-sm">Calendar</span>
+                  </div>
+                  <Switch
+                    checked={family.enable_calendar !== false}
+                    onCheckedChange={(v) => updateFamilySetting('enable_calendar', v)}
+                  />
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-400">No family settings found</p>
+            )}
+          </CardContent>
+        </Card>
 
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
           <CardHeader>
