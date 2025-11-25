@@ -16,7 +16,7 @@ const getESTDate = () => {
 };
 
 export default function CalendarEvents() {
-  const [selectedDate, setSelectedDate] = useState(getESTDate());
+  const [selectedDate, setSelectedDate] = useState('2025-11-25');
   const [events, setEvents] = useState([]);
   const [dayCalc, setDayCalc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
