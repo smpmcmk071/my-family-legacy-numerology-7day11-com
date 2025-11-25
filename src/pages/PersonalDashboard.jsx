@@ -121,7 +121,13 @@ export default function PersonalDashboard() {
     
     const advice = [];
     const personalDay = todayCalc.personalDay || todayCalc.universalDay;
+    const universalDay = todayCalc.universalDay;
     const lifePath = userMember.life_path_western;
+    
+    // Get user's master numbers
+    const userMasterNumbers = userMember.master_numbers 
+      ? userMember.master_numbers.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n))
+      : [];
     
     // Life path + personal day synergy
     if (personalDay === lifePath) {
@@ -129,14 +135,83 @@ export default function PersonalDashboard() {
       advice.push({ 
         icon: Sparkles, 
         text: isMasterLifePath 
-          ? `Power Day! Master ${lifePath} aligned - your personal day matches your life path. Maximum spiritual power and manifestation.`
-          : 'Power Day! Your personal day matches your life path. Maximum alignment for personal growth.', 
+          ? `🔥 POWER DAY! Master ${lifePath} aligned - your personal day matches your life path. Maximum spiritual power and manifestation.`
+          : '⚡ Power Day! Your personal day matches your life path. Maximum alignment for personal growth.', 
         type: 'power' 
       });
     }
     
-    // Master number days (only show separately if not already a power day with same master)
-    if ([11, 22, 33].includes(personalDay) && personalDay !== lifePath) {
+    // Master number matching - check if any user master numbers match universal/personal day
+    if (userMasterNumbers.includes(universalDay)) {
+      const masterPowers = {
+        11: { power: 'Illumination', desc: 'Your visionary gifts are supercharged. Trust your intuition completely. Messages from higher realms flow through you.' },
+        22: { power: 'Master Building', desc: 'Your ability to manifest dreams into reality is at peak power. Start major projects or make bold moves.' },
+        33: { power: 'Divine Teaching', desc: 'Your healing and teaching abilities are amplified. Your words carry extra weight and can transform others.' }
+      };
+      const mp = masterPowers[universalDay];
+      if (mp) {
+        advice.push({ 
+          icon: Sparkles, 
+          text: `✨ MASTER ${universalDay} ACTIVATION! ${mp.power} - ${mp.desc}`, 
+          type: 'master-power' 
+        });
+      }
+    }
+    
+    if (userMasterNumbers.includes(personalDay) && personalDay !== universalDay) {
+      const masterPowers = {
+        11: { power: 'Inner Vision', desc: 'Personal intuition heightened. Pay attention to dreams and gut feelings.' },
+        22: { power: 'Personal Mastery', desc: 'Structure your day for maximum achievement. Your organizational power peaks.' },
+        33: { power: 'Compassion Flow', desc: 'Your empathy is extraordinary today. Healing conversations are favored.' }
+      };
+      const mp = masterPowers[personalDay];
+      if (mp) {
+        advice.push({ 
+          icon: Sun, 
+          text: `🌟 Personal Master ${personalDay}: ${mp.power} - ${mp.desc}`, 
+          type: 'master' 
+        });
+      }
+    }
+    
+    // Expression/Destiny matching universal day
+    if (userMember.expression_western === universalDay) {
+      advice.push({ 
+        icon: Users, 
+        text: `💫 Destiny Alignment! Universal day ${universalDay} matches your Expression number. Your purpose shines brightly - share your gifts with the world.`, 
+        type: 'destiny' 
+      });
+    }
+    
+    // Soul Urge matching universal day
+    if (userMember.soul_urge_western === universalDay) {
+      advice.push({ 
+        icon: Heart, 
+        text: `💖 Heart's Desire Day! The universe resonates with your soul urge (${universalDay}). Follow your deepest desires - they lead to fulfillment.`, 
+        type: 'soul' 
+      });
+    }
+    
+    // Personality matching universal day
+    if (userMember.personality_western === universalDay) {
+      advice.push({ 
+        icon: Users, 
+        text: `🎭 Charisma Boost! Your personality number (${universalDay}) aligns with universal energy. Social interactions flow effortlessly - network and connect.`, 
+        type: 'personality' 
+      });
+    }
+    
+    // Birthday number matching
+    if (userMember.birthday_number === universalDay) {
+      advice.push({ 
+        icon: Calendar, 
+        text: `🎂 Birthday Vibe Day! Universal energy (${universalDay}) echoes your birth day gifts. Natural talents are amplified.`, 
+        type: 'birthday' 
+      });
+    }
+    
+    // Master number days (only show separately if not already covered)
+    if ([11, 22, 33].includes(personalDay) && personalDay !== lifePath && !userMasterNumbers.includes(personalDay)) {
       advice.push({ icon: Sun, text: `Master ${personalDay} energy active. Heightened intuition and manifestation potential.`, type: 'master' });
     }
     
@@ -154,11 +229,11 @@ export default function PersonalDashboard() {
       advice.push({ icon: Moon, text: 'Spiritual awareness heightened. Meditate or journal.', type: 'spiritual' });
     }
     
-    // Expression number influence
-    if (userMember.expression_western) {
+    // Expression number influence (general harmony)
+    if (userMember.expression_western && userMember.expression_western !== universalDay) {
       const expr = userMember.expression_western;
-      if ((personalDay + expr) % 9 === 0 || personalDay === expr) {
-        advice.push({ icon: Users, text: 'Your expression energy is amplified. Communication flows easily.', type: 'expression' });
+      if ((personalDay + expr) % 9 === 0) {
+        advice.push({ icon: Users, text: 'Expression harmony active. Communication flows easily.', type: 'expression' });
       }
     }
     
@@ -347,8 +422,13 @@ export default function PersonalDashboard() {
                   {actionableAdvice.length > 0 ? (
                     actionableAdvice.map((item, i) => (
                       <div key={i} className={`p-3 rounded-lg flex items-start gap-3 ${
-                        item.type === 'power' ? 'bg-amber-500/20 border border-amber-500/30' :
+                        item.type === 'power' ? 'bg-gradient-to-r from-amber-500/30 to-orange-500/30 border-2 border-amber-500' :
+                        item.type === 'master-power' ? 'bg-gradient-to-r from-purple-500/30 to-pink-500/30 border-2 border-purple-400 animate-pulse' :
                         item.type === 'master' ? 'bg-purple-500/20 border border-purple-500/30' :
+                        item.type === 'destiny' ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30' :
+                        item.type === 'soul' ? 'bg-gradient-to-r from-pink-500/20 to-rose-500/20 border border-pink-500/30' :
+                        item.type === 'personality' ? 'bg-gradient-to-r from-violet-500/20 to-purple-500/20 border border-violet-500/30' :
+                        item.type === 'birthday' ? 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30' :
                         item.type === 'career' ? 'bg-blue-500/20 border border-blue-500/30' :
                         item.type === 'love' ? 'bg-pink-500/20 border border-pink-500/30' :
                         item.type === 'creative' ? 'bg-green-500/20 border border-green-500/30' :
