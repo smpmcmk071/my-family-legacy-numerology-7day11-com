@@ -1150,35 +1150,35 @@ function calculateFullNameNumerology(fullName, birthDate = null, birthTime = nul
     // Western (Pythagorean) - PRIMARY for display
     expression: {
       sum: expressionWestern.sum,
-      reduced: [11, 22, 33].includes(expressionWestern.sum) ? expressionWestern.sum : expressionWestern.reduced,
-      display: [11, 22, 33].includes(expressionWestern.sum) ? String(expressionWestern.sum) : expressionWestern.formatted
+      reduced: ALL_MASTER_NUMBERS.includes(expressionWestern.sum) ? expressionWestern.sum : expressionWestern.reduced,
+      display: ALL_MASTER_NUMBERS.includes(expressionWestern.sum) ? String(expressionWestern.sum) : expressionWestern.formatted
     },
     soulUrge: {
       sum: soulUrgeWestern.sum,
-      reduced: [11, 22, 33].includes(soulUrgeWestern.sum) ? soulUrgeWestern.sum : soulUrgeWestern.reduced,
-      display: [11, 22, 33].includes(soulUrgeWestern.sum) ? String(soulUrgeWestern.sum) : soulUrgeWestern.formatted
+      reduced: ALL_MASTER_NUMBERS.includes(soulUrgeWestern.sum) ? soulUrgeWestern.sum : soulUrgeWestern.reduced,
+      display: ALL_MASTER_NUMBERS.includes(soulUrgeWestern.sum) ? String(soulUrgeWestern.sum) : soulUrgeWestern.formatted
     },
     personality: {
       sum: personalityWestern.sum,
-      reduced: [11, 22, 33].includes(personalityWestern.sum) ? personalityWestern.sum : personalityWestern.reduced,
-      display: [11, 22, 33].includes(personalityWestern.sum) ? String(personalityWestern.sum) : personalityWestern.formatted
+      reduced: ALL_MASTER_NUMBERS.includes(personalityWestern.sum) ? personalityWestern.sum : personalityWestern.reduced,
+      display: ALL_MASTER_NUMBERS.includes(personalityWestern.sum) ? String(personalityWestern.sum) : personalityWestern.formatted
     },
     
-    // Chaldean versions for storage
+    // Chaldean versions for storage (check for higher masters like 77)
     expressionChaldean: {
       sum: expressionChaldean.sum,
-      reduced: [11, 22, 33].includes(expressionChaldean.sum) ? expressionChaldean.sum : expressionChaldean.reduced,
-      display: [11, 22, 33].includes(expressionChaldean.sum) ? String(expressionChaldean.sum) : expressionChaldean.formatted
+      reduced: ALL_MASTER_NUMBERS.includes(expressionChaldean.sum) ? expressionChaldean.sum : expressionChaldean.reduced,
+      display: ALL_MASTER_NUMBERS.includes(expressionChaldean.sum) ? String(expressionChaldean.sum) : expressionChaldean.formatted
     },
     soulUrgeChaldean: {
       sum: soulUrgeChaldean.sum,
-      reduced: [11, 22, 33].includes(soulUrgeChaldean.sum) ? soulUrgeChaldean.sum : soulUrgeChaldean.reduced,
-      display: [11, 22, 33].includes(soulUrgeChaldean.sum) ? String(soulUrgeChaldean.sum) : soulUrgeChaldean.formatted
+      reduced: ALL_MASTER_NUMBERS.includes(soulUrgeChaldean.sum) ? soulUrgeChaldean.sum : soulUrgeChaldean.reduced,
+      display: ALL_MASTER_NUMBERS.includes(soulUrgeChaldean.sum) ? String(soulUrgeChaldean.sum) : soulUrgeChaldean.formatted
     },
     personalityChaldean: {
       sum: personalityChaldean.sum,
-      reduced: [11, 22, 33].includes(personalityChaldean.sum) ? personalityChaldean.sum : personalityChaldean.reduced,
-      display: [11, 22, 33].includes(personalityChaldean.sum) ? String(personalityChaldean.sum) : personalityChaldean.formatted
+      reduced: ALL_MASTER_NUMBERS.includes(personalityChaldean.sum) ? personalityChaldean.sum : personalityChaldean.reduced,
+      display: ALL_MASTER_NUMBERS.includes(personalityChaldean.sum) ? String(personalityChaldean.sum) : personalityChaldean.formatted
     },
     
     // Vowel/Consonant analysis
