@@ -3,10 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { base44 } from '@/api/base44Client';
-import { Swords, Zap, Shield, Heart, Wind, Sparkles, Trophy, RotateCcw, Loader2, History } from 'lucide-react';
+import { Swords, Zap, Shield, Heart, Wind, Sparkles, Trophy, RotateCcw, Loader2, History, Users } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import NumberBadge from '../components/legacy/NumberBadge';
+import TeamSelector from '../components/battle/TeamSelector';
+import TeamCard from '../components/battle/TeamCard';
 
 export default function NumerologyBattle() {
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -23,6 +26,13 @@ export default function NumerologyBattle() {
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [battleHistory, setBattleHistory] = useState([]);
   const [battleSummary, setBattleSummary] = useState(null);
+  
+  // Team battle state
+  const [battleMode, setBattleMode] = useState('1v1'); // 1v1, 2v2, 3v3
+  const [team1Ids, setTeam1Ids] = useState([]);
+  const [team2Ids, setTeam2Ids] = useState([]);
+  const [team1Stats, setTeam1Stats] = useState([]);
+  const [team2Stats, setTeam2Stats] = useState([]);
 
   useEffect(() => {
     loadFamilyMembers();
