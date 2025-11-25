@@ -838,47 +838,87 @@ export default function NumerologyBattle() {
                 <CardContent className="py-6">
                   <div className="text-center mb-6">
                     <Trophy className="w-16 h-16 text-amber-400 mx-auto mb-4" />
-                    <h2 className="text-3xl font-bold text-white mb-2">{winner.name} Wins!</h2>
+                    <h2 className="text-3xl font-bold text-white mb-2">
+                      {battleSummary.isTeamBattle 
+                        ? `Team ${battleSummary.winningTeam} Wins!`
+                        : `${winner.name} Wins!`
+                      }
+                    </h2>
                     <p className="text-gray-300">Victory achieved in {battleSummary.turns} turns</p>
                   </div>
                   
                   {/* Battle Summary */}
                   <div className="grid md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/20">
-                    {/* Player 1 Summary */}
-                    <div className="p-4 bg-blue-900/30 rounded-lg">
-                      <h3 className="text-white font-bold mb-2">{player1Stats?.name}</h3>
-                      <p className="text-sm text-gray-300 mb-2">Final HP: <span className={battleSummary.p1FinalHp > 0 ? 'text-green-400' : 'text-red-400'}>{battleSummary.p1FinalHp}</span> / {player1Stats?.health}</p>
-                      {battleSummary.p1Abilities.length > 0 && (
-                        <div>
-                          <p className="text-xs text-gray-400 mb-1">Abilities:</p>
-                          <div className="flex flex-wrap gap-1">
-                            {battleSummary.p1Abilities.map((a, i) => (
-                              <span key={i} className={`px-2 py-0.5 rounded text-xs ${battleSummary.p1Activated.includes(a) ? 'bg-green-500/30 text-green-300' : 'bg-gray-500/30 text-gray-400'}`}>
-                                {battleSummary.p1Activated.includes(a) && '✓ '}{a}
-                              </span>
+                    {battleSummary.isTeamBattle ? (
+                      <>
+                        {/* Team 1 Summary */}
+                        <div className="p-4 bg-blue-900/30 rounded-lg">
+                          <h3 className="text-white font-bold mb-2">Team 1</h3>
+                          <div className="space-y-2">
+                            {battleSummary.team1Final.map((f, i) => (
+                              <div key={i} className="flex justify-between text-sm">
+                                <span className="text-gray-300">{f.name}</span>
+                                <span className={f.hp > 0 ? 'text-green-400' : 'text-red-400'}>
+                                  {f.hp}/{f.maxHp} HP
+                                </span>
+                              </div>
                             ))}
                           </div>
                         </div>
-                      )}
-                    </div>
-                    
-                    {/* Player 2 Summary */}
-                    <div className="p-4 bg-red-900/30 rounded-lg">
-                      <h3 className="text-white font-bold mb-2">{player2Stats?.name}</h3>
-                      <p className="text-sm text-gray-300 mb-2">Final HP: <span className={battleSummary.p2FinalHp > 0 ? 'text-green-400' : 'text-red-400'}>{battleSummary.p2FinalHp}</span> / {player2Stats?.health}</p>
-                      {battleSummary.p2Abilities.length > 0 && (
-                        <div>
-                          <p className="text-xs text-gray-400 mb-1">Abilities:</p>
-                          <div className="flex flex-wrap gap-1">
-                            {battleSummary.p2Abilities.map((a, i) => (
-                              <span key={i} className={`px-2 py-0.5 rounded text-xs ${battleSummary.p2Activated.includes(a) ? 'bg-green-500/30 text-green-300' : 'bg-gray-500/30 text-gray-400'}`}>
-                                {battleSummary.p2Activated.includes(a) && '✓ '}{a}
-                              </span>
+                        {/* Team 2 Summary */}
+                        <div className="p-4 bg-red-900/30 rounded-lg">
+                          <h3 className="text-white font-bold mb-2">Team 2</h3>
+                          <div className="space-y-2">
+                            {battleSummary.team2Final.map((f, i) => (
+                              <div key={i} className="flex justify-between text-sm">
+                                <span className="text-gray-300">{f.name}</span>
+                                <span className={f.hp > 0 ? 'text-green-400' : 'text-red-400'}>
+                                  {f.hp}/{f.maxHp} HP
+                                </span>
+                              </div>
                             ))}
                           </div>
                         </div>
-                      )}
-                    </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Player 1 Summary */}
+                        <div className="p-4 bg-blue-900/30 rounded-lg">
+                          <h3 className="text-white font-bold mb-2">{player1Stats?.name}</h3>
+                          <p className="text-sm text-gray-300 mb-2">Final HP: <span className={battleSummary.p1FinalHp > 0 ? 'text-green-400' : 'text-red-400'}>{battleSummary.p1FinalHp}</span> / {player1Stats?.health}</p>
+                          {battleSummary.p1Abilities?.length > 0 && (
+                            <div>
+                              <p className="text-xs text-gray-400 mb-1">Abilities:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {battleSummary.p1Abilities.map((a, i) => (
+                                  <span key={i} className={`px-2 py-0.5 rounded text-xs ${battleSummary.p1Activated?.includes(a) ? 'bg-green-500/30 text-green-300' : 'bg-gray-500/30 text-gray-400'}`}>
+                                    {battleSummary.p1Activated?.includes(a) && '✓ '}{a}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Player 2 Summary */}
+                        <div className="p-4 bg-red-900/30 rounded-lg">
+                          <h3 className="text-white font-bold mb-2">{player2Stats?.name}</h3>
+                          <p className="text-sm text-gray-300 mb-2">Final HP: <span className={battleSummary.p2FinalHp > 0 ? 'text-green-400' : 'text-red-400'}>{battleSummary.p2FinalHp}</span> / {player2Stats?.health}</p>
+                          {battleSummary.p2Abilities?.length > 0 && (
+                            <div>
+                              <p className="text-xs text-gray-400 mb-1">Abilities:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {battleSummary.p2Abilities.map((a, i) => (
+                                  <span key={i} className={`px-2 py-0.5 rounded text-xs ${battleSummary.p2Activated?.includes(a) ? 'bg-green-500/30 text-green-300' : 'bg-gray-500/30 text-gray-400'}`}>
+                                    {battleSummary.p2Activated?.includes(a) && '✓ '}{a}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </CardContent>
               </Card>
