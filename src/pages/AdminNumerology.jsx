@@ -28,6 +28,8 @@ export default function AdminNumerology() {
   // Import state
   const [importData, setImportData] = useState('');
   const [isImporting, setIsImporting] = useState(false);
+  const [allFamilies, setAllFamilies] = useState([]);
+  const [selectedFamilyForImport, setSelectedFamilyForImport] = useState('');
   
   // Calendar predictions state
   const [predictionStart, setPredictionStart] = useState('2025-01-01');
@@ -75,10 +77,16 @@ export default function AdminNumerology() {
       setIsAdmin(true);
       loadFamilyMembers(selfMember.family_id);
       loadFamilySettings(selfMember.family_id);
-    } else {
-      setIsAdmin(false);
+      loadAllFamilies();
+    } else if (user.role === 'admin') {
+      loadAllFamilies();
     }
     setCheckingAdmin(false);
+  };
+  
+  const loadAllFamilies = async () => {
+    const families = await base44.entities.Family.list();
+    setAllFamilies(families);
   };
   
   const loadFamilySettings = async (familyId) => {
@@ -151,7 +159,7 @@ export default function AdminNumerology() {
   };
 
   const importMembers = async () => {
-    if (!importData.trim()) return;
+    if (!importData.trim() || !selectedFamilyForImport) return;
     
     setIsImporting(true);
     setMemberStatus('Importing members...');
@@ -161,16 +169,8 @@ export default function AdminNumerology() {
       const lines = importData.trim().split('\n');
       let imported = 0;
       
-      // Get or create family
-      const user = await base44.auth.me();
-      let families = await base44.entities.Family.filter({ admin_email: user.email });
-      let family = families[0];
-      if (!family) {
-        family = await base44.entities.Family.create({
-          name: `${user.full_name?.split(' ').pop() || 'My'} Family`,
-          admin_email: user.email
-        });
-      }
+      // Use selected family
+      const familyId = selectedFamilyForImport;
       
       for (const line of lines) {
         if (!line.trim()) continue;
@@ -179,7 +179,7 @@ export default function AdminNumerology() {
         
         if (full_name && birth_date) {
           await base44.entities.FamilyMember.create({
-            family_id: family.id,
+            family_id: familyId,
             full_name,
             nickname: full_name.split(' ')[0],
             birth_date,
@@ -549,20 +549,35 @@ export default function AdminNumerology() {
           <CardHeader>
             <CardTitle className="text-white text-lg">Import Family Members</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
-                          <p className="text-gray-500 text-xs">
-                            Format: Name, YYYY-MM-DD, Relationship, Gen, Time, Place
-                          </p>
+          <CardContent className="space-y-3">
+            <div>
+              <label className="text-sm text-gray-300 mb-1 block">Select Target Family *</label>
+              <Select value={selectedFamilyForImport} onValueChange={setSelectedFamilyForImport}>
+                <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                  <SelectValue placeholder="Select a family to import into" />
+                </SelectTrigger>
+                <SelectContent>
+                  {allFamilies.map(f => (
+                    <SelectItem key={f.id} value={f.id}>
+                      {f.name} ({f.admin_email})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <p className="text-gray-500 text-xs">
+              Format: Name, YYYY-MM-DD, Relationship, Gen, Time, Place
+            </p>
             <textarea
-                              value={importData}
-                              onChange={(e) => setImportData(e.target.value)}
-                              placeholder="Name, YYYY-MM-DD, relationship, gen, time, place"
-                              className="w-full h-16 bg-white/10 border border-white/20 rounded-lg p-2 text-white placeholder:text-gray-500 text-xs font-mono"
-                            />
+              value={importData}
+              onChange={(e) => setImportData(e.target.value)}
+              placeholder="Name, YYYY-MM-DD, relationship, gen, time, place"
+              className="w-full h-16 bg-white/10 border border-white/20 rounded-lg p-2 text-white placeholder:text-gray-500 text-xs font-mono"
+            />
             <div className="flex gap-2">
               <Button
                 onClick={importMembers}
-                disabled={!importData.trim() || isImporting}
+                disabled={!importData.trim() || !selectedFamilyForImport || isImporting}
                 className="bg-green-600 hover:bg-green-700"
               >
                 {isImporting ? (
