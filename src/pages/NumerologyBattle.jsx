@@ -68,31 +68,101 @@ export default function NumerologyBattle() {
     setCheckingAccess(false);
   };
 
+  const getTeamSize = () => {
+    if (battleMode === '2v2') return 2;
+    if (battleMode === '3v3') return 3;
+    return 1;
+  };
+
+  const toggleTeam1 = (id) => {
+    if (team1Ids.includes(id)) {
+      setTeam1Ids(team1Ids.filter(i => i !== id));
+    } else if (team1Ids.length < getTeamSize()) {
+      setTeam1Ids([...team1Ids, id]);
+    }
+  };
+
+  const toggleTeam2 = (id) => {
+    if (team2Ids.includes(id)) {
+      setTeam2Ids(team2Ids.filter(i => i !== id));
+    } else if (team2Ids.length < getTeamSize()) {
+      setTeam2Ids([...team2Ids, id]);
+    }
+  };
+
   const loadBattleStats = async () => {
-    if (!player1Id || !player2Id) return;
+    // 1v1 mode
+    if (battleMode === '1v1') {
+      if (!player1Id || !player2Id) return;
+      
+      setIsLoading(true);
+      const response = await base44.functions.invoke('calculateBattleStats', {
+        action: 'getBattlePreview',
+        player1Id,
+        player2Id
+      });
+
+      if (response.data?.success) {
+        const p1Data = response.data.data.player1;
+        const p2Data = response.data.data.player2;
+        setPlayer1Stats({ 
+          ...p1Data.stats, 
+          name: p1Data.name,
+          abilities: p1Data.stats.specialAbilities 
+        });
+        setPlayer2Stats({ 
+          ...p2Data.stats, 
+          name: p2Data.name,
+          abilities: p2Data.stats.specialAbilities 
+        });
+        setBattleState('ready');
+      }
+      setIsLoading(false);
+      return;
+    }
+    
+    // Team mode
+    if (team1Ids.length !== getTeamSize() || team2Ids.length !== getTeamSize()) return;
     
     setIsLoading(true);
-    const response = await base44.functions.invoke('calculateBattleStats', {
-      action: 'getBattlePreview',
-      player1Id,
-      player2Id
-    });
-
-    if (response.data?.success) {
-      const p1Data = response.data.data.player1;
-      const p2Data = response.data.data.player2;
-      setPlayer1Stats({ 
-        ...p1Data.stats, 
-        name: p1Data.name,
-        abilities: p1Data.stats.specialAbilities 
+    
+    // Load stats for all team members
+    const t1Stats = [];
+    const t2Stats = [];
+    
+    for (const id of team1Ids) {
+      const response = await base44.functions.invoke('calculateBattleStats', {
+        action: 'getPlayerStats',
+        playerId: id
       });
-      setPlayer2Stats({ 
-        ...p2Data.stats, 
-        name: p2Data.name,
-        abilities: p2Data.stats.specialAbilities 
-      });
-      setBattleState('ready');
+      if (response.data?.success) {
+        t1Stats.push({
+          ...response.data.data.stats,
+          id,
+          name: response.data.data.name,
+          abilities: response.data.data.stats.specialAbilities
+        });
+      }
     }
+    
+    for (const id of team2Ids) {
+      const response = await base44.functions.invoke('calculateBattleStats', {
+        action: 'getPlayerStats',
+        playerId: id
+      });
+      if (response.data?.success) {
+        t2Stats.push({
+          ...response.data.data.stats,
+          id,
+          name: response.data.data.name,
+          abilities: response.data.data.stats.specialAbilities
+        });
+      }
+    }
+    
+    setTeam1Stats(t1Stats);
+    setTeam2Stats(t2Stats);
+    setBattleState('ready');
     setIsLoading(false);
   };
 
