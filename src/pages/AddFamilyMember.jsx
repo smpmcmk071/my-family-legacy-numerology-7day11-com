@@ -4,9 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
-import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw, MapPin } from 'lucide-react';
+import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw, MapPin, Music } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
 import { buildMemberDataFromCalc } from '../components/utils/numerologyHelpers';
+import { getSongRecommendations } from '../components/utils/songRecommendations';
 
 // Simple ZIP code to City/State lookup (common US ZIP codes)
 const ZIP_LOOKUP = {
