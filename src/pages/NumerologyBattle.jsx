@@ -22,6 +22,7 @@ export default function NumerologyBattle() {
   const [accessDenied, setAccessDenied] = useState(false);
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [battleHistory, setBattleHistory] = useState([]);
+  const [battleSummary, setBattleSummary] = useState(null);
 
   useEffect(() => {
     loadFamilyMembers();
@@ -104,11 +105,22 @@ export default function NumerologyBattle() {
     let turn = 0;
     const maxTurns = 20;
     
+    // Track ability activations
+    const abilityActivations = { [p1.name]: [], [p2.name]: [] };
+    
     // Determine who goes first based on speed
     let attacker = p1.speed >= p2.speed ? p1 : p2;
     let defender = attacker === p1 ? p2 : p1;
     
     log.push({ type: 'info', text: `⚔️ Battle begins! ${attacker.name} has higher speed and attacks first!` });
+    
+    // Log special abilities at start
+    if (p1.abilities?.length > 0) {
+      log.push({ type: 'ability', text: `✨ ${p1.name} activates: ${p1.abilities.join(', ')}` });
+    }
+    if (p2.abilities?.length > 0) {
+      log.push({ type: 'ability', text: `✨ ${p2.name} activates: ${p2.abilities.join(', ')}` });
+    }
     
     while (p1.currentHp > 0 && p2.currentHp > 0 && turn < maxTurns) {
       turn++;
@@ -124,6 +136,14 @@ export default function NumerologyBattle() {
       
       // Check for evasion
       if (evasionRoll < defender.evasion) {
+        // Find evasion-related ability
+        const evasionAbility = defender.abilities?.find(a => 
+          a.includes('Evasion') || a.includes('Wind') || a.includes('55') || a.includes('Seeker') || a.includes('Deep')
+        );
+        if (evasionAbility && !abilityActivations[defender.name].includes(evasionAbility)) {
+          abilityActivations[defender.name].push(evasionAbility);
+          log.push({ type: 'ability', text: `🌀 ${defender.name}'s ${evasionAbility} triggers!` });
+        }
         log.push({ 
           type: 'miss', 
           attacker: attacker.name,
@@ -133,6 +153,14 @@ export default function NumerologyBattle() {
         let damage = Math.max(1, Math.floor(baseDamage - defense));
         if (isCrit) {
           damage = Math.floor(damage * 1.5);
+          // Find crit-related ability
+          const critAbility = attacker.abilities?.find(a => 
+            a.includes('Strike') || a.includes('Vision') || a.includes('Insight') || a.includes('11') || a.includes('Power')
+          );
+          if (critAbility && !abilityActivations[attacker.name].includes(critAbility)) {
+            abilityActivations[attacker.name].push(critAbility);
+            log.push({ type: 'ability', text: `⚡ ${attacker.name}'s ${critAbility} triggers!` });
+          }
           log.push({ 
             type: 'crit', 
             attacker: attacker.name,
@@ -154,6 +182,14 @@ export default function NumerologyBattle() {
       if (attacker.regen > 0 && attacker.currentHp < attacker.health) {
         const healAmount = Math.min(attacker.regen, attacker.health - attacker.currentHp);
         attacker.currentHp += healAmount;
+        // Find regen-related ability
+        const regenAbility = attacker.abilities?.find(a => 
+          a.includes('Heal') || a.includes('Aura') || a.includes('33') || a.includes('Nurturer') || a.includes('Regen') || a.includes('Divine')
+        );
+        if (regenAbility && !abilityActivations[attacker.name].includes(regenAbility)) {
+          abilityActivations[attacker.name].push(regenAbility);
+          log.push({ type: 'ability', text: `💚 ${attacker.name}'s ${regenAbility} triggers!` });
+        }
         log.push({ 
           type: 'heal', 
           attacker: attacker.name,
@@ -197,6 +233,18 @@ export default function NumerologyBattle() {
     setWinner(battleWinner);
     setBattleLog(log);
     setBattleState('finished');
+    
+    // Store ability activations for summary
+    setBattleSummary({
+      winner: battleWinner,
+      turns: turn,
+      p1FinalHp: Math.max(0, Math.floor(p1.currentHp)),
+      p2FinalHp: Math.max(0, Math.floor(p2.currentHp)),
+      p1Abilities: p1.abilities || [],
+      p2Abilities: p2.abilities || [],
+      p1Activated: abilityActivations[p1.name] || [],
+      p2Activated: abilityActivations[p2.name] || []
+    });
     
     // Save battle record
     await base44.entities.BattleRecord.create({
@@ -250,6 +298,7 @@ export default function NumerologyBattle() {
     setBattleLog([]);
     setWinner(null);
     setCurrentTurn(0);
+    setBattleSummary(null);
   };
 
   const StatBar = ({ label, value, max, color, icon: Icon }) => (
@@ -472,13 +521,54 @@ export default function NumerologyBattle() {
               )}
             </div>
 
-            {/* Winner Display */}
-            {winner && (
+            {/* Winner Display & Battle Summary */}
+            {winner && battleSummary && (
               <Card className="bg-gradient-to-r from-amber-600/30 to-yellow-600/30 border-amber-500/50 mb-6">
-                <CardContent className="py-6 text-center">
-                  <Trophy className="w-16 h-16 text-amber-400 mx-auto mb-4" />
-                  <h2 className="text-3xl font-bold text-white mb-2">{winner.name} Wins!</h2>
-                  <p className="text-gray-300">Victory achieved in {currentTurn} turns</p>
+                <CardContent className="py-6">
+                  <div className="text-center mb-6">
+                    <Trophy className="w-16 h-16 text-amber-400 mx-auto mb-4" />
+                    <h2 className="text-3xl font-bold text-white mb-2">{winner.name} Wins!</h2>
+                    <p className="text-gray-300">Victory achieved in {battleSummary.turns} turns</p>
+                  </div>
+                  
+                  {/* Battle Summary */}
+                  <div className="grid md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/20">
+                    {/* Player 1 Summary */}
+                    <div className="p-4 bg-blue-900/30 rounded-lg">
+                      <h3 className="text-white font-bold mb-2">{player1Stats?.name}</h3>
+                      <p className="text-sm text-gray-300 mb-2">Final HP: <span className={battleSummary.p1FinalHp > 0 ? 'text-green-400' : 'text-red-400'}>{battleSummary.p1FinalHp}</span> / {player1Stats?.health}</p>
+                      {battleSummary.p1Abilities.length > 0 && (
+                        <div>
+                          <p className="text-xs text-gray-400 mb-1">Abilities:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {battleSummary.p1Abilities.map((a, i) => (
+                              <span key={i} className={`px-2 py-0.5 rounded text-xs ${battleSummary.p1Activated.includes(a) ? 'bg-green-500/30 text-green-300' : 'bg-gray-500/30 text-gray-400'}`}>
+                                {battleSummary.p1Activated.includes(a) && '✓ '}{a}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Player 2 Summary */}
+                    <div className="p-4 bg-red-900/30 rounded-lg">
+                      <h3 className="text-white font-bold mb-2">{player2Stats?.name}</h3>
+                      <p className="text-sm text-gray-300 mb-2">Final HP: <span className={battleSummary.p2FinalHp > 0 ? 'text-green-400' : 'text-red-400'}>{battleSummary.p2FinalHp}</span> / {player2Stats?.health}</p>
+                      {battleSummary.p2Abilities.length > 0 && (
+                        <div>
+                          <p className="text-xs text-gray-400 mb-1">Abilities:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {battleSummary.p2Abilities.map((a, i) => (
+                              <span key={i} className={`px-2 py-0.5 rounded text-xs ${battleSummary.p2Activated.includes(a) ? 'bg-green-500/30 text-green-300' : 'bg-gray-500/30 text-gray-400'}`}>
+                                {battleSummary.p2Activated.includes(a) && '✓ '}{a}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -527,7 +617,8 @@ export default function NumerologyBattle() {
                           entry.type === 'crit' ? 'bg-red-500/20 text-red-300' :
                           entry.type === 'miss' ? 'bg-gray-500/20 text-gray-400' :
                           entry.type === 'heal' ? 'bg-green-500/20 text-green-300' :
-                          entry.type === 'info' ? 'bg-blue-500/20 text-blue-300' :
+                          entry.type === 'ability' ? 'bg-purple-500/20 text-purple-300' :
+                        entry.type === 'info' ? 'bg-blue-500/20 text-blue-300' :
                           'bg-white/5 text-gray-300'
                         }`}
                       >
