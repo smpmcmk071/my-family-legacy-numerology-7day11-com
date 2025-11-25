@@ -60,6 +60,34 @@ function reduceToDigit(n, keepMaster = true) {
   return n;
 }
 
+// New function that returns both the final reduced value AND any master numbers found during reduction
+function reduceWithMasters(n, keepMaster = true) {
+  if (n < 0) n = Math.abs(n);
+  const mastersFound = [];
+  
+  // Check if already a master number
+  if (MASTER_NUMBERS.includes(n)) {
+    mastersFound.push(n);
+    if (keepMaster) {
+      return { reduced: n, masters: mastersFound };
+    }
+  }
+  
+  // Reduce by summing digits, tracking any master numbers encountered
+  while (n > 9) {
+    n = String(n).split('').reduce((sum, d) => sum + parseInt(d), 0);
+    // Check if reduction creates a master number
+    if ([11, 22, 33].includes(n)) {
+      mastersFound.push(n);
+      if (keepMaster) {
+        return { reduced: n, masters: mastersFound };
+      }
+    }
+  }
+  
+  return { reduced: n, masters: mastersFound };
+}
+
 function formatWithReduction(total, keepMaster = true) {
   const reduced = reduceToDigit(total, keepMaster);
   if (total === reduced || total < 10) {
