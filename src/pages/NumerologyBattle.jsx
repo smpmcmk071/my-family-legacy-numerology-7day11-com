@@ -56,13 +56,24 @@ export default function NumerologyBattle() {
     
     setIsLoading(true);
     const response = await base44.functions.invoke('calculateBattleStats', {
+      action: 'getBattlePreview',
       player1Id,
       player2Id
     });
 
     if (response.data?.success) {
-      setPlayer1Stats(response.data.player1);
-      setPlayer2Stats(response.data.player2);
+      const p1Data = response.data.data.player1;
+      const p2Data = response.data.data.player2;
+      setPlayer1Stats({ 
+        ...p1Data.stats, 
+        name: p1Data.name,
+        abilities: p1Data.stats.specialAbilities 
+      });
+      setPlayer2Stats({ 
+        ...p2Data.stats, 
+        name: p2Data.name,
+        abilities: p2Data.stats.specialAbilities 
+      });
       setBattleState('ready');
     }
     setIsLoading(false);
