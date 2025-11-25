@@ -140,106 +140,107 @@ export default function FamilyTrends({ familyMembers }) {
   const totalMembers = familyMembers.length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Overview Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-2">
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardContent className="py-4 text-center">
-            <Users className="w-6 h-6 text-amber-400 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-white">{totalMembers}</p>
-            <p className="text-xs text-gray-400">Family Members</p>
+          <CardContent className="py-3 text-center">
+            <Users className="w-5 h-5 text-amber-400 mx-auto mb-1" />
+            <p className="text-xl font-bold text-white">{totalMembers}</p>
+            <p className="text-xs text-gray-400">Members</p>
           </CardContent>
         </Card>
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardContent className="py-4 text-center">
-            <Star className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-white">{masterNumberMembers.length}</p>
-            <p className="text-xs text-gray-400">With Master Numbers</p>
+          <CardContent className="py-3 text-center">
+            <Star className="w-5 h-5 text-purple-400 mx-auto mb-1" />
+            <p className="text-xl font-bold text-white">{masterNumberMembers.length}</p>
+            <p className="text-xs text-gray-400">Masters</p>
           </CardContent>
         </Card>
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardContent className="py-4 text-center">
-            <TrendingUp className="w-6 h-6 text-green-400 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-white">{sortedLifePaths[0]?.[0] || '-'}</p>
-            <p className="text-xs text-gray-400">Most Common LP</p>
+          <CardContent className="py-3 text-center">
+            <TrendingUp className="w-5 h-5 text-green-400 mx-auto mb-1" />
+            <p className="text-xl font-bold text-white">{sortedLifePaths[0]?.[0] || '-'}</p>
+            <p className="text-xs text-gray-400">Top LP</p>
           </CardContent>
         </Card>
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardContent className="py-4 text-center">
+          <CardContent className="py-3 text-center">
             {sortedElements[0] && ELEMENT_ICONS[sortedElements[0][0]] ? (
-              React.createElement(ELEMENT_ICONS[sortedElements[0][0]], { className: 'w-6 h-6 text-cyan-400 mx-auto mb-2' })
+              React.createElement(ELEMENT_ICONS[sortedElements[0][0]], { className: 'w-5 h-5 text-cyan-400 mx-auto mb-1' })
             ) : (
-              <Flame className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
+              <Flame className="w-5 h-5 text-cyan-400 mx-auto mb-1" />
             )}
-            <p className="text-2xl font-bold text-white">{sortedElements[0]?.[0] || '-'}</p>
-            <p className="text-xs text-gray-400">Dominant Element</p>
+            <p className="text-xl font-bold text-white">{sortedElements[0]?.[0] || '-'}</p>
+            <p className="text-xs text-gray-400">Element</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Life Path Distribution */}
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white text-lg">Life Path Distribution</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {sortedLifePaths.map(([num, count]) => {
-              const percentage = Math.round((count / totalMembers) * 100);
-              return (
-                <div key={num} className="flex items-center gap-3">
-                  <NumberBadge number={parseInt(num)} size="sm" />
-                  <div className="flex-1">
-                    <div className="h-4 bg-white/10 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all"
-                        style={{ width: `${percentage}%` }}
-                      />
+      {/* Life Path & Expression Side by Side */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-white text-sm">Life Path Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {sortedLifePaths.slice(0, 5).map(([num, count]) => {
+                const percentage = Math.round((count / totalMembers) * 100);
+                return (
+                  <div key={num} className="flex items-center gap-2">
+                    <NumberBadge number={parseInt(num)} size="sm" />
+                    <div className="flex-1">
+                      <div className="h-3 bg-white/10 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
                     </div>
+                    <span className="text-white text-xs w-12 text-right">{count} ({percentage}%)</span>
                   </div>
-                  <span className="text-white text-sm w-16 text-right">{count} ({percentage}%)</span>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Expression Number Distribution */}
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white text-lg">Expression/Destiny Distribution</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {sortedExpressions.slice(0, 5).map(([num, count]) => {
-              const percentage = Math.round((count / totalMembers) * 100);
-              return (
-                <div key={num} className="flex items-center gap-3">
-                  <NumberBadge number={parseInt(num)} size="sm" />
-                  <div className="flex-1">
-                    <div className="h-4 bg-white/10 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all"
-                        style={{ width: `${percentage}%` }}
-                      />
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-white text-sm">Expression Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {sortedExpressions.slice(0, 5).map(([num, count]) => {
+                const percentage = Math.round((count / totalMembers) * 100);
+                return (
+                  <div key={num} className="flex items-center gap-2">
+                    <NumberBadge number={parseInt(num)} size="sm" />
+                    <div className="flex-1">
+                      <div className="h-3 bg-white/10 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
                     </div>
+                    <span className="text-white text-xs w-12 text-right">{count} ({percentage}%)</span>
                   </div>
-                  <span className="text-white text-sm w-16 text-right">{count} ({percentage}%)</span>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Element Distribution */}
+      {/* Element Distribution - Compact */}
       <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-        <CardHeader>
-          <CardTitle className="text-white text-lg">Elemental Balance</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-white text-sm">Elemental Balance</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-2">
             {['Fire', 'Water', 'Air', 'Earth'].map(element => {
               const count = elementCounts[element] || 0;
               const percentage = totalMembers > 0 ? Math.round((count / totalMembers) * 100) : 0;
@@ -252,10 +253,10 @@ export default function FamilyTrends({ familyMembers }) {
               };
               
               return (
-                <div key={element} className={`p-4 rounded-lg bg-gradient-to-br ${colors[element]} bg-opacity-20 border`}>
-                  <Icon className="w-6 h-6 text-white mb-2" />
-                  <p className="text-white font-bold">{element}</p>
-                  <p className="text-white/80 text-sm">{count} members ({percentage}%)</p>
+                <div key={element} className={`p-2 rounded-lg bg-gradient-to-br ${colors[element]} bg-opacity-20 border text-center`}>
+                  <Icon className="w-4 h-4 text-white mx-auto mb-1" />
+                  <p className="text-white text-xs font-bold">{element}</p>
+                  <p className="text-white/80 text-xs">{count} ({percentage}%)</p>
                 </div>
               );
             })}
@@ -263,21 +264,21 @@ export default function FamilyTrends({ familyMembers }) {
         </CardContent>
       </Card>
 
-      {/* Master Number Carriers */}
+      {/* Master Number Carriers - Compact */}
       {masterNumberMembers.length > 0 && (
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-          <CardHeader>
-            <CardTitle className="text-white text-lg flex items-center gap-2">
-              <Star className="w-5 h-5 text-amber-400" />
+          <CardHeader className="pb-2">
+            <CardTitle className="text-white text-sm flex items-center gap-2">
+              <Star className="w-4 h-4 text-amber-400" />
               Master Number Carriers
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               {masterNumberMembers.map((m, i) => (
-                <div key={i} className="px-3 py-2 bg-amber-500/20 rounded-lg border border-amber-500/30">
-                  <p className="text-white font-medium">{m.name}</p>
-                  <div className="flex gap-1 mt-1">
+                <div key={i} className="px-2 py-1 bg-amber-500/20 rounded border border-amber-500/30 flex items-center gap-2">
+                  <span className="text-white text-sm">{m.name}</span>
+                  <div className="flex gap-0.5">
                     {m.masters.split(',').map((num, j) => (
                       <NumberBadge key={j} number={parseInt(num)} size="sm" />
                     ))}

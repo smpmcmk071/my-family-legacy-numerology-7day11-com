@@ -8,6 +8,7 @@ import FamilyTrends from '@/components/community/FamilyTrends';
 import SharedExperiences from '@/components/community/SharedExperiences';
 import NumerologyPlaylists from '@/components/community/NumerologyPlaylists';
 import FamilyPlaylist from '@/components/community/FamilyPlaylist';
+import UpcomingEvents from '@/components/community/UpcomingEvents';
 
 export default function Community() {
   const [user, setUser] = useState(null);
@@ -108,7 +109,12 @@ export default function Community() {
           </TabsList>
 
           <TabsContent value="trends">
-            <FamilyPlaylist familyMembers={familyMembers} />
+            <div className="grid lg:grid-cols-3 gap-4 mb-4">
+              <div className="lg:col-span-2">
+                <FamilyPlaylist familyMembers={familyMembers} />
+              </div>
+              <UpcomingEvents userMember={userMember} />
+            </div>
             <FamilyTrends familyMembers={familyMembers} />
           </TabsContent>
 
