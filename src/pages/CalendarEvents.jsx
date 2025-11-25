@@ -16,7 +16,14 @@ const getESTDate = () => {
 };
 
 export default function CalendarEvents() {
-  const [selectedDate, setSelectedDate] = useState('2025-11-25');
+  const [selectedDate, setSelectedDate] = useState(() => {
+  // Force current EST date
+  const now = new Date();
+  const year = now.toLocaleString('en-US', { timeZone: 'America/New_York', year: 'numeric' });
+  const month = now.toLocaleString('en-US', { timeZone: 'America/New_York', month: '2-digit' });
+  const day = now.toLocaleString('en-US', { timeZone: 'America/New_York', day: '2-digit' });
+  return `${year}-${month}-${day}`;
+});
   const [events, setEvents] = useState([]);
   const [dayCalc, setDayCalc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
