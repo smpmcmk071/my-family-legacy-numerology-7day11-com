@@ -681,44 +681,78 @@ export default function NumerologyBattle() {
         {battleState === 'select' && (
           <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
             <CardHeader>
-              <CardTitle className="text-white">Choose Your Fighters</CardTitle>
+              <CardTitle className="text-white flex items-center justify-between">
+                <span>Choose Your Fighters</span>
+                <Tabs value={battleMode} onValueChange={handleModeChange}>
+                  <TabsList className="bg-white/10">
+                    <TabsTrigger value="1v1" className="data-[state=active]:bg-amber-600">1v1</TabsTrigger>
+                    <TabsTrigger value="2v2" className="data-[state=active]:bg-amber-600">2v2</TabsTrigger>
+                    <TabsTrigger value="3v3" className="data-[state=active]:bg-amber-600">3v3</TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm text-gray-300 mb-2 block">Player 1</label>
-                  <Select value={player1Id} onValueChange={setPlayer1Id}>
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                      <SelectValue placeholder="Select fighter" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {familyMembers.map(m => (
-                        <SelectItem key={m.id} value={m.id} disabled={m.id === player2Id}>
-                          {m.nickname || m.full_name} (LP: {m.life_path_western})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              {battleMode === '1v1' ? (
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-gray-300 mb-2 block">Player 1</label>
+                    <Select value={player1Id} onValueChange={setPlayer1Id}>
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                        <SelectValue placeholder="Select fighter" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {familyMembers.map(m => (
+                          <SelectItem key={m.id} value={m.id} disabled={m.id === player2Id}>
+                            {m.nickname || m.full_name} (LP: {m.life_path_western})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-300 mb-2 block">Player 2</label>
+                    <Select value={player2Id} onValueChange={setPlayer2Id}>
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                        <SelectValue placeholder="Select fighter" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {familyMembers.map(m => (
+                          <SelectItem key={m.id} value={m.id} disabled={m.id === player1Id}>
+                            {m.nickname || m.full_name} (LP: {m.life_path_western})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-sm text-gray-300 mb-2 block">Player 2</label>
-                  <Select value={player2Id} onValueChange={setPlayer2Id}>
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                      <SelectValue placeholder="Select fighter" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {familyMembers.map(m => (
-                        <SelectItem key={m.id} value={m.id} disabled={m.id === player1Id}>
-                          {m.nickname || m.full_name} (LP: {m.life_path_western})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              ) : (
+                <div className="grid md:grid-cols-2 gap-4">
+                  <TeamSelector
+                    teamNumber={1}
+                    members={familyMembers}
+                    selectedIds={team1Ids}
+                    onToggle={toggleTeam1}
+                    maxSize={getTeamSize()}
+                    otherTeamIds={team2Ids}
+                  />
+                  <TeamSelector
+                    teamNumber={2}
+                    members={familyMembers}
+                    selectedIds={team2Ids}
+                    onToggle={toggleTeam2}
+                    maxSize={getTeamSize()}
+                    otherTeamIds={team1Ids}
+                  />
                 </div>
-              </div>
+              )}
               <Button 
                 onClick={loadBattleStats} 
-                disabled={!player1Id || !player2Id || isLoading}
+                disabled={
+                  battleMode === '1v1' 
+                    ? (!player1Id || !player2Id || isLoading)
+                    : (team1Ids.length !== getTeamSize() || team2Ids.length !== getTeamSize() || isLoading)
+                }
                 className="w-full bg-amber-600 hover:bg-amber-700"
               >
                 {isLoading ? (
