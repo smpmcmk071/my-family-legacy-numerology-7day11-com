@@ -567,6 +567,34 @@ Deno.serve(async (req) => {
       });
     }
     
+    if (action === 'getPlayerStats') {
+      // Get stats for a single player by ID
+      const { playerId } = body;
+      const player = allMembers.find(m => m.id === playerId);
+      
+      if (!player) {
+        return Response.json({ error: 'Player not found' }, { status: 404 });
+      }
+      
+      const playerMappings = customMappings.filter(m => 
+        m.number === player.life_path_western || m.zodiac_sign === player.sun_sign
+      );
+      
+      const stats = deriveBattleStats(player, allMembers, playerMappings);
+      
+      return Response.json({
+        success: true,
+        data: {
+          id: player.id,
+          name: player.nickname || player.full_name,
+          lifePath: player.life_path_western,
+          sunSign: player.sun_sign,
+          element: ZODIAC_ELEMENTS[player.sun_sign] || 'neutral',
+          stats
+        }
+      });
+    }
+    
     if (action === 'getBattlePreview') {
       // Get stats for both players
       const player1 = allMembers.find(m => m.id === player1Id);
