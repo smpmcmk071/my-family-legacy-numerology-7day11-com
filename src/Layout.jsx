@@ -115,6 +115,15 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Main Content */}
       <main>{children}</main>
-    </div>
-  );
-}
+
+      {/* Footer */}
+      <footer className="bg-black/30 backdrop-blur-sm border-t border-white/10 py-4 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-gray-400 text-sm">
+            © {new Date().getFullYear()} 7day11.com. All Rights Reserved.
+          </p>
+        </div>
+      </footer>
+      </div>
+      );
+      }
