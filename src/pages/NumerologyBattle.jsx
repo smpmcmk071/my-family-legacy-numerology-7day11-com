@@ -969,7 +969,8 @@ export default function NumerologyBattle() {
                           entry.type === 'miss' ? 'bg-gray-500/20 text-gray-400' :
                           entry.type === 'heal' ? 'bg-green-500/20 text-green-300' :
                           entry.type === 'ability' ? 'bg-purple-500/20 text-purple-300' :
-                        entry.type === 'info' ? 'bg-blue-500/20 text-blue-300' :
+                          entry.type === 'info' ? 'bg-blue-500/20 text-blue-300' :
+                          entry.type === 'defeat' ? 'bg-red-600/30 text-red-300 font-semibold' :
                           'bg-white/5 text-gray-300'
                         }`}
                       >
