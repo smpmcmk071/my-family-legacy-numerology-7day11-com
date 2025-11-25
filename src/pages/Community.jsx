@@ -14,6 +14,7 @@ export default function Community() {
   const [userMember, setUserMember] = useState(null);
   const [familyMembers, setFamilyMembers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [accessDenied, setAccessDenied] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -35,6 +36,17 @@ export default function Community() {
     }
     
     setUserMember(selfMember);
+    
+    // Check family settings
+    if (selfMember?.family_id) {
+      const allFamilies = await base44.entities.Family.list();
+      const family = allFamilies.find(f => f.id === selfMember.family_id);
+      if (family && family.enable_community === false) {
+        setAccessDenied(true);
+        setIsLoading(false);
+        return;
+      }
+    }
     
     // Now fetch ALL members from the same family_id (not just created_by)
     let members = [];
