@@ -1,7 +1,26 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, Users, Star, Flame, Droplet, Wind, Mountain } from 'lucide-react';
+import { TrendingUp, Users, Star, Flame, Droplet, Wind, Mountain, AlertTriangle, BookOpen } from 'lucide-react';
 import NumberBadge from '@/components/legacy/NumberBadge';
+
+const KARMIC_DEBT_MEANINGS = {
+  13: { title: 'Laziness & Shortcuts', lesson: 'Hard work, focus, and building solid foundations. Avoid cutting corners.' },
+  14: { title: 'Freedom & Excess', lesson: 'Balance freedom with responsibility. Avoid addiction and overindulgence.' },
+  16: { title: 'Ego & Downfall', lesson: 'Humility and spiritual growth. Ego destruction leads to rebirth.' },
+  19: { title: 'Independence & Selfishness', lesson: 'Learn to give and receive help. Balance independence with cooperation.' }
+};
+
+const KARMIC_LESSON_MEANINGS = {
+  1: 'Leadership & Independence - Learn to stand on your own and take initiative',
+  2: 'Cooperation & Sensitivity - Develop patience and diplomacy in relationships',
+  3: 'Self-Expression & Joy - Embrace creativity and communicate feelings openly',
+  4: 'Discipline & Hard Work - Build stability through consistent effort',
+  5: 'Freedom & Adaptability - Embrace change and learn from diverse experiences',
+  6: 'Responsibility & Love - Nurture others while maintaining healthy boundaries',
+  7: 'Faith & Inner Wisdom - Trust intuition and seek deeper spiritual understanding',
+  8: 'Power & Abundance - Master material world while staying ethically grounded',
+  9: 'Compassion & Release - Let go of attachments and serve humanity selflessly'
+};
 
 const ELEMENT_ICONS = {
   Fire: Flame,
