@@ -595,7 +595,7 @@ export default function NumerologyBattle() {
                 <CardContent>
                   <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={getWinStats()} layout="vertical">
-                      <XAxis type="number" stroke="#9ca3af" />
+                      <XAxis type="number" stroke="#9ca3af" allowDecimals={false} />
                       <YAxis type="category" dataKey="name" stroke="#9ca3af" width={80} tick={{ fontSize: 12 }} />
                       <Tooltip 
                         contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid #6366f1', borderRadius: '8px' }}
