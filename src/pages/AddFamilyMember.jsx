@@ -560,6 +560,30 @@ export default function AddFamilyMember() {
                                             </div>
                                           </div>
 
+                  {/* Song Recommendations */}
+                  {calculatedData && (
+                    <div className="pt-4 border-t border-white/10">
+                      <p className="text-xs text-gray-400 mb-2 flex items-center gap-1">
+                        <Music className="w-3 h-3" /> Song Recommendations
+                      </p>
+                      <div className="space-y-2">
+                        {getSongRecommendations(
+                          displayMethod === 'western' ? calculatedData.lifePath?.reduced : calculatedData.lifePathChaldean?.reduced,
+                          displayMethod === 'western' ? calculatedData.expression?.reduced : calculatedData.expressionChaldean?.reduced,
+                          calculatedData.birthday?.reduced
+                        ).map((rec, idx) => (
+                          <div key={idx} className="p-2 bg-purple-500/10 rounded border border-purple-500/20">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-purple-400">{rec.type} ({rec.number})</span>
+                            </div>
+                            <p className="text-white font-medium text-sm">🎵 "{rec.song}" - {rec.artist}</p>
+                            <p className="text-gray-400 text-xs">{rec.reason}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <Button
                     onClick={handleSave}
                     disabled={isSaving || saved}
