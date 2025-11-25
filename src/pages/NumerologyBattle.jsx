@@ -167,17 +167,161 @@ export default function NumerologyBattle() {
   };
 
   const startBattle = () => {
-    if (!player1Stats || !player2Stats) return;
-    
     setBattleState('fighting');
     setBattleLog([]);
     setCurrentTurn(0);
     
-    // Clone stats for battle
-    const p1 = { ...player1Stats, currentHp: player1Stats.health };
-    const p2 = { ...player2Stats, currentHp: player2Stats.health };
+    if (battleMode === '1v1') {
+      if (!player1Stats || !player2Stats) return;
+      // Clone stats for battle
+      const p1 = { ...player1Stats, currentHp: player1Stats.health };
+      const p2 = { ...player2Stats, currentHp: player2Stats.health };
+      runBattle(p1, p2);
+    } else {
+      // Team battle
+      if (team1Stats.length === 0 || team2Stats.length === 0) return;
+      const t1 = team1Stats.map(s => ({ ...s, currentHp: s.health }));
+      const t2 = team2Stats.map(s => ({ ...s, currentHp: s.health }));
+      runTeamBattle(t1, t2);
+    }
+  };
+
+  const runTeamBattle = async (team1, team2) => {
+    const log = [];
+    let turn = 0;
+    const maxTurns = 30;
     
-    runBattle(p1, p2);
+    // Create combined turn order based on speed
+    const allFighters = [
+      ...team1.map(f => ({ ...f, team: 1 })),
+      ...team2.map(f => ({ ...f, team: 2 }))
+    ].sort((a, b) => b.speed - a.speed);
+    
+    log.push({ type: 'info', text: `⚔️ Team Battle begins! ${team1.map(f => f.name).join(' & ')} VS ${team2.map(f => f.name).join(' & ')}` });
+    
+    // Log abilities
+    team1.forEach(f => {
+      if (f.abilities?.length > 0) {
+        log.push({ type: 'ability', text: `✨ ${f.name} activates: ${f.abilities.slice(0, 2).join(', ')}${f.abilities.length > 2 ? '...' : ''}` });
+      }
+    });
+    team2.forEach(f => {
+      if (f.abilities?.length > 0) {
+        log.push({ type: 'ability', text: `✨ ${f.name} activates: ${f.abilities.slice(0, 2).join(', ')}${f.abilities.length > 2 ? '...' : ''}` });
+      }
+    });
+    
+    const getAliveEnemies = (attackerTeam) => {
+      return attackerTeam === 1 
+        ? team2.filter(f => f.currentHp > 0)
+        : team1.filter(f => f.currentHp > 0);
+    };
+    
+    const isTeamDefeated = (team) => team.every(f => f.currentHp <= 0);
+    
+    while (!isTeamDefeated(team1) && !isTeamDefeated(team2) && turn < maxTurns) {
+      turn++;
+      
+      for (const fighter of allFighters) {
+        // Skip if fighter is defeated
+        if (fighter.currentHp <= 0) continue;
+        
+        // Get actual fighter reference
+        const actualFighter = fighter.team === 1 
+          ? team1.find(f => f.id === fighter.id)
+          : team2.find(f => f.id === fighter.id);
+        
+        if (!actualFighter || actualFighter.currentHp <= 0) continue;
+        
+        // Get alive enemies
+        const enemies = getAliveEnemies(fighter.team);
+        if (enemies.length === 0) break;
+        
+        // Pick random target
+        const target = enemies[Math.floor(Math.random() * enemies.length)];
+        
+        // Calculate damage
+        const baseDamage = actualFighter.attack + Math.floor(Math.random() * 10);
+        const defense = target.defense * 0.5;
+        const evasionRoll = Math.random() * 100;
+        const critRoll = Math.random();
+        const isCrit = critRoll < actualFighter.critChance;
+        
+        if (evasionRoll < target.evasion) {
+          log.push({ 
+            type: 'miss', 
+            text: `${target.name} evades ${actualFighter.name}'s attack! 💨` 
+          });
+        } else {
+          let damage = Math.max(1, Math.floor(baseDamage - defense));
+          if (isCrit) {
+            damage = Math.floor(damage * 1.5);
+            log.push({ 
+              type: 'crit', 
+              text: `💥 CRITICAL! ${actualFighter.name} deals ${damage} to ${target.name}!` 
+            });
+          } else {
+            log.push({ 
+              type: 'hit', 
+              text: `${actualFighter.name} attacks ${target.name} for ${damage} damage!` 
+            });
+          }
+          target.currentHp -= damage;
+          
+          if (target.currentHp <= 0) {
+            target.currentHp = 0;
+            log.push({ type: 'defeat', text: `💀 ${target.name} has been defeated!` });
+          }
+        }
+        
+        // Regeneration
+        if (actualFighter.regen > 0 && actualFighter.currentHp < actualFighter.health) {
+          const healAmount = Math.min(actualFighter.regen, actualFighter.health - actualFighter.currentHp);
+          actualFighter.currentHp += healAmount;
+          log.push({ type: 'heal', text: `✨ ${actualFighter.name} regenerates ${healAmount} HP!` });
+        }
+        
+        // Update UI
+        setTeam1Stats([...team1]);
+        setTeam2Stats([...team2]);
+        setBattleLog([...log]);
+        
+        await new Promise(resolve => setTimeout(resolve, 600));
+        
+        // Check for team defeat
+        if (isTeamDefeated(team1) || isTeamDefeated(team2)) break;
+      }
+      
+      setCurrentTurn(turn);
+    }
+    
+    // Determine winner
+    let winningTeam = null;
+    if (isTeamDefeated(team1)) {
+      winningTeam = 2;
+      log.push({ type: 'victory', text: `🏆 Team 2 (${team2.map(f => f.name).join(' & ')}) WINS!` });
+    } else if (isTeamDefeated(team2)) {
+      winningTeam = 1;
+      log.push({ type: 'victory', text: `🏆 Team 1 (${team1.map(f => f.name).join(' & ')}) WINS!` });
+    } else {
+      // Draw by turn limit
+      const t1Hp = team1.reduce((sum, f) => sum + Math.max(0, f.currentHp), 0);
+      const t2Hp = team2.reduce((sum, f) => sum + Math.max(0, f.currentHp), 0);
+      winningTeam = t1Hp >= t2Hp ? 1 : 2;
+      log.push({ type: 'victory', text: `⏱️ Time! Team ${winningTeam} wins with more HP!` });
+    }
+    
+    setWinner({ team: winningTeam, names: winningTeam === 1 ? team1.map(f => f.name) : team2.map(f => f.name) });
+    setBattleLog(log);
+    setBattleState('finished');
+    
+    setBattleSummary({
+      isTeamBattle: true,
+      winningTeam,
+      turns: turn,
+      team1Final: team1.map(f => ({ name: f.name, hp: Math.max(0, Math.floor(f.currentHp)), maxHp: f.health })),
+      team2Final: team2.map(f => ({ name: f.name, hp: Math.max(0, Math.floor(f.currentHp)), maxHp: f.health }))
+    });
   };
 
   const runBattle = async (p1, p2) => {
