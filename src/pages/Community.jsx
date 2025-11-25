@@ -7,6 +7,7 @@ import { Users, TrendingUp, MessageSquare, Music, Loader2 } from 'lucide-react';
 import FamilyTrends from '@/components/community/FamilyTrends';
 import SharedExperiences from '@/components/community/SharedExperiences';
 import NumerologyPlaylists from '@/components/community/NumerologyPlaylists';
+import FamilyPlaylist from '@/components/community/FamilyPlaylist';
 
 export default function Community() {
   const [user, setUser] = useState(null);
@@ -65,6 +66,7 @@ export default function Community() {
           </TabsList>
 
           <TabsContent value="trends">
+            <FamilyPlaylist familyMembers={familyMembers} />
             <FamilyTrends familyMembers={familyMembers} />
           </TabsContent>
 
