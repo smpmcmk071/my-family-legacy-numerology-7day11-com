@@ -841,7 +841,7 @@ export default function NumerologyBattle() {
                     <h2 className="text-3xl font-bold text-white mb-2">
                       {battleSummary.isTeamBattle 
                         ? `Team ${battleSummary.winningTeam} Wins!`
-                        : `${winner.name} Wins!`
+                        : `${winner?.name} Wins!`
                       }
                     </h2>
                     <p className="text-gray-300">Victory achieved in {battleSummary.turns} turns</p>
@@ -849,11 +849,11 @@ export default function NumerologyBattle() {
                   
                   {/* Battle Summary */}
                   <div className="grid md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/20">
-                    {battleSummary.isTeamBattle ? (
+                    {battleSummary.isTeamBattle && battleSummary.team1Final && battleSummary.team2Final ? (
                       <>
                         {/* Team 1 Summary */}
                         <div className="p-4 bg-blue-900/30 rounded-lg">
-                          <h3 className="text-white font-bold mb-2">Team 1</h3>
+                          <h3 className="text-white font-bold mb-2">Team 1 {battleSummary.winningTeam === 1 && '🏆'}</h3>
                           <div className="space-y-2">
                             {battleSummary.team1Final.map((f, i) => (
                               <div key={i} className="flex justify-between text-sm">
@@ -867,7 +867,7 @@ export default function NumerologyBattle() {
                         </div>
                         {/* Team 2 Summary */}
                         <div className="p-4 bg-red-900/30 rounded-lg">
-                          <h3 className="text-white font-bold mb-2">Team 2</h3>
+                          <h3 className="text-white font-bold mb-2">Team 2 {battleSummary.winningTeam === 2 && '🏆'}</h3>
                           <div className="space-y-2">
                             {battleSummary.team2Final.map((f, i) => (
                               <div key={i} className="flex justify-between text-sm">
@@ -880,7 +880,7 @@ export default function NumerologyBattle() {
                           </div>
                         </div>
                       </>
-                    ) : (
+                    ) : !battleSummary.isTeamBattle ? (
                       <>
                         {/* Player 1 Summary */}
                         <div className="p-4 bg-blue-900/30 rounded-lg">
