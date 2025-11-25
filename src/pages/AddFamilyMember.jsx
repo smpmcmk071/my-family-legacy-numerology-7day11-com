@@ -39,6 +39,7 @@ export default function AddFamilyMember() {
   const [formData, setFormData] = useState({
     full_name: '',
     nickname: '',
+    email: '',
     birth_date: '',
     birth_time: '',
     birth_place: '',
@@ -89,6 +90,7 @@ export default function AddFamilyMember() {
     setFormData({
       full_name: member.full_name || '',
       nickname: member.nickname || '',
+      email: member.email || '',
       birth_date: member.birth_date || '',
       birth_time: member.birth_time || '',
       birth_place: member.birth_place || '',
@@ -103,6 +105,7 @@ export default function AddFamilyMember() {
     setFormData({
       full_name: '',
       nickname: '',
+      email: '',
       birth_date: '',
       birth_time: '',
       birth_place: '',
@@ -143,6 +146,7 @@ export default function AddFamilyMember() {
         family_id: userFamily.id,
         full_name: formData.full_name,
         nickname: formData.nickname || formData.full_name.split(' ')[0],
+        email: formData.email || null,
         birth_date: formData.birth_date,
         birth_time: formData.birth_time_exact || formData.birth_time || '',
         birth_place: formData.birth_place,
@@ -245,6 +249,18 @@ export default function AddFamilyMember() {
                   placeholder="Grandpop"
                   className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
                 />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-300 mb-1 block">Email (for dashboard access)</label>
+                <Input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="family@example.com"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">Link to their user account for personal dashboard</p>
               </div>
 
               <div>
