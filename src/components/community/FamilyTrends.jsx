@@ -4,8 +4,11 @@ import { TrendingUp, Users, Star, Flame, Droplet, Wind, Mountain, AlertTriangle,
 import NumberBadge from '@/components/legacy/NumberBadge';
 
 const KARMIC_DEBT_MEANINGS = {
+  10: { title: 'Wheel of Fortune', lesson: 'Embrace cycles of change. What goes around comes around - maintain integrity through ups and downs.' },
+  12: { title: 'Sacrifice & Surrender', lesson: 'Learn to let go and trust the process. Growth comes through releasing control and serving others.' },
   13: { title: 'Laziness & Shortcuts', lesson: 'Hard work, focus, and building solid foundations. Avoid cutting corners.' },
   14: { title: 'Freedom & Excess', lesson: 'Balance freedom with responsibility. Avoid addiction and overindulgence.' },
+  15: { title: 'Materialism & Temptation', lesson: 'Overcome attachment to material pleasures. Find spiritual fulfillment beyond physical desires.' },
   16: { title: 'Ego & Downfall', lesson: 'Humility and spiritual growth. Ego destruction leads to rebirth.' },
   19: { title: 'Independence & Selfishness', lesson: 'Learn to give and receive help. Balance independence with cooperation.' }
 };
