@@ -507,9 +507,17 @@ export default function NumerologyBattle() {
     setBattleLog([]);
     setWinner(null);
     setCurrentTurn(0);
-    // Reset HP to full
-    setPlayer1Stats(prev => ({ ...prev, currentHp: prev.health }));
-    setPlayer2Stats(prev => ({ ...prev, currentHp: prev.health }));
+    setBattleSummary(null);
+    
+    if (battleMode === '1v1') {
+      // Reset HP to full
+      setPlayer1Stats(prev => ({ ...prev, currentHp: prev.health }));
+      setPlayer2Stats(prev => ({ ...prev, currentHp: prev.health }));
+    } else {
+      // Reset team HP
+      setTeam1Stats(prev => prev.map(f => ({ ...f, currentHp: f.health })));
+      setTeam2Stats(prev => prev.map(f => ({ ...f, currentHp: f.health })));
+    }
   };
 
   // Calculate win stats for chart
