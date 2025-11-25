@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Printer, Sparkles, ArrowLeft } from 'lucide-react';
+import { Printer, Sparkles, ArrowLeft, AlertTriangle, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import NumberBadge from '../components/legacy/NumberBadge';
 import FamilyTable from '../components/legacy/FamilyTable';
 import DailySongs from '../components/legacy/DailySongs';
 import { numerologyMeanings } from '../components/legacy/numerologyData';
+import { base44 } from '@/api/base44Client';
 
 export default function MaherLegacy() {
   const [selectedNumber, setSelectedNumber] = useState(null);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+
+  useEffect(() => {
+    loadUpcomingEvents();
+  }, []);
+
+  const loadUpcomingEvents = async () => {
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 14);
+    
+    // Get events for next 14 days
+    const events = await base44.entities.CalendarEvent.list('-event_date', 100);
+    const todayStr = today.toISOString().split('T')[0];
+    const nextWeekStr = nextWeek.toISOString().split('T')[0];
+    
+    const upcoming = events.filter(e => 
+      e.event_date >= todayStr && e.event_date <= nextWeekStr
+    ).slice(0, 5);
+    
+    setUpcomingEvents(upcoming);
+  };
 
   const handlePrint = () => {
     window.print();
@@ -58,6 +81,60 @@ export default function MaherLegacy() {
           </h2>
           <FamilyTable onNumberClick={setSelectedNumber} />
         </div>
+
+        {/* Calendar Warnings */}
+        {upcomingEvents.length > 0 && (
+          <div className="mb-12 print:hidden">
+            <div className="p-6 bg-gradient-to-r from-purple-100 to-indigo-100 rounded-lg border-l-4 border-purple-600">
+              <h3 className="text-lg font-bold text-purple-900 flex items-center gap-2 mb-4">
+                <Calendar className="w-5 h-5" />
+                Upcoming Family Events
+              </h3>
+              <div className="space-y-3">
+                {upcomingEvents.map(event => {
+                  const eventDate = new Date(event.event_date + 'T12:00:00');
+                  const today = new Date();
+                  const daysUntil = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24));
+                  const isToday = daysUntil <= 0;
+                  const isSoon = daysUntil <= 3;
+                  
+                  return (
+                    <div 
+                      key={event.id} 
+                      className={`flex items-center justify-between p-3 rounded-lg ${
+                        isToday ? 'bg-red-100 border border-red-300' : 
+                        isSoon ? 'bg-amber-100 border border-amber-300' : 
+                        'bg-white/50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        {(isToday || isSoon) && <AlertTriangle className={`w-4 h-4 ${isToday ? 'text-red-600' : 'text-amber-600'}`} />}
+                        <div>
+                          <p className="font-medium text-gray-900">{event.event_title}</p>
+                          <p className="text-sm text-gray-600">
+                            {eventDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+                            {' • '}<span className="capitalize">{event.event_type}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {event.universal_day_number && (
+                          <NumberBadge number={event.universal_day_number} size="sm" onClick={setSelectedNumber} />
+                        )}
+                        <span className={`text-sm font-medium ${isToday ? 'text-red-600' : isSoon ? 'text-amber-600' : 'text-gray-500'}`}>
+                          {isToday ? 'Today!' : daysUntil === 1 ? 'Tomorrow' : `${daysUntil} days`}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <Link to={createPageUrl('CalendarEvents')} className="inline-flex items-center gap-1 mt-4 text-purple-700 hover:text-purple-900 text-sm font-medium">
+                View Full Calendar →
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Daily Songs */}
         <div className="mb-12 print:hidden">
