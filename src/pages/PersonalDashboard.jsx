@@ -116,11 +116,18 @@ export default function PersonalDashboard() {
     
     // Life path + personal day synergy
     if (personalDay === lifePath) {
-      advice.push({ icon: Sparkles, text: 'Power Day! Your personal day matches your life path. Maximum alignment for personal growth.', type: 'power' });
+      const isMasterLifePath = [11, 22, 33].includes(lifePath);
+      advice.push({ 
+        icon: Sparkles, 
+        text: isMasterLifePath 
+          ? `Power Day! Master ${lifePath} aligned - your personal day matches your life path. Maximum spiritual power and manifestation.`
+          : 'Power Day! Your personal day matches your life path. Maximum alignment for personal growth.', 
+        type: 'power' 
+      });
     }
     
-    // Master number days
-    if ([11, 22, 33].includes(personalDay)) {
+    // Master number days (only show separately if not already a power day with same master)
+    if ([11, 22, 33].includes(personalDay) && personalDay !== lifePath) {
       advice.push({ icon: Sun, text: `Master ${personalDay} energy active. Heightened intuition and manifestation potential.`, type: 'master' });
     }
     
