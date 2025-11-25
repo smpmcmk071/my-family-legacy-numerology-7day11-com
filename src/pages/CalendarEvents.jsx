@@ -54,11 +54,17 @@ export default function CalendarEvents() {
     const user = await base44.auth.me();
     setCurrentUser(user);
     
-    // Find family member matching user email
-    const members = await base44.entities.FamilyMember.filter({ created_by: user.email });
-    if (members.length > 0) {
-      // Find self or first member
-      const selfMember = members.find(m => m.relationship === 'self') || members[0];
+    // Find family member by email first
+    let members = await base44.entities.FamilyMember.filter({ email: user.email });
+    let selfMember = members.find(m => m.relationship === 'self') || members[0];
+    
+    // Fallback: check members created by user
+    if (!selfMember) {
+      const createdMembers = await base44.entities.FamilyMember.filter({ created_by: user.email });
+      selfMember = createdMembers.find(m => m.relationship === 'self') || createdMembers[0];
+    }
+    
+    if (selfMember) {
       setUserMember(selfMember);
     }
   };

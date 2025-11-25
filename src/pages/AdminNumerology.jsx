@@ -51,27 +51,47 @@ export default function AdminNumerology() {
     // Check if user is admin in User entity OR has is_admin in FamilyMember
     if (user.role === 'admin') {
       setIsAdmin(true);
-      loadFamilyMembers();
+      loadFamilyMembers(null);
       setCheckingAdmin(false);
       return;
     }
     
     // Check FamilyMember for is_admin flag
-    const members = await base44.entities.FamilyMember.filter({ created_by: user.email });
-    const adminMember = members.find(m => m.is_admin === true);
+    let userMembers = await base44.entities.FamilyMember.filter({ email: user.email });
+    let selfMember = userMembers.find(m => m.relationship === 'self') || userMembers[0];
     
-    if (adminMember) {
+    // Fallback: check created_by
+    if (!selfMember) {
+      const createdMembers = await base44.entities.FamilyMember.filter({ created_by: user.email });
+      selfMember = createdMembers.find(m => m.relationship === 'self') || createdMembers[0];
+    }
+    
+    if (selfMember?.is_admin === true) {
       setIsAdmin(true);
-      loadFamilyMembers();
+      loadFamilyMembers(selfMember.family_id);
     } else {
       setIsAdmin(false);
     }
     setCheckingAdmin(false);
   };
 
-  const loadFamilyMembers = async () => {
-    const members = await base44.entities.FamilyMember.list();
-    setFamilyMembers(members);
+  const loadFamilyMembers = async (familyId) => {
+    if (!familyId) {
+      // Try to get family_id from user's member record
+      const user = await base44.auth.me();
+      let userMembers = await base44.entities.FamilyMember.filter({ email: user.email });
+      let selfMember = userMembers[0];
+      if (!selfMember) {
+        const createdMembers = await base44.entities.FamilyMember.filter({ created_by: user.email });
+        selfMember = createdMembers[0];
+      }
+      familyId = selfMember?.family_id;
+    }
+    
+    if (familyId) {
+      const members = await base44.entities.FamilyMember.filter({ family_id: familyId });
+      setFamilyMembers(members);
+    }
   };
 
   const toggleMemberSelection = (memberId) => {
