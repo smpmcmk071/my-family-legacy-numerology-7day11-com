@@ -35,8 +35,10 @@ const COMPATIBILITY_ADVICE = {
 // Get current date in EST timezone
 const getESTDate = () => {
   const now = new Date();
-  const estParts = now.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
-  return estParts; // Returns YYYY-MM-DD format directly
+  const year = now.toLocaleString('en-US', { timeZone: 'America/New_York', year: 'numeric' });
+  const month = now.toLocaleString('en-US', { timeZone: 'America/New_York', month: '2-digit' });
+  const day = now.toLocaleString('en-US', { timeZone: 'America/New_York', day: '2-digit' });
+  return `${year}-${month}-${day}`;
 };
 
 const getESTDateObject = () => {
