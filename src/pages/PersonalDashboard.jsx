@@ -269,19 +269,41 @@ export default function PersonalDashboard() {
               </div>
             </div>
             
-            {/* Master Numbers */}
-            {userMember.master_numbers && (
-              <div className="mt-4 p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                <p className="text-xs text-amber-300 mb-2">Your Master Numbers</p>
-                <div className="flex gap-2">
-                  {userMember.master_numbers.split(',').map((num, i) => (
-                    <NumberBadge key={i} number={parseInt(num)} size="sm" />
-                  ))}
+            {/* Master Numbers & Karmic Info */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
+              {userMember.master_numbers && (
+                <div className="p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                  <p className="text-xs text-amber-300 mb-2">Master Numbers</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {userMember.master_numbers.split(',').map((num, i) => (
+                      <NumberBadge key={i} number={parseInt(num)} size="sm" />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              )}
+              {userMember.karmic_debt_number && (
+                <div className="p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+                  <p className="text-xs text-red-300 mb-2">Karmic Debt</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {userMember.karmic_debt_number.split(',').map((num, i) => (
+                      <span key={i} className="px-2 py-1 bg-red-500/20 rounded text-red-300 text-sm font-medium">{num.trim()}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {userMember.karmic_lessons && (
+                <div className="p-3 bg-orange-500/10 rounded-lg border border-orange-500/20">
+                  <p className="text-xs text-orange-300 mb-2">Karmic Lessons</p>
+                  <div className="flex gap-1 flex-wrap">
+                    {userMember.karmic_lessons.split(',').map((num, i) => (
+                      <NumberBadge key={i} number={parseInt(num.trim())} size="sm" />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            </CardContent>
+            </Card>
 
         {/* Today's Energy */}
         {todayCalc && (
