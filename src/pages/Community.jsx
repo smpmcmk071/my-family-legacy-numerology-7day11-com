@@ -24,12 +24,28 @@ export default function Community() {
     const currentUser = await base44.auth.me();
     setUser(currentUser);
     
-    const members = await base44.entities.FamilyMember.filter({ created_by: currentUser.email });
-    setFamilyMembers(members);
+    // First find the user's family member record to get their family_id
+    const userMembers = await base44.entities.FamilyMember.filter({ email: currentUser.email });
+    let selfMember = userMembers.find(m => m.relationship === 'self') || userMembers[0];
     
-    const selfMember = members.find(m => m.relationship === 'self') || members[0];
+    // Fallback: check members created by user
+    if (!selfMember) {
+      const createdMembers = await base44.entities.FamilyMember.filter({ created_by: currentUser.email });
+      selfMember = createdMembers.find(m => m.relationship === 'self') || createdMembers[0];
+    }
+    
     setUserMember(selfMember);
     
+    // Now fetch ALL members from the same family_id (not just created_by)
+    let members = [];
+    if (selfMember?.family_id) {
+      members = await base44.entities.FamilyMember.filter({ family_id: selfMember.family_id });
+    } else {
+      // Fallback to created_by if no family_id
+      members = await base44.entities.FamilyMember.filter({ created_by: currentUser.email });
+    }
+    
+    setFamilyMembers(members);
     setIsLoading(false);
   };
 
