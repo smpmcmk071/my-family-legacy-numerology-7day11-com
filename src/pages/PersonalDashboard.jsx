@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { base44 } from '@/api/base44Client';
 import { Sparkles, Sun, Moon, Calendar, TrendingUp, Heart, Briefcase, Users, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
+import DailySongs from '../components/legacy/DailySongs';
 
 const NUMBER_MEANINGS = {
   1: { title: 'The Leader', keywords: ['independence', 'innovation', 'ambition'], advice: 'Take initiative today. Your leadership energy is strong.' },
@@ -294,6 +295,11 @@ export default function PersonalDashboard() {
             </CardContent>
           </Card>
         )}
+
+        {/* Daily Songs */}
+        <div className="mb-6">
+          <DailySongs />
+        </div>
 
         {/* Weekly Forecast */}
         <Card className="bg-white/10 backdrop-blur-sm border-white/20">
