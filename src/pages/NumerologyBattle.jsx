@@ -176,9 +176,20 @@ export default function NumerologyBattle() {
           });
         }
         defender.currentHp -= damage;
+        
+        // Check if defender is defeated - end battle immediately
+        if (defender.currentHp <= 0) {
+          defender.currentHp = 0;
+          setPlayer1Stats(prev => ({ ...prev, currentHp: p1.currentHp }));
+          setPlayer2Stats(prev => ({ ...prev, currentHp: p2.currentHp }));
+          setBattleLog([...log]);
+          setCurrentTurn(turn);
+          await new Promise(resolve => setTimeout(resolve, 800));
+          break;
+        }
       }
       
-      // Regeneration
+      // Regeneration (only if attacker was damaged)
       if (attacker.regen > 0 && attacker.currentHp < attacker.health) {
         const healAmount = Math.min(attacker.regen, attacker.health - attacker.currentHp);
         attacker.currentHp += healAmount;
