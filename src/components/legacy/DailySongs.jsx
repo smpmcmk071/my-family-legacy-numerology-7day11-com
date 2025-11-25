@@ -8,9 +8,8 @@ import NumberBadge from './NumberBadge';
 // Get current date in EST timezone
 const getESTDate = () => {
   const now = new Date();
-  const estString = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
-  const estDate = new Date(estString);
-  return estDate.toISOString().split('T')[0];
+  const estParts = now.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  return estParts; // Returns YYYY-MM-DD format directly
 };
 
 export default function DailySongs() {
