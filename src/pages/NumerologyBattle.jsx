@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { base44 } from '@/api/base44Client';
-import { Swords, Zap, Shield, Heart, Wind, Sparkles, Trophy, RotateCcw, Loader2 } from 'lucide-react';
+import { Swords, Zap, Shield, Heart, Wind, Sparkles, Trophy, RotateCcw, Loader2, History } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import NumberBadge from '../components/legacy/NumberBadge';
 
 export default function NumerologyBattle() {
@@ -20,6 +21,7 @@ export default function NumerologyBattle() {
   const [currentTurn, setCurrentTurn] = useState(0);
   const [accessDenied, setAccessDenied] = useState(false);
   const [checkingAccess, setCheckingAccess] = useState(true);
+  const [battleHistory, setBattleHistory] = useState([]);
 
   useEffect(() => {
     loadFamilyMembers();
@@ -47,6 +49,10 @@ export default function NumerologyBattle() {
       
       const allMembers = await base44.entities.FamilyMember.filter({ family_id: selfMember.family_id });
       setFamilyMembers(allMembers.filter(m => m.life_path_western)); // Only members with numerology calculated
+      
+      // Load battle history
+      const history = await base44.entities.BattleRecord.list('-created_date', 50);
+      setBattleHistory(history);
     }
     setCheckingAccess(false);
   };
@@ -206,6 +212,35 @@ export default function NumerologyBattle() {
       total_turns: turn,
       battle_date: new Date().toISOString().split('T')[0]
     });
+    
+    // Refresh battle history
+    const history = await base44.entities.BattleRecord.list('-created_date', 50);
+    setBattleHistory(history);
+  };
+
+  const rematch = () => {
+    // Reset battle state but keep players and stats
+    setBattleState('ready');
+    setBattleLog([]);
+    setWinner(null);
+    setCurrentTurn(0);
+    // Reset HP to full
+    setPlayer1Stats(prev => ({ ...prev, currentHp: prev.health }));
+    setPlayer2Stats(prev => ({ ...prev, currentHp: prev.health }));
+  };
+
+  // Calculate win stats for chart
+  const getWinStats = () => {
+    const stats = {};
+    battleHistory.forEach(record => {
+      if (record.winner_name) {
+        stats[record.winner_name] = (stats[record.winner_name] || 0) + 1;
+      }
+    });
+    return Object.entries(stats)
+      .map(([name, wins]) => ({ name, wins }))
+      .sort((a, b) => b.wins - a.wins)
+      .slice(0, 8);
   };
 
   const resetBattle = () => {
@@ -426,9 +461,14 @@ export default function NumerologyBattle() {
                 </div>
               )}
               {battleState === 'finished' && (
-                <Button onClick={resetBattle} className="bg-amber-600 hover:bg-amber-700">
-                  <RotateCcw className="w-4 h-4 mr-2" /> New Battle
-                </Button>
+                <>
+                  <Button onClick={rematch} className="bg-green-600 hover:bg-green-700">
+                    <Swords className="w-4 h-4 mr-2" /> Rematch
+                  </Button>
+                  <Button onClick={resetBattle} variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                    <RotateCcw className="w-4 h-4 mr-2" /> New Fighters
+                  </Button>
+                </>
               )}
             </div>
 
@@ -439,6 +479,34 @@ export default function NumerologyBattle() {
                   <Trophy className="w-16 h-16 text-amber-400 mx-auto mb-4" />
                   <h2 className="text-3xl font-bold text-white mb-2">{winner.name} Wins!</h2>
                   <p className="text-gray-300">Victory achieved in {currentTurn} turns</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Battle History Chart */}
+            {battleHistory.length > 0 && battleState === 'finished' && (
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <History className="w-5 h-5" /> Battle Leaderboard
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <BarChart data={getWinStats()} layout="vertical">
+                      <XAxis type="number" stroke="#9ca3af" />
+                      <YAxis type="category" dataKey="name" stroke="#9ca3af" width={80} tick={{ fontSize: 12 }} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid #6366f1', borderRadius: '8px' }}
+                        labelStyle={{ color: '#fff' }}
+                      />
+                      <Bar dataKey="wins" radius={[0, 4, 4, 0]}>
+                        {getWinStats().map((entry, index) => (
+                          <Cell key={index} fill={index === 0 ? '#f59e0b' : index === 1 ? '#9ca3af' : index === 2 ? '#b45309' : '#6366f1'} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
                 </CardContent>
               </Card>
             )}
