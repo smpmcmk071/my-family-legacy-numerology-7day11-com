@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import NumberBadge from '../components/legacy/NumberBadge';
 import FamilyTable from '../components/legacy/FamilyTable';
+import DailySongs from '../components/legacy/DailySongs';
 import { numerologyMeanings } from '../components/legacy/numerologyData';
 
 export default function MaherLegacy() {
@@ -56,6 +57,11 @@ export default function MaherLegacy() {
             Our Family's Master Number Map
           </h2>
           <FamilyTable onNumberClick={setSelectedNumber} />
+        </div>
+
+        {/* Daily Songs */}
+        <div className="mb-12 print:hidden">
+          <DailySongs />
         </div>
 
         {/* The Weave of Power Through Generations */}
