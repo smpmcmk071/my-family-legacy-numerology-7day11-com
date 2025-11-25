@@ -18,6 +18,8 @@ export default function NumerologyBattle() {
   const [winner, setWinner] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentTurn, setCurrentTurn] = useState(0);
+  const [accessDenied, setAccessDenied] = useState(false);
+  const [checkingAccess, setCheckingAccess] = useState(true);
 
   useEffect(() => {
     loadFamilyMembers();
@@ -34,9 +36,18 @@ export default function NumerologyBattle() {
     }
     
     if (selfMember?.family_id) {
+      // Check family settings
+      const families = await base44.entities.Family.filter({ id: selfMember.family_id });
+      if (families.length > 0 && families[0].enable_battle === false) {
+        setAccessDenied(true);
+        setCheckingAccess(false);
+        return;
+      }
+      
       const allMembers = await base44.entities.FamilyMember.filter({ family_id: selfMember.family_id });
       setFamilyMembers(allMembers.filter(m => m.life_path_western)); // Only members with numerology calculated
     }
+    setCheckingAccess(false);
   };
 
   const loadBattleStats = async () => {
@@ -281,6 +292,28 @@ export default function NumerologyBattle() {
       </Card>
     );
   };
+
+  if (checkingAccess) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+      </div>
+    );
+  }
+
+  if (accessDenied) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 flex items-center justify-center">
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 max-w-md">
+          <CardContent className="py-12 text-center">
+            <Swords className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-white mb-2">Battle Disabled</h2>
+            <p className="text-gray-300">This game has been disabled by your family admin.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
