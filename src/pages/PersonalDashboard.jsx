@@ -31,6 +31,20 @@ const COMPATIBILITY_ADVICE = {
   '11-22': 'Master number synergy - transformative.',
 };
 
+// Get current date in EST timezone
+const getESTDate = () => {
+  const now = new Date();
+  const estString = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
+  const estDate = new Date(estString);
+  return estDate.toISOString().split('T')[0];
+};
+
+const getESTDateObject = () => {
+  const now = new Date();
+  const estString = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
+  return new Date(estString);
+};
+
 export default function PersonalDashboard() {
   const [userMember, setUserMember] = useState(null);
   const [todayCalc, setTodayCalc] = useState(null);
@@ -58,8 +72,8 @@ export default function PersonalDashboard() {
     if (selfMember) {
       setUserMember(selfMember);
       
-      // Get today's numbers
-      const today = new Date().toISOString().split('T')[0];
+      // Get today's numbers in EST
+      const today = getESTDate();
       const response = await base44.functions.invoke('calculateNumerology', {
         type: 'dayNumbers',
         date: today,
@@ -74,7 +88,7 @@ export default function PersonalDashboard() {
   };
 
   const loadWeekForecast = async () => {
-    const startDate = new Date();
+    const startDate = getESTDateObject();
     startDate.setDate(startDate.getDate() + (weekOffset * 7));
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + 6);
@@ -306,7 +320,7 @@ export default function PersonalDashboard() {
             <div className="grid grid-cols-7 gap-2">
               {weekForecast.map((day, i) => {
                 const date = new Date(day.date + 'T12:00:00');
-                const isToday = day.date === new Date().toISOString().split('T')[0];
+                const isToday = day.date === getESTDate();
                 const meaning = getMeaning(day.personal_day_number || day.universal_day_number);
                 
                 return (

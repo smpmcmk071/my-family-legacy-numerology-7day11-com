@@ -8,8 +8,16 @@ import { base44 } from '@/api/base44Client';
 import { Calendar, Plus, Loader2, Sparkles, User, Repeat, Trash2 } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
 
+// Get current date in EST timezone
+const getESTDate = () => {
+  const now = new Date();
+  const estString = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
+  const estDate = new Date(estString);
+  return estDate.toISOString().split('T')[0];
+};
+
 export default function CalendarEvents() {
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(getESTDate());
   const [events, setEvents] = useState([]);
   const [dayCalc, setDayCalc] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
