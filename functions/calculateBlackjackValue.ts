@@ -7,12 +7,27 @@ const PYTHAGOREAN = {
   S: 1, T: 2, U: 3, V: 4, W: 5, X: 6, Y: 7, Z: 8
 };
 
-// Reduce to single digit (NO master numbers - always reduce)
-const reduceToSingle = (num) => {
-  while (num > 9) {
-    num = String(num).split('').reduce((sum, d) => sum + parseInt(d), 0);
+const MASTER_NUMBERS = [11, 22, 33];
+
+// Reduce step by step to find master numbers along the way
+const reduceWithMasterDetection = (num) => {
+  const mastersFound = [];
+  let current = num;
+  
+  // Check if starting number is a master
+  if (MASTER_NUMBERS.includes(current)) {
+    mastersFound.push(current);
   }
-  return num;
+  
+  // Reduce step by step, checking for masters at each step
+  while (current > 9) {
+    current = String(current).split('').reduce((sum, d) => sum + parseInt(d), 0);
+    if (MASTER_NUMBERS.includes(current)) {
+      mastersFound.push(current);
+    }
+  }
+  
+  return { reduced: current, mastersFound };
 };
 
 // Calculate name value for blackjack
@@ -24,12 +39,21 @@ const calculateBlackjackName = (name) => {
     rawTotal += PYTHAGOREAN[letter] || 0;
   }
   
-  const reduced = reduceToSingle(rawTotal);
+  const { reduced, mastersFound } = reduceWithMasterDetection(rawTotal);
+  
+  // For gameplay: master numbers become 2, 4, 6
+  const masterToGameValue = { 11: 2, 22: 4, 33: 6 };
+  const hasMaster = mastersFound.length > 0;
+  const primaryMaster = mastersFound[0] || null;
   
   return {
     name,
     raw_value: rawTotal,
-    reduced_value: reduced
+    reduced_value: reduced,
+    master_numbers: mastersFound,
+    has_master: hasMaster,
+    display_value: hasMaster ? `${rawTotal}/${primaryMaster}/${reduced}` : `${rawTotal}/${reduced}`,
+    game_value: reduced // Always 1-9 for blackjack gameplay
   };
 };
 
