@@ -71,7 +71,13 @@ export default function PersonalDashboard() {
     
     // Find member by email - this links the user to their profile
     let members = await base44.entities.FamilyMember.filter({ email: user.email });
-    const selfMember = members.find(m => m.relationship === 'self') || members[0];
+    let selfMember = members.find(m => m.relationship === 'self') || members[0];
+    
+    // Fallback: if no member found by email, check for members created by this user
+    if (!selfMember) {
+      const createdMembers = await base44.entities.FamilyMember.filter({ created_by: user.email });
+      selfMember = createdMembers.find(m => m.relationship === 'self') || createdMembers[0];
+    }
     
     if (selfMember) {
       setUserMember(selfMember);
