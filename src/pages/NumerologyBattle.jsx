@@ -538,10 +538,22 @@ export default function NumerologyBattle() {
     setBattleState('select');
     setPlayer1Stats(null);
     setPlayer2Stats(null);
+    setTeam1Stats([]);
+    setTeam2Stats([]);
+    setTeam1Ids([]);
+    setTeam2Ids([]);
     setBattleLog([]);
     setWinner(null);
     setCurrentTurn(0);
     setBattleSummary(null);
+  };
+
+  const handleModeChange = (mode) => {
+    setBattleMode(mode);
+    setTeam1Ids([]);
+    setTeam2Ids([]);
+    setPlayer1Id('');
+    setPlayer2Id('');
   };
 
   const StatBar = ({ label, value, max, color, icon: Icon }) => (
