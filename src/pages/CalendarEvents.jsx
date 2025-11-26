@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { base44 } from '@/api/base44Client';
-import { Calendar, Plus, Loader2, Sparkles, User, Repeat, Trash2, AlertTriangle } from 'lucide-react';
+import { Calendar, Plus, Loader2, Sparkles, User, Repeat, Trash2, AlertTriangle, ChevronDown, ChevronUp, Star, CheckCircle2 } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
 
 // Get current date in EST timezone
@@ -40,6 +40,10 @@ export default function CalendarEvents() {
   const [accessDenied, setAccessDenied] = useState(false);
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [cautionAlerts, setCautionAlerts] = useState([]);
+  const [forecast, setForecast] = useState([]);
+  const [forecastSummary, setForecastSummary] = useState(null);
+  const [loadingForecast, setLoadingForecast] = useState(false);
+  const [showForecast, setShowForecast] = useState(true);
 
   useEffect(() => {
     loadUserAndMember();
@@ -78,8 +82,30 @@ export default function CalendarEvents() {
         }
       }
       setUserMember(selfMember);
+      // Load 45-day forecast
+      loadForecast(selfMember);
     }
     setCheckingAccess(false);
+  };
+
+  const loadForecast = async (member) => {
+    setLoadingForecast(true);
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setDate(today.getDate() + 44);
+    
+    const response = await base44.functions.invoke('populateCalendarPredictions', {
+      startDate: today.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0],
+      familyMemberId: member?.id || null,
+      lifePath: member?.life_path_western || null
+    });
+    
+    if (response.data?.success) {
+      setForecast(response.data.data.predictions || []);
+      setForecastSummary(response.data.data.summary || null);
+    }
+    setLoadingForecast(false);
   };
 
   const calculateDayNumbers = async () => {
@@ -469,6 +495,88 @@ export default function CalendarEvents() {
               )}
             </Button>
           </CardContent>
+        </Card>
+
+        {/* 45-Day Forecast */}
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
+          <CardHeader 
+            className="cursor-pointer"
+            onClick={() => setShowForecast(!showForecast)}
+          >
+            <CardTitle className="text-white flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-400" />
+                Next 45 Days Forecast
+                {forecastSummary && (
+                  <span className="text-sm font-normal text-gray-400">
+                    ({forecastSummary.master_days} master, {forecastSummary.power_days} power, {forecastSummary.aligned_days} aligned)
+                  </span>
+                )}
+              </div>
+              {showForecast ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </CardTitle>
+          </CardHeader>
+          {showForecast && (
+            <CardContent>
+              {loadingForecast ? (
+                <div className="flex items-center gap-2 text-gray-400 justify-center py-8">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Loading forecast...
+                </div>
+              ) : forecast.length > 0 ? (
+                <div className="space-y-2 max-h-[500px] overflow-y-auto pr-2">
+                  {forecast.map((day, idx) => (
+                    <div 
+                      key={day.date}
+                      onClick={() => setSelectedDate(day.date)}
+                      className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                        day.date === selectedDate ? 'ring-2 ring-amber-400' : ''
+                      } ${
+                        day.is_master_day ? 'bg-amber-500/20 border border-amber-500/30' :
+                        day.is_power_day ? 'bg-purple-500/20 border border-purple-500/30' :
+                        day.is_aligned ? 'bg-green-500/20 border border-green-500/30' :
+                        'bg-white/5 hover:bg-white/10'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="text-center min-w-[60px]">
+                            <p className="text-xs text-gray-400">
+                              {new Date(day.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' })}
+                            </p>
+                            <p className="text-white font-medium">
+                              {new Date(day.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="text-center">
+                              <p className="text-xs text-gray-500">U</p>
+                              <NumberBadge number={day.universal_day_number} size="sm" />
+                            </div>
+                            {day.personal_day_number && (
+                              <div className="text-center">
+                                <p className="text-xs text-amber-400">P</p>
+                                <NumberBadge number={day.personal_day_number} size="sm" />
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-gray-300 text-sm hidden md:block">{day.universal_vibe}</p>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {day.is_master_day && <Star className="w-4 h-4 text-amber-400" title="Master Day" />}
+                          {day.is_power_day && <Sparkles className="w-4 h-4 text-purple-400" title="Power Day" />}
+                          {day.is_aligned && <CheckCircle2 className="w-4 h-4 text-green-400" title="Aligned Day" />}
+                          {day.caution_alerts?.length > 0 && <AlertTriangle className="w-4 h-4 text-yellow-400" title="Caution" />}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-400 text-center py-4">No forecast data available</p>
+              )}
+            </CardContent>
+          )}
         </Card>
 
         {/* Events List */}
