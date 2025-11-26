@@ -112,6 +112,7 @@ export const numerologyMeanings = {
 // Compound/Intermediate number vibes (shown during reduction)
 export const compoundVibes = {
   10: { title: "Wheel of Fortune", meaning: "Success, honor, rise and fall. A karmic number of new cycles beginning." },
+  11: { title: "The Master Intuitive", meaning: "Spiritual illumination, intuition, and inspiration. The visionary who brings higher wisdom." },
   12: { title: "The Sacrifice", meaning: "Learning through experience, the need to sacrifice for growth." },
   13: { title: "Transformation", meaning: "Karmic debt of laziness in past lives. Power through hard work and discipline." },
   14: { title: "The Temperance", meaning: "Karmic debt of freedom misused. Balance and moderation required." },
@@ -122,6 +123,7 @@ export const compoundVibes = {
   19: { title: "The Sun", meaning: "Karmic debt of power abuse. Success through integrity and honor." },
   20: { title: "Awakening", meaning: "Spiritual awakening, new purpose, resurrection of plans." },
   21: { title: "The World", meaning: "Success, advancement, victory. Completion and achievement." },
+  22: { title: "The Master Builder", meaning: "Ability to turn dreams into reality on a grand scale. The ultimate manifestor." },
   23: { title: "The Royal Star", meaning: "Promise of success, help from superiors, protection." },
   24: { title: "Love & Money", meaning: "Assistance from loved ones, success through relationships." },
   25: { title: "The Mystic", meaning: "Strength through experience, wisdom gained from trials." },
@@ -132,6 +134,7 @@ export const compoundVibes = {
   30: { title: "The Loner", meaning: "Thoughtful, introspective, neither fortunate nor unfortunate." },
   31: { title: "The Hermit", meaning: "Similar to 30, but more isolated. Self-made success." },
   32: { title: "The Communicator", meaning: "Magnetic personality, persuasive speech, success through expression." },
+  33: { title: "The Master Teacher", meaning: "Ultimate expression of love, compassion, and healing. Selfless service to humanity." },
   34: { title: "The Innovator", meaning: "Similar to 25, wisdom through unconventional paths." },
   35: { title: "The Investor", meaning: "Success in business, particularly investments and speculation." },
   36: { title: "The Genius", meaning: "Great potential for unique achievement and creative expression." },
@@ -142,6 +145,7 @@ export const compoundVibes = {
   41: { title: "The Achiever", meaning: "Success through determination and self-discipline." },
   42: { title: "The Planner", meaning: "Success through careful planning and partnerships." },
   43: { title: "The Revolutionary", meaning: "Upheaval leading to transformation and new order." },
+  44: { title: "The Master Healer", meaning: "Mastery over material and physical realms. The master architect of reality." },
   45: { title: "The Visionary", meaning: "Success through progressive ideas and adaptability." },
   46: { title: "The Provider", meaning: "Material success through service to others." },
   47: { title: "The Analyst", meaning: "Success through deep research and spiritual insight." },
@@ -152,6 +156,7 @@ export const compoundVibes = {
   52: { title: "The Oracle", meaning: "Psychic and intuitive abilities, success through insight." },
   53: { title: "The Adventurer", meaning: "Success through exploration and taking risks." },
   54: { title: "The Catalyst", meaning: "Brings change to others, transformative influence." },
+  55: { title: "The Master of Change", meaning: "Mastery over freedom and transformation. Agent of evolution." },
   56: { title: "The Protector", meaning: "Success through protecting and nurturing others." },
   57: { title: "The Sage", meaning: "Deep wisdom, spiritual teaching abilities." },
   58: { title: "The Executive", meaning: "Business success through leadership and integrity." },
@@ -162,6 +167,7 @@ export const compoundVibes = {
   63: { title: "The Joyful Creator", meaning: "Success through creative expression and optimism." },
   64: { title: "The Stable Builder", meaning: "Success through patient, methodical building." },
   65: { title: "The Dynamic Changer", meaning: "Success through embracing and leading change." },
+  66: { title: "The Cosmic Parent", meaning: "Highest expression of love and nurturing. Cosmic-level caregiving and harmony." },
   67: { title: "The Wise Nurturer", meaning: "Success through nurturing with wisdom." },
   68: { title: "The Prosperous Leader", meaning: "Material success through responsible leadership." },
   69: { title: "The Compassionate Achiever", meaning: "Success through serving humanity." },
@@ -172,6 +178,7 @@ export const compoundVibes = {
   74: { title: "The Practical Mystic", meaning: "Grounding spiritual wisdom into practical form." },
   75: { title: "The Freedom Seeker", meaning: "Success through spiritual freedom and exploration." },
   76: { title: "The Material Mystic", meaning: "Bringing spiritual wisdom to material success." },
+  77: { title: "The Spiritual Master", meaning: "Highest level of spiritual wisdom and intuition. The sage and mystic." },
   78: { title: "The Powerful Analyst", meaning: "Success through combining power with wisdom." },
   79: { title: "The Wise Humanitarian", meaning: "Success through spiritual service to humanity." },
   80: { title: "The Karmic Power", meaning: "Success through responsible use of power." },
@@ -182,6 +189,7 @@ export const compoundVibes = {
   85: { title: "The Dynamic Achiever", meaning: "Success through adaptable ambition." },
   86: { title: "The Prosperous Nurturer", meaning: "Success through caring for others materially." },
   87: { title: "The Wise Achiever", meaning: "Success through combining wisdom with ambition." },
+  88: { title: "The Infinite Abundance", meaning: "Mastery over material abundance and karmic balance. Infinite prosperity." },
   89: { title: "The Humanitarian Leader", meaning: "Success through leading humanitarian efforts." },
   90: { title: "The Completed Cycle", meaning: "Endings and new beginnings, karmic completion." },
   91: { title: "The New Humanitarian", meaning: "Beginning a new cycle of service." },
@@ -191,5 +199,6 @@ export const compoundVibes = {
   95: { title: "The Freedom Giver", meaning: "Success through liberating others." },
   96: { title: "The Universal Healer", meaning: "Success through healing on a grand scale." },
   97: { title: "The Spiritual Humanitarian", meaning: "Success through spiritual service." },
-  98: { title: "The Abundant Giver", meaning: "Success through generous sharing of wealth." }
+  98: { title: "The Abundant Giver", meaning: "Success through generous sharing of wealth." },
+  99: { title: "The Universal Healer", meaning: "Completion of all cycles. Universal humanitarian service and enlightenment." }
 };
