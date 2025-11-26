@@ -117,6 +117,59 @@ export default function MaherHistory() {
                 </ul>
               </div>
             </div>
+
+            {/* Numerology Profile */}
+            <div className="mt-6 p-5 bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-xl border border-purple-500/30">
+              <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <Star className="w-5 h-5 text-purple-400" />
+                The Original Crazy 7 — Numerology Profile
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center p-3 bg-black/30 rounded-lg">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white font-bold text-xl mb-2">7</div>
+                  <p className="text-purple-300 text-xs">Life Path</p>
+                  <p className="text-white font-semibold">16/7</p>
+                  <p className="text-amber-400 text-xs mt-1">Karmic Debt</p>
+                </div>
+                <div className="text-center p-3 bg-black/30 rounded-lg">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl mb-2">5</div>
+                  <p className="text-purple-300 text-xs">Expression</p>
+                  <p className="text-white font-semibold">95/5</p>
+                </div>
+                <div className="text-center p-3 bg-black/30 rounded-lg">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl mb-2">1</div>
+                  <p className="text-purple-300 text-xs">Soul Urge</p>
+                  <p className="text-white font-semibold">28/1</p>
+                </div>
+                <div className="text-center p-3 bg-black/30 rounded-lg">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl mb-2">4</div>
+                  <p className="text-purple-300 text-xs">Personality</p>
+                  <p className="text-white font-semibold">67/4</p>
+                </div>
+              </div>
+              <div className="mt-4 grid md:grid-cols-2 gap-4">
+                <div className="p-3 bg-black/30 rounded-lg">
+                  <p className="text-purple-300 text-xs mb-1">Birthday Vibe</p>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold">3</div>
+                    <span className="text-white">August 3rd — The Creator</span>
+                  </div>
+                </div>
+                <div className="p-3 bg-black/30 rounded-lg">
+                  <p className="text-purple-300 text-xs mb-1">Karmic Debt Numbers</p>
+                  <div className="flex gap-2">
+                    {[10, 13, 14, 16].map(num => (
+                      <span key={num} className="px-2 py-1 bg-red-600/50 text-red-200 rounded text-sm font-semibold">{num}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 p-3 bg-purple-800/30 rounded-lg">
+                <p className="text-purple-200 text-sm">
+                  <strong className="text-amber-400">The 16/7 Life Path</strong> is known as the "Tower" number — representing someone who builds great things only to see them fall, and must rebuild with spiritual wisdom. Meagher's life perfectly embodies this: rising as Ireland's revolutionary hero, falling through exile, rebuilding in America as a war hero and governor, and his mysterious final fall into the Missouri River.
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
