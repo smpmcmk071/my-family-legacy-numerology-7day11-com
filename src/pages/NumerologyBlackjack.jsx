@@ -70,8 +70,8 @@ export default function NumerologyBlackjack() {
     setCheckingAccess(false);
   };
 
-  const getPlayerTotal = () => playerHand.reduce((sum, card) => sum + card.reduced_value, 0);
-  const getDealerTotal = () => dealerHand.reduce((sum, card) => sum + card.reduced_value, 0);
+  const getPlayerTotal = () => playerHand.reduce((sum, card) => sum + getGameValue(card), 0);
+  const getDealerTotal = () => dealerHand.reduce((sum, card) => sum + getGameValue(card), 0);
 
   const shuffleDeck = (cards) => {
     const shuffled = [...cards];
