@@ -134,7 +134,7 @@ export default function AmyLegacy() {
           <div className="space-y-4 text-gray-700 leading-relaxed">
             <p>
               Your <NumberBadge number={11} onClick={setSelectedNumber} /> Life Path makes you one of only four people in the family 
-              carrying a master number as their core path—you walk alongside <strong>John Francis's 22</strong> and <strong>Elizabeth's 33</strong>, 
+              carrying a master number as their core path—you walk alongside <strong>John Francis's 22</strong> and <strong>Elizabeth JoAnn's 33</strong>, 
               bringing visionary energy into daily life.
             </p>
             <p>
