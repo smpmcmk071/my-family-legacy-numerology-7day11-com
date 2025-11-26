@@ -238,8 +238,8 @@ export default function BrothersLegacy() {
                   Stephen's <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> life path—wisdom seeking
                 </p>
                 <p>
-                  • Her <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> expression connects to 
-                  Stephen's <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> soul urge—achievement power
+                  • Her <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> expression represents 
+                  the family's achievement power
                 </p>
                 <p>
                   • Her <NumberBadge number={1} onClick={setSelectedNumber} size="sm" /> personality flows to 
@@ -300,7 +300,7 @@ export default function BrothersLegacy() {
             <p>
               You are not just brothers—you are a trinity of purpose. David brings humanitarian completion (<NumberBadge number={9} onClick={setSelectedNumber} size="sm" />) 
               and creative joy (<NumberBadge number={3} onClick={setSelectedNumber} size="sm" />). Stephen bridges wisdom 
-              (<NumberBadge number={7} onClick={setSelectedNumber} size="sm" />) with achievement power (<NumberBadge number={8} onClick={setSelectedNumber} size="sm" />). 
+              (<NumberBadge number={7} onClick={setSelectedNumber} size="sm" />) with master vision (<NumberBadge number={11} onClick={setSelectedNumber} size="sm" />) and diplomacy (<NumberBadge number={2} onClick={setSelectedNumber} size="sm" />). 
               Kenneth embodies pure visionary mastery (double <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />).
             </p>
             <p>
