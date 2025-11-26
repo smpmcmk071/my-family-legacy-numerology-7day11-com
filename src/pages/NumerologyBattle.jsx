@@ -673,21 +673,30 @@ export default function NumerologyBattle() {
     </div>
   );
 
-  const PlayerCard = ({ stats, member, isLeft }) => {
+  const PlayerCard = ({ stats, member, isLeft, isCharacter }) => {
     if (!stats) return null;
     
     const hpPercent = stats.currentHp !== undefined 
       ? (stats.currentHp / stats.health) * 100 
       : 100;
     
+    // For characters, use the character data directly
+    const displayMember = isCharacter ? member : member;
+    const lifePath = displayMember?.life_path_western;
+    const sunSign = displayMember?.sun_sign;
+    const categoryIcon = isCharacter ? getCategoryIcon(displayMember?.category) : '👤';
+    
     return (
       <Card className={`bg-gradient-to-br ${isLeft ? 'from-blue-900/50 to-purple-900/50' : 'from-red-900/50 to-orange-900/50'} border-white/20 flex-1`}>
         <CardHeader className="pb-2">
           <CardTitle className="text-white text-lg flex items-center justify-between">
-            <span>{stats.name}</span>
-            <NumberBadge number={member?.life_path_western} size="sm" />
+            <span>{categoryIcon} {stats.name}</span>
+            <NumberBadge number={lifePath} size="sm" />
           </CardTitle>
-          <p className="text-xs text-gray-400">{member?.sun_sign} • LP {member?.life_path_western}</p>
+          <p className="text-xs text-gray-400">{sunSign} • LP {lifePath}</p>
+          {isCharacter && displayMember?.bio && (
+            <p className="text-xs text-amber-400 italic mt-1">{displayMember.bio}</p>
+          )}
         </CardHeader>
         <CardContent className="space-y-3">
           {/* HP Bar */}
@@ -974,19 +983,30 @@ export default function NumerologyBattle() {
             <div className="flex gap-4 mb-6">
               {battleMode === '1v1' ? (
                 <>
-                  <PlayerCard 
-                    stats={player1Stats} 
-                    member={familyMembers.find(m => m.id === player1Id)}
-                    isLeft={true}
-                  />
-                  <div className="flex items-center">
-                    <span className="text-4xl font-bold text-amber-400">VS</span>
-                  </div>
-                  <PlayerCard 
-                    stats={player2Stats} 
-                    member={familyMembers.find(m => m.id === player2Id)}
-                    isLeft={false}
-                  />
+                  {(() => {
+                    const fighters = getAvailableFighters();
+                    const p1Fighter = fighters.find(f => f.id === player1Id);
+                    const p2Fighter = fighters.find(f => f.id === player2Id);
+                    return (
+                      <>
+                        <PlayerCard 
+                          stats={player1Stats} 
+                          member={p1Fighter}
+                          isLeft={true}
+                          isCharacter={p1Fighter?.isCharacter}
+                        />
+                        <div className="flex items-center">
+                          <span className="text-4xl font-bold text-amber-400">VS</span>
+                        </div>
+                        <PlayerCard 
+                          stats={player2Stats} 
+                          member={p2Fighter}
+                          isLeft={false}
+                          isCharacter={p2Fighter?.isCharacter}
+                        />
+                      </>
+                    );
+                  })()}
                 </>
               ) : (
                 <>
