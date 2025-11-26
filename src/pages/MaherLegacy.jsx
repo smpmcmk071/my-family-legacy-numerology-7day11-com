@@ -68,6 +68,8 @@ export default function MaherLegacy() {
         <div className="mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">The Weave of Power Through Generations</h2>
           <div className="space-y-4 text-gray-700 leading-relaxed">
+            {/* Maher Side */}
+            <h3 className="text-xl font-semibold text-amber-700 mt-4">The Maher Line (Paternal)</h3>
             <p>
               <strong className="text-gray-900">Thomas Francis & Mary Agnes</strong> (Great-Grandparents): The foundation with 
               <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> master vision, <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> humanitarian wisdom, 
@@ -83,15 +85,25 @@ export default function MaherLegacy() {
               <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> wisdom, triple <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> vision, 
               <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> completion, and <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> achievement forward.
             </p>
+            
+            {/* Wilson Side */}
+            <h3 className="text-xl font-semibold text-rose-700 mt-6">The Wilson Line (Maternal)</h3>
             <p>
-              <strong className="text-gray-900">Stephen & Amy</strong> (Parents): Rare double <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> visionaries 
+              <strong className="text-gray-900">George & Elizabeth Eleanor Wilson</strong> (Maternal Grandparents): Amy's foundation—bringing their own unique numerological gifts 
+              that merge with the Maher legacy through Amy and into the children.
+            </p>
+            
+            {/* The Merger */}
+            <h3 className="text-xl font-semibold text-purple-700 mt-6">The Convergence</h3>
+            <p>
+              <strong className="text-gray-900">Stephen & Amy</strong> (Parents): Where Maher meets Wilson—rare double <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> visionaries 
               with <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> power and <NumberBadge number={6} onClick={setSelectedNumber} size="sm" /> nurturing—
               guiding the next generation with love and purpose.
             </p>
             <p>
-              <strong className="text-gray-900">Christian, Kyle & Melanie</strong> (The Children): The inheritors—carrying double <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />, 
+              <strong className="text-gray-900">Christian, Kyle & Melanie</strong> (The Children): The inheritors of both lineages—carrying double <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />, 
               master <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />, <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> healing, 
-              and the complete legacy of four generations into the future.
+              and the complete legacy of both the Maher and Wilson families into the future.
             </p>
           </div>
         </div>
