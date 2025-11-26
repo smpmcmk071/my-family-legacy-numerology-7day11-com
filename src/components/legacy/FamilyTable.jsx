@@ -12,11 +12,9 @@ export default function FamilyTable({ onNumberClick, highlightPerson, familyId }
     const loadFamilyMembers = async () => {
       setLoading(true);
       let members = [];
-      if (familyId) {
-        members = await base44.entities.FamilyMember.filter({ family_id: familyId });
-      } else {
-        members = await base44.entities.FamilyMember.list();
-      }
+      // Default to Maher family if no familyId provided
+      const targetFamilyId = familyId || '6924ccd20f6a90ebd590f527';
+      members = await base44.entities.FamilyMember.filter({ family_id: targetFamilyId });
       
       // Transform database records to display format
       const transformed = members.map(m => ({
