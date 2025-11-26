@@ -183,7 +183,9 @@ export default function NumerologyBlackjack() {
               {card.name}
             </p>
           </div>
-          <div className="text-[10px] text-center text-purple-500">vibe: {card.reduced_value}</div>
+          <div className="text-[10px] text-center text-purple-500">
+            vibe: {card.reduced_value}{[11,22,33].includes(card.reduced_value) ? ` → ${getGameValue(card)}` : ''}
+          </div>
           <div className="text-xs text-center text-purple-600 capitalize">{card.category}</div>
         </div>
       )}
