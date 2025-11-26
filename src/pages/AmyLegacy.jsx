@@ -104,25 +104,25 @@ export default function AmyLegacy() {
               </p>
             </div>
 
-            <div className="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-600">
-              <div className="flex items-center gap-2 mb-3">
-                <NumberBadge number={8} onClick={setSelectedNumber} size="lg" />
-                <span className="font-semibold text-gray-900">Soul Urge: The Powerhouse</span>
-              </div>
-              <p className="text-gray-700">
-                Your soul craves achievement and the power to manifest. You share this 8 with Elizabeth, Stephen, 
-                Christian, and Kyle—ensuring vision becomes tangible success.
-              </p>
-            </div>
-
             <div className="p-6 bg-pink-50 rounded-lg border-l-4 border-pink-600">
               <div className="flex items-center gap-2 mb-3">
                 <NumberBadge number={6} onClick={setSelectedNumber} size="lg" />
-                <span className="font-semibold text-gray-900">Personality: The Nurturer</span>
+                <span className="font-semibold text-gray-900">Soul Urge: The Nurturer</span>
               </div>
               <p className="text-gray-700">
-                Others see you as caring, responsible, and harmonious—you share this nurturing energy with 
-                Elizabeth, Christian, and Melanie, ensuring love flows through achievement.
+                Your soul craves harmony, family, and nurturing others. You share this caring energy with 
+                Elizabeth, Christian, and Melanie, ensuring love flows through everything you do.
+              </p>
+            </div>
+
+            <div className="p-6 bg-amber-50 rounded-lg border-l-4 border-amber-600">
+              <div className="flex items-center gap-2 mb-3">
+                <NumberBadge number={8} onClick={setSelectedNumber} size="lg" />
+                <span className="font-semibold text-gray-900">Personality: The Powerhouse</span>
+              </div>
+              <p className="text-gray-700">
+                Others see you as powerful, capable, and authoritative—you share this 8 with Elizabeth, Stephen, 
+                Christian, and Kyle—projecting strength and achievement to the world.
               </p>
             </div>
           </div>
