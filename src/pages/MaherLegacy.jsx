@@ -96,7 +96,7 @@ export default function MaherLegacy() {
             {/* The Merger */}
             <h3 className="text-xl font-semibold text-purple-700 mt-6">The Convergence</h3>
             <p>
-              <strong className="text-gray-900">Stephen & Amy</strong> (Parents): Where Maher meets Wilson—rare double <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> visionaries 
+              <strong className="text-gray-900">Stephen & Amy</strong> (Parents): Where Maher meets Amy—rare double <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> visionaries 
               with <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> power and <NumberBadge number={6} onClick={setSelectedNumber} size="sm" /> nurturing—
               guiding the next generation with love and purpose.
             </p>
