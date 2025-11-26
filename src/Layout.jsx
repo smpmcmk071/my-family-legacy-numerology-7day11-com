@@ -40,13 +40,8 @@ export default function Layout({ children, currentPageName }) {
       <header className="bg-black/30 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691753906e9048d99eb78f5c/307f2c5a2_image.png" 
-                alt="Maher Family Crest" 
-                className="w-10 h-10 object-contain"
-              />
-              <span className="text-white font-bold text-lg">Maher Legacy</span>
-            </Link>
+                              <span className="text-white font-bold text-lg">Home</span>
+                            </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-4">
