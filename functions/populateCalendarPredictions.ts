@@ -275,6 +275,15 @@ Deno.serve(async (req) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     
+    // Get karmic debt if family member provided
+    let memberKarmicDebt = [];
+    if (familyMemberId) {
+      const members = await base44.entities.FamilyMember.filter({ id: familyMemberId });
+      if (members.length > 0 && members[0].karmic_debt_number) {
+        memberKarmicDebt = members[0].karmic_debt_number.split(',').map(n => n.trim()).filter(Boolean);
+      }
+    }
+    
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
       const dateStr = d.toISOString().split('T')[0];
       const dayNumbers = calculateDayNumbers(dateStr, memberLifePath);
@@ -283,6 +292,13 @@ Deno.serve(async (req) => {
         dayNumbers.universalDay, 
         dayNumbers.personalDay, 
         memberLifePath
+      );
+      
+      const cautionDays = identifyCautionDays(
+        dayNumbers.universalDay,
+        dayNumbers.personalDay,
+        memberLifePath,
+        memberKarmicDebt
       );
       
       const prediction = {
@@ -294,6 +310,11 @@ Deno.serve(async (req) => {
         recommendations: getRecommendations(dayNumbers.personalDay || dayNumbers.universalDay),
         suggested_activities: suggestEventTypes(dayNumbers.universalDay, dayNumbers.personalDay),
         special_significance: specialDays,
+        caution_alerts: cautionDays,
+        is_caution_day: cautionDays.length > 0,
+        caution_level: cautionDays.length > 0 ? 
+          (cautionDays.some(c => c.level === 'critical') ? 'critical' : 
+           cautionDays.some(c => c.level === 'high') ? 'high' : 'moderate') : null,
         is_master_day: [11, 22, 33].includes(dayNumbers.universalDay) || 
                        [11, 22, 33].includes(dayNumbers.personalDay),
         is_aligned: dayNumbers.personalDay && dayNumbers.universalDay === dayNumbers.personalDay,
