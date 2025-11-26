@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { base44 } from '@/api/base44Client';
-import { Calendar, Plus, Loader2, Sparkles, User, Repeat, Trash2, AlertTriangle, ChevronDown, ChevronUp, Star, CheckCircle2 } from 'lucide-react';
+import { Calendar, Plus, Loader2, Sparkles, User, Repeat, Trash2, AlertTriangle, ChevronDown, ChevronUp, Star, CheckCircle2, BarChart3 } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
+import ForecastAnalysis from '../components/calendar/ForecastAnalysis';
 
 // Get current date in EST timezone
 const getESTDate = () => {
@@ -44,6 +45,7 @@ export default function CalendarEvents() {
   const [forecastSummary, setForecastSummary] = useState(null);
   const [loadingForecast, setLoadingForecast] = useState(false);
   const [showForecast, setShowForecast] = useState(true);
+  const [showAnalysis, setShowAnalysis] = useState(false);
 
   useEffect(() => {
     loadUserAndMember();
@@ -513,10 +515,24 @@ export default function CalendarEvents() {
                   </span>
                 )}
               </div>
-              {showForecast ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setShowAnalysis(!showAnalysis); }}
+                  className={`px-2 py-1 rounded text-xs transition-colors ${showAnalysis ? 'bg-amber-600 text-white' : 'bg-white/10 text-gray-300 hover:bg-white/20'}`}
+                >
+                  <BarChart3 className="w-3 h-3 inline mr-1" />
+                  Analysis
+                </button>
+                {showForecast ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+              </div>
             </CardTitle>
           </CardHeader>
-          {showForecast && (
+          {showForecast && showAnalysis && (
+            <CardContent className="border-b border-white/10 pb-6">
+              <ForecastAnalysis forecast={forecast} userMember={userMember} />
+            </CardContent>
+          )}
+          {showForecast && !showAnalysis && (
             <CardContent>
               {loadingForecast ? (
                 <div className="flex items-center gap-2 text-gray-400 justify-center py-8">
@@ -578,6 +594,7 @@ export default function CalendarEvents() {
             </CardContent>
           )}
         </Card>
+        
 
         {/* Events List */}
         {events.length > 0 && (
