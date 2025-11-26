@@ -86,6 +86,7 @@ export default function CalendarEvents() {
     if (!selectedDate) return;
     
     setIsLoading(true);
+    setCautionAlerts([]);
     
     const response = await base44.functions.invoke('calculateNumerology', {
       type: 'dayNumbers',
@@ -96,6 +97,24 @@ export default function CalendarEvents() {
     if (response.data?.success) {
       setDayCalc(response.data.data);
     }
+    
+    // Get caution alerts for this date
+    if (userMember?.id) {
+      const cautionResponse = await base44.functions.invoke('populateCalendarPredictions', {
+        startDate: selectedDate,
+        endDate: selectedDate,
+        familyMemberId: userMember.id,
+        lifePath: userMember.life_path_western
+      });
+      
+      if (cautionResponse.data?.success && cautionResponse.data.data.predictions?.length > 0) {
+        const dayPrediction = cautionResponse.data.data.predictions[0];
+        if (dayPrediction.caution_alerts?.length > 0) {
+          setCautionAlerts(dayPrediction.caution_alerts);
+        }
+      }
+    }
+    
     setIsLoading(false);
   };
 
