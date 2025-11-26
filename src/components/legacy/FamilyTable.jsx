@@ -29,14 +29,27 @@ export default function FamilyTable({ onNumberClick, highlightPerson, familyId }
         masters: m.master_numbers ? m.master_numbers.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n) && n > 0) : [],
         sign: `${m.sun_sign || ''} / ${m.element || ''}${m.secondary_element ? '-' + m.secondary_element : ''}`.replace(' / -', ' / ').replace(' / /', ''),
         relationship: m.relationship,
-        generation: m.generation
+        generation: m.generation,
+        birthDate: m.birth_date
       }));
 
-      // Sort by generation (oldest first) then by relationship
-      const relationshipOrder = ['great-great-great-grandparent', 'great-great-grandparent', 'great-grandparent', 'grandparent', 'parent', 'uncle', 'aunt', 'sibling', 'self', 'child', 'cousin', 'spouse'];
+      // Sort by birth date (oldest first) to get proper generational order
+      // This ensures great-great-great-grandparents come before great-great-grandparents, etc.
       transformed.sort((a, b) => {
-        if (a.generation !== b.generation) return (a.generation || 99) - (b.generation || 99);
-        return relationshipOrder.indexOf(a.relationship) - relationshipOrder.indexOf(b.relationship);
+        // First sort by birth year (oldest first)
+        const aYear = a.birthDate ? new Date(a.birthDate).getFullYear() : 9999;
+        const bYear = b.birthDate ? new Date(b.birthDate).getFullYear() : 9999;
+        
+        // Group by approximate generation (within 15 years = same generation)
+        const aGenGroup = Math.floor(aYear / 25);
+        const bGenGroup = Math.floor(bYear / 25);
+        
+        if (aGenGroup !== bGenGroup) {
+          return aGenGroup - bGenGroup; // Older generations first
+        }
+        
+        // Within same generation, sort by birth year (men typically born slightly before in couples)
+        return aYear - bYear;
       });
 
       setFamilyData(transformed);
