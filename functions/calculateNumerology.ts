@@ -94,8 +94,7 @@ function formatWithReduction(total, keepMaster = true) {
     return String(reduced);
   }
   
-  // Always show the raw total first for vibe lookup (e.g., 74/11 or 102/3)
-  // Check if there's an intermediate step (e.g., 76 → 13 → 4)
+  // Calculate the first reduction (sum of digits)
   const firstReduction = String(total).split('').reduce((sum, d) => sum + parseInt(d), 0);
   
   // If first reduction is a master number, show total/master
@@ -103,12 +102,12 @@ function formatWithReduction(total, keepMaster = true) {
     return `${total}/${firstReduction}`;
   }
   
-  // If first reduction equals reduced, just show total/reduced
+  // If first reduction equals reduced (single digit), show total/reduced
   if (firstReduction === reduced) {
     return `${total}/${reduced}`;
   }
   
-  // Otherwise show total/firstReduction/reduced (e.g., 76/13/4)
+  // Otherwise show total/firstReduction/reduced (e.g., 102/12/3, 76/13/4)
   if (firstReduction > 9) {
     return `${total}/${firstReduction}/${reduced}`;
   }
