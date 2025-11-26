@@ -40,7 +40,7 @@ export default function Layout({ children, currentPageName }) {
       <header className="bg-black/30 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-                              <span className="text-white font-bold text-lg">Home</span>
+                              <span className="text-white font-bold text-lg">7day11.com</span>
                             </Link>
 
           {/* Desktop Nav */}
