@@ -94,18 +94,23 @@ function formatWithReduction(total, keepMaster = true) {
     return String(reduced);
   }
   
+  // Always show the raw total first for vibe lookup (e.g., 74/11 or 102/3)
   // Check if there's an intermediate step (e.g., 76 → 13 → 4)
-  // Show the first reduction if it's > 9 and not a master number
   const firstReduction = String(total).split('').reduce((sum, d) => sum + parseInt(d), 0);
   
-  // If first reduction is a master number, show it
-  if (keepMaster && [11, 22, 33].includes(firstReduction)) {
-    return `${firstReduction}/${reduced}`;
+  // If first reduction is a master number, show total/master
+  if (keepMaster && MASTER_NUMBERS.includes(firstReduction)) {
+    return `${total}/${firstReduction}`;
   }
   
-  // If first reduction is still > 9 (like 13, 14, 16, 19), show it as intermediate
-  if (firstReduction > 9 && firstReduction !== reduced) {
-    return `${firstReduction}/${reduced}`;
+  // If first reduction equals reduced, just show total/reduced
+  if (firstReduction === reduced) {
+    return `${total}/${reduced}`;
+  }
+  
+  // Otherwise show total/firstReduction/reduced (e.g., 76/13/4)
+  if (firstReduction > 9) {
+    return `${total}/${firstReduction}/${reduced}`;
   }
   
   return `${total}/${reduced}`;
