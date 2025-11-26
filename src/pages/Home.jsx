@@ -28,7 +28,7 @@ export default function Home() {
         {
           name: 'Melanie Maher',
           title: 'The Healer',
-          description: 'Life Path 1, Expression 3, Soul 33/6',
+          description: 'Life Path 1, Expression 3, Personality 44',
           highlight: 'Innovation & Compassion',
           page: 'MelanieLegacy',
           gradient: 'from-purple-500 to-pink-600'
