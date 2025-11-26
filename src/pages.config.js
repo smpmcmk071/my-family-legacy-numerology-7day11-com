@@ -19,6 +19,7 @@ import Community from './pages/Community';
 import NumerologyBlackjack from './pages/NumerologyBlackjack';
 import NumerologyBattle from './pages/NumerologyBattle';
 import MaherHistory from './pages/MaherHistory';
+import GenealogyResearch from './pages/GenealogyResearch';
 import __Layout from './Layout.jsx';
 
 
@@ -44,6 +45,7 @@ export const PAGES = {
     "NumerologyBlackjack": NumerologyBlackjack,
     "NumerologyBattle": NumerologyBattle,
     "MaherHistory": MaherHistory,
+    "GenealogyResearch": GenealogyResearch,
 }
 
 export const pagesConfig = {
