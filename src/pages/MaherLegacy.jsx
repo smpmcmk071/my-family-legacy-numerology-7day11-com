@@ -89,8 +89,8 @@ export default function MaherLegacy() {
             {/* Wilson Side */}
             <h3 className="text-xl font-semibold text-rose-700 mt-6">The Wilson Line (Maternal)</h3>
             <p>
-              <strong className="text-gray-900">George & Elizabeth Eleanor Wilson</strong> (Maternal Grandparents): Amy's foundation—bringing their own unique numerological gifts 
-              that merge with the Maher legacy through Amy and into the children.
+              <strong className="text-gray-900">George & Elizabeth Eleanor Wilson</strong> (Stephen's Maternal Grandparents): Your mother's parents—bringing their own unique numerological gifts 
+              that merge with the Maher legacy through your mother and into you and the next generation.
             </p>
             
             {/* The Merger */}
