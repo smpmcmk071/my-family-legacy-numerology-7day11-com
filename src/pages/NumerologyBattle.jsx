@@ -90,6 +90,7 @@ export default function NumerologyBattle() {
   const getTeamSize = () => {
     if (battleMode === '2v2') return 2;
     if (battleMode === '3v3') return 3;
+    if (battleMode === '6v6') return 6;
     return 1;
   };
 
@@ -230,37 +231,64 @@ export default function NumerologyBattle() {
     
     setIsLoading(true);
     
-    // Load stats for all team members
+    // Load stats for all team members (supports both family and characters)
     const t1Stats = [];
     const t2Stats = [];
+    const fighters = getAvailableFighters();
     
     for (const id of team1Ids) {
-      const response = await base44.functions.invoke('calculateBattleStats', {
-        action: 'getPlayerStats',
-        playerId: id
-      });
-      if (response.data?.success) {
+      const fighter = fighters.find(f => f.id === id);
+      if (fighter?.isCharacter) {
+        const stats = calculateCharacterStats(fighter);
         t1Stats.push({
-          ...response.data.data.stats,
+          ...stats,
           id,
-          name: response.data.data.name,
-          abilities: response.data.data.stats.specialAbilities
+          name: fighter.name,
+          abilities: stats.specialAbilities,
+          isCharacter: true,
+          category: fighter.category
         });
+      } else {
+        const response = await base44.functions.invoke('calculateBattleStats', {
+          action: 'getPlayerStats',
+          playerId: id
+        });
+        if (response.data?.success) {
+          t1Stats.push({
+            ...response.data.data.stats,
+            id,
+            name: response.data.data.name,
+            abilities: response.data.data.stats.specialAbilities
+          });
+        }
       }
     }
     
     for (const id of team2Ids) {
-      const response = await base44.functions.invoke('calculateBattleStats', {
-        action: 'getPlayerStats',
-        playerId: id
-      });
-      if (response.data?.success) {
+      const fighter = fighters.find(f => f.id === id);
+      if (fighter?.isCharacter) {
+        const stats = calculateCharacterStats(fighter);
         t2Stats.push({
-          ...response.data.data.stats,
+          ...stats,
           id,
-          name: response.data.data.name,
-          abilities: response.data.data.stats.specialAbilities
+          name: fighter.name,
+          abilities: stats.specialAbilities,
+          isCharacter: true,
+          category: fighter.category
         });
+      } else {
+        const response = await base44.functions.invoke('calculateBattleStats', {
+          action: 'getPlayerStats',
+          playerId: id
+        });
+        if (response.data?.success) {
+          t2Stats.push({
+            ...response.data.data.stats,
+            id,
+            name: response.data.data.name,
+            abilities: response.data.data.stats.specialAbilities
+          });
+        }
       }
     }
     
@@ -801,6 +829,7 @@ export default function NumerologyBattle() {
                     <TabsTrigger value="1v1" className="data-[state=active]:bg-amber-600">1v1</TabsTrigger>
                     <TabsTrigger value="2v2" className="data-[state=active]:bg-amber-600">2v2</TabsTrigger>
                     <TabsTrigger value="3v3" className="data-[state=active]:bg-amber-600">3v3</TabsTrigger>
+                    <TabsTrigger value="6v6" className="data-[state=active]:bg-amber-600">6v6</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </CardTitle>
@@ -941,7 +970,7 @@ export default function NumerologyBattle() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <TeamSelector
                     teamNumber={1}
-                    members={familyMembers}
+                    members={getAvailableFighters()}
                     selectedIds={team1Ids}
                     onToggle={toggleTeam1}
                     maxSize={getTeamSize()}
@@ -949,7 +978,7 @@ export default function NumerologyBattle() {
                   />
                   <TeamSelector
                     teamNumber={2}
-                    members={familyMembers}
+                    members={getAvailableFighters()}
                     selectedIds={team2Ids}
                     onToggle={toggleTeam2}
                     maxSize={getTeamSize()}
