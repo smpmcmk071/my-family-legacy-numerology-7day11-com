@@ -102,7 +102,7 @@ export default function MaherLegacy() {
             </p>
             <p>
               <strong className="text-gray-900">Christian, Kyle & Melanie</strong> (The Children): The inheritors of the Maher legacy—carrying double <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />, 
-              master <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />, <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> healing, 
+              master <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />, <NumberBadge number={44} onClick={setSelectedNumber} size="sm" /> master healing, 
               and the complete legacy of the Maher family combined with Amy's gifts into the future.
             </p>
           </div>
@@ -147,9 +147,17 @@ export default function MaherLegacy() {
             <div className="p-6 bg-green-50 rounded-lg border-l-4 border-green-600">
               <div className="flex items-center gap-2 mb-3">
                 <NumberBadge number={33} onClick={setSelectedNumber} size="lg" />
+                <span className="font-semibold text-gray-900">The Master Teacher</span>
+              </div>
+              <p className="text-gray-700">Elizabeth JoAnn (Soul Urge 33). The silent guide who teaches through compassion.</p>
+            </div>
+
+            <div className="p-6 bg-teal-50 rounded-lg border-l-4 border-teal-600">
+              <div className="flex items-center gap-2 mb-3">
+                <NumberBadge number={44} onClick={setSelectedNumber} size="lg" />
                 <span className="font-semibold text-gray-900">The Master Healer</span>
               </div>
-              <p className="text-gray-700">Elizabeth JoAnn ➡️ Melanie. The silent guides who teach through compassion.</p>
+              <p className="text-gray-700">Melanie (Chaldean Personality 44). Mastery over the physical realm and healing architecture.</p>
             </div>
 
             <div className="p-6 bg-orange-50 rounded-lg border-l-4 border-orange-600">
