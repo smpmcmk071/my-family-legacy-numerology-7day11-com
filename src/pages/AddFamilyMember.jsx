@@ -674,28 +674,10 @@ export default function AddFamilyMember() {
                     </div>
                   )}
 
-                  <Button
-                    onClick={handleSave}
-                    disabled={isSaving || saved}
-                    className="w-full bg-green-600 hover:bg-green-700"
-                  >
-                    {saved ? (
-                      <>
-                        <CheckCircle2 className="w-4 h-4 mr-2" />
-                        {editingMemberId ? 'Updated!' : 'Saved!'}
-                      </>
-                    ) : isSaving ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        {editingMemberId ? 'Updating...' : 'Saving...'}
-                      </>
-                    ) : (
-                      <>
-                        <UserPlus className="w-4 h-4 mr-2" />
-                        {editingMemberId ? 'Update Member' : 'Save Family Member'}
-                      </>
-                    )}
-                  </Button>
+                  <div className="p-4 bg-yellow-500/20 border border-yellow-500/50 rounded-lg text-center">
+                    <p className="text-yellow-300 font-medium">🚧 Out of Order 🚧</p>
+                    <p className="text-yellow-200/70 text-sm mt-1">Saving is temporarily disabled</p>
+                  </div>
                 </div>
               )}
             </CardContent>
