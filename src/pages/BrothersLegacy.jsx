@@ -112,7 +112,7 @@ export default function BrothersLegacy() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-700 text-sm">Soul Urge:</span>
-                  <NumberBadge number={8} onClick={setSelectedNumber} />
+                  <NumberBadge number={2} onClick={setSelectedNumber} />
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-700 text-sm">Birthday:</span>
@@ -173,8 +173,8 @@ export default function BrothersLegacy() {
                 Stephen inherits Dad's <NumberBadge number={7} onClick={setSelectedNumber} size="sm" /> life path—the seeker's wisdom 
                 flowing directly down the line. His <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> expression carries 
                 the master visionary gift from Dad's <NumberBadge number={22} onClick={setSelectedNumber} size="sm" /> soul urge and 
-                birth month 11. The <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> soul urge connects to Mom's 
-                birthday 26/<NumberBadge number={8} onClick={setSelectedNumber} size="sm" />, amplifying the family's achievement power. 
+                birth month 11. The <NumberBadge number={2} onClick={setSelectedNumber} size="sm" /> soul urge brings diplomacy and 
+                partnership energy, balancing the visionary intensity. 
                 His personality <NumberBadge number={9} onClick={setSelectedNumber} size="sm" /> mirrors Dad's expression for humanitarian 
                 vision.
               </p>
