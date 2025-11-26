@@ -26,13 +26,13 @@ const familyData = [
     highlight: true
   },
   {
-    name: 'George Shotts Wilson (Maternal Great-Grandpop)',
+    name: 'George Shotts Wilson (Pop Pop Wilson)',
     lifePath: 1,
     expression: 7,
-    soulUrge: 6,
-    personality: 1,
+    soulUrge: 1,
+    personality: 6,
     birthday: '23/5',
-    masters: [1, 7, 6],
+    masters: [1, 7, 44],
     sign: 'Scorpio / Water',
     highlight: true
   },
