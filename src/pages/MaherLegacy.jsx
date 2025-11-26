@@ -179,7 +179,8 @@ export default function MaherLegacy() {
             <NumberBadge number={8} onClick={setSelectedNumber} size="sm" /> achievement, 
             <NumberBadge number={11} onClick={setSelectedNumber} size="sm" /> vision, 
             <NumberBadge number={22} onClick={setSelectedNumber} size="sm" /> building, and 
-            <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> healing converge to create a legacy of purpose.
+            <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> teaching, and 
+            <NumberBadge number={44} onClick={setSelectedNumber} size="sm" /> healing converge to create a legacy of purpose.
           </p>
           <p className="text-gray-700 leading-relaxed text-lg mb-4">
             The <NumberBadge number={6} onClick={setSelectedNumber} size="sm" /> nurturing thread—woven through Thomas's personality, 
