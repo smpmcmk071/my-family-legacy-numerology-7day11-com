@@ -71,7 +71,7 @@ export default function MelanieLegacy() {
           <p className="text-gray-700 leading-relaxed text-lg mb-6">
             Melanie, you are <strong>The Creative Healer</strong> of the Maher family—combining the leadership power of 
             <NumberBadge number={1} onClick={setSelectedNumber} /> with the creative expression of <NumberBadge number={3} onClick={setSelectedNumber} /> 
-            and the master healing energy of <NumberBadge number={33} onClick={setSelectedNumber} />.
+            and the master healing energy of <NumberBadge number={44} onClick={setSelectedNumber} />.
           </p>
           <p className="text-gray-900 font-bold text-xl">
             You bring joy, compassion, and creative healing light to balance the family's intense drive and power.
@@ -106,12 +106,12 @@ export default function MelanieLegacy() {
 
             <div className="p-6 bg-purple-50 rounded-lg border-l-4 border-purple-600">
               <div className="flex items-center gap-2 mb-3">
-                <NumberBadge number={33} onClick={setSelectedNumber} size="lg" />
-                <span className="font-semibold text-gray-900">Soul Urge: The Master Teacher</span>
+                <NumberBadge number={44} onClick={setSelectedNumber} size="lg" />
+                <span className="font-semibold text-gray-900">Personality: The Master Healer</span>
               </div>
               <p className="text-gray-700">
-                You share Grandma's rare master number 33—the ultimate healer and teacher. Your soul deeply desires 
-                to nurture, heal, and uplift humanity with unconditional love.
+                You carry the rare master number 44—the ultimate healer and architect of transformation. Your presence 
+                brings mastery over the physical realm and the power to restructure reality with healing energy.
               </p>
             </div>
 
@@ -133,8 +133,8 @@ export default function MelanieLegacy() {
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Your Place in the Family Weave</h2>
           <div className="space-y-4 text-gray-700 leading-relaxed">
             <p>
-              You carry the rare <NumberBadge number={33} onClick={setSelectedNumber} /> Master Teacher energy—
-              shared only with <strong>Grandma Elizabeth JoAnn</strong>. Together, you form the family's healing heart.
+              You carry the rare <NumberBadge number={44} onClick={setSelectedNumber} /> Master Healer energy—
+              giving you extraordinary power to heal and transform on a grand scale.
             </p>
             <p>
               Your <NumberBadge number={1} onClick={setSelectedNumber} /> Life Path connects you to <strong>Kyle</strong>—
@@ -161,7 +161,7 @@ export default function MelanieLegacy() {
             Melanie, you are the family's <strong>creative healer and compassionate innovator</strong>. While others focus on 
             achievement and exploration, you ensure that success includes beauty, joy, and healing. Your combination of 
             leadership (<NumberBadge number={1} onClick={setSelectedNumber} />), creativity (<NumberBadge number={3} onClick={setSelectedNumber} />), 
-            master healing (<NumberBadge number={33} onClick={setSelectedNumber} />), and nurturing care (<NumberBadge number={6} onClick={setSelectedNumber} />) 
+            master healing (<NumberBadge number={44} onClick={setSelectedNumber} />), and nurturing care (<NumberBadge number={6} onClick={setSelectedNumber} />) 
             makes you the essential balance the family needs.
           </p>
           <p className="text-gray-900 font-bold text-xl mt-4">
