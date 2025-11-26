@@ -122,7 +122,7 @@ export default function MaherHistory() {
             <div className="mt-6 p-5 bg-gradient-to-r from-purple-900/50 to-indigo-900/50 rounded-xl border border-purple-500/30">
               <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 <Star className="w-5 h-5 text-purple-400" />
-                The Original Crazy 7 — Numerology Profile
+                The Original Seeker 7 — Numerology Profile
               </h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-3 bg-black/30 rounded-lg">
