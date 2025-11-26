@@ -31,7 +31,7 @@ export default function AmyLegacy() {
             </h1>
             <Sparkles className="w-8 h-8 text-teal-600" />
           </div>
-          <p className="text-xl text-gray-600 italic">Amy Maher - Mom</p>
+          <p className="text-xl text-gray-600 italic">Amy Cher D'Angelo Maher - Mom</p>
           <Button
             onClick={handlePrint}
             className="mt-6 print:hidden bg-teal-600 hover:bg-teal-700"
