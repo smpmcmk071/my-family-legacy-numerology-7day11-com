@@ -62,7 +62,7 @@ export default function NumerologyBattle() {
       setFamilyMembers(allMembers.filter(m => m.life_path_western)); // Only members with numerology calculated
       
       // Load battle history
-      const history = await base44.entities.BattleRecord.list('-created_date', 50);
+      const history = await base44.entities.BattleRecord.list('-created_date', 200);
       setBattleHistory(history);
     }
     setCheckingAccess(false);
@@ -497,7 +497,7 @@ export default function NumerologyBattle() {
     });
     
     // Refresh battle history
-    const history = await base44.entities.BattleRecord.list('-created_date', 50);
+    const history = await base44.entities.BattleRecord.list('-created_date', 200);
     setBattleHistory(history);
   };
 
