@@ -28,11 +28,11 @@ const familyData = [
   {
     name: 'George Shotts Wilson (Pop Pop Wilson)',
     lifePath: 1,
-    expression: 7,
+    expression: 88,
     soulUrge: 1,
     personality: 6,
     birthday: '23/5',
-    masters: [1, 7, 44],
+    masters: [1, 44, 88],
     sign: 'Scorpio / Water',
     highlight: true
   },
