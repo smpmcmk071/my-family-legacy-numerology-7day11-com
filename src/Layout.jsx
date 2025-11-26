@@ -45,42 +45,42 @@ export default function Layout({ children, currentPageName }) {
                             </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-4">
+          <nav className="hidden lg:flex items-center gap-1">
             {navItems.map(item => (
               <Link
                 key={item.page}
                 to={createPageUrl(item.page)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                className={`flex items-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-xs ${
                   currentPageName === item.page 
                     ? 'bg-amber-600 text-white' 
                     : 'text-gray-300 hover:bg-white/10'
                 }`}
               >
-                <item.icon className="w-4 h-4" />
+                <item.icon className="w-3 h-3" />
                 {item.name}
               </Link>
             ))}
           </nav>
 
           {/* User & Logout */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-2">
             {user && (
-              <span className="text-gray-300 text-sm">{user.full_name || user.email}</span>
+              <span className="text-gray-300 text-xs">{user.full_name || user.email}</span>
             )}
             <Button
               variant="ghost"
               size="sm"
               onClick={handleLogout}
-              className="text-gray-400 hover:text-white hover:bg-white/10"
+              className="text-gray-400 hover:text-white hover:bg-white/10 text-xs px-2 py-1"
             >
-              <LogOut className="w-4 h-4 mr-2" />
+              <LogOut className="w-3 h-3 mr-1" />
               Logout
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-white"
+            className="lg:hidden text-white"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -89,7 +89,7 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Mobile Nav */}
         {menuOpen && (
-          <nav className="md:hidden bg-black/50 backdrop-blur-sm border-t border-white/10 px-4 py-4 space-y-2">
+          <nav className="lg:hidden bg-black/50 backdrop-blur-sm border-t border-white/10 px-4 py-4 space-y-2">
             {navItems.map(item => (
               <Link
                 key={item.page}
