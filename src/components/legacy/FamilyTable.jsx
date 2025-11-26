@@ -26,7 +26,7 @@ export default function FamilyTable({ onNumberClick, highlightPerson, familyId }
         soulUrge: m.soul_urge_master || m.soul_urge_western || 0,
         personality: m.personality_western || 0,
         birthday: m.birthday_vibe || '',
-        masters: m.master_numbers ? m.master_numbers.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n)) : [],
+        masters: m.master_numbers ? m.master_numbers.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n) && n > 0) : [],
         sign: `${m.sun_sign || ''} / ${m.element || ''}${m.secondary_element ? '-' + m.secondary_element : ''}`.replace(' / -', ' / ').replace(' / /', ''),
         relationship: m.relationship,
         generation: m.generation
