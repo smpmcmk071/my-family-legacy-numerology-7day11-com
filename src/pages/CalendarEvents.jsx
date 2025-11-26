@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { base44 } from '@/api/base44Client';
-import { Calendar, Plus, Loader2, Sparkles, User, Repeat, Trash2 } from 'lucide-react';
+import { Calendar, Plus, Loader2, Sparkles, User, Repeat, Trash2, AlertTriangle } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
 
 // Get current date in EST timezone
