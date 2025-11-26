@@ -201,5 +201,7 @@ export const compoundVibes = {
   97: { title: "The Spiritual Humanitarian", meaning: "Success through spiritual service." },
   98: { title: "The Abundant Giver", meaning: "Success through generous sharing of wealth." },
   99: { title: "The Universal Healer", meaning: "Completion of all cycles. Universal humanitarian service and enlightenment." },
-  100: { title: "The Divine Complete", meaning: "Perfect wholeness and new divine beginnings. The end of one grand cycle and the start of another at the highest level." }
+  100: { title: "The Divine Complete", meaning: "Perfect wholeness and new divine beginnings. The end of one grand cycle and the start of another at the highest level." },
+  101: { title: "The Spiritual Pioneer", meaning: "New beginnings at the highest spiritual level. Combines divine completion (100) with leadership (1)." },
+  102: { title: "The Divine Communicator", meaning: "Mastery of expression at the cosmic level. Creative communication channeled from higher realms." }
   };
