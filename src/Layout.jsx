@@ -40,9 +40,9 @@ export default function Layout({ children, currentPageName }) {
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
               <img 
-                src="https://www.irishsurnames.com/coatsofarms/m/maher-coat-of-arms-family-crest.gif" 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691753906e9048d99eb78f5c/307f2c5a2_image.png" 
                 alt="Maher Family Crest" 
-                className="w-8 h-8 object-contain"
+                className="w-10 h-10 object-contain"
               />
               <span className="text-white font-bold text-lg">Maher Legacy</span>
             </Link>
