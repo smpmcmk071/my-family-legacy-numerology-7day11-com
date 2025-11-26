@@ -118,8 +118,9 @@ export default function ParentsLegacy() {
             <div className="p-6 bg-purple-50 rounded-lg border-l-4 border-purple-600">
               <h3 className="text-xl font-bold text-purple-900 mb-3">Melanie</h3>
               <p className="text-gray-700 leading-relaxed">
-                You received Grandma's rare <NumberBadge number={33} onClick={setSelectedNumber} /> master teacher energy and Mom's <NumberBadge number={6} onClick={setSelectedNumber} /> nurturing personality, 
-                combined with creative <NumberBadge number={3} onClick={setSelectedNumber} /> expression and pioneering <NumberBadge number={1} onClick={setSelectedNumber} /> leadership. 
+                You received the <NumberBadge number={44} onClick={setSelectedNumber} /> master healer energy—evolving from Grandma Elizabeth JoAnn's <NumberBadge number={33} onClick={setSelectedNumber} /> master teacher—
+                combined with Mom's <NumberBadge number={6} onClick={setSelectedNumber} /> nurturing personality, 
+                creative <NumberBadge number={3} onClick={setSelectedNumber} /> expression and pioneering <NumberBadge number={1} onClick={setSelectedNumber} /> leadership. 
                 You bring the essential balance of healing, creativity, and compassion to temper the family's intense drive.
               </p>
             </div>
@@ -141,7 +142,7 @@ export default function ParentsLegacy() {
               <strong>Kyle</strong>, embrace your freedom. Your 5 reminds us all that success means nothing without the courage to explore and live fully.
             </p>
             <p>
-              <strong>Melanie</strong>, never underestimate your healing gift. Your 33 and 3 bring the joy and compassion that make all achievement worthwhile.
+              <strong>Melanie</strong>, never underestimate your healing gift. Your 44 and 3 bring the joy and compassion that make all achievement worthwhile.
             </p>
             <p className="text-gray-900 font-bold text-xl mt-6">
               Together, you three carry everything: wisdom, power, vision, freedom, creativity, and healing. 

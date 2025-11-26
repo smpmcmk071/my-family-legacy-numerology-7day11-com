@@ -391,12 +391,13 @@ export default function GrandparentsLegacy() {
             <div className="p-6 bg-pink-50 rounded-lg border-l-4 border-pink-600">
               <div className="flex items-center gap-2 mb-3">
                 <NumberBadge number={33} onClick={setSelectedNumber} size="lg" />
+                <NumberBadge number={44} onClick={setSelectedNumber} size="lg" />
                 <h3 className="text-xl font-bold text-gray-900">The Healing Thread</h3>
               </div>
               <p className="text-gray-700">
-                Elizabeth JoAnn (Soul Urge 33/6) → Melanie (Soul Urge 33/6) → Future generations
+                Elizabeth JoAnn (Soul Urge 33) → Melanie (Personality 44) → Future generations
                 <br />
-                <span className="text-sm italic">The master teacher and healer energy flowing through the maternal line</span>
+                <span className="text-sm italic">The master teacher (33) evolving into master healer (44) through the maternal line</span>
               </p>
             </div>
 
