@@ -115,7 +115,7 @@ export default function NumerologyBlackjack() {
     setPlayerHand(newHand);
     setDeck([...deck]);
 
-    const total = newHand.reduce((sum, card) => sum + card.reduced_value, 0);
+    const total = newHand.reduce((sum, card) => sum + getGameValue(card), 0);
     if (total > 21) {
       endGame('bust');
     }
