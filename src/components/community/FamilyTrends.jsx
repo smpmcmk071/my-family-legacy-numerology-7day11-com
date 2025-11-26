@@ -361,11 +361,11 @@ export default function FamilyTrends({ familyMembers }) {
                         </div>
                         <p className="text-gray-300 text-xs mt-1">{KARMIC_LESSON_MEANINGS[parseInt(lesson)]}</p>
                         <div className="flex flex-wrap gap-1 mt-2">
-                          {karmicLessonMembers[lesson]?.slice(0, 5).map((name, i) => (
+                          {karmicLessonMembers[lesson]?.slice(0, 7).map((name, i) => (
                             <span key={i} className="px-1.5 py-0.5 bg-white/5 rounded text-xs text-gray-400">{name}</span>
                           ))}
-                          {karmicLessonMembers[lesson]?.length > 5 && (
-                            <span className="text-xs text-gray-500">+{karmicLessonMembers[lesson].length - 5} more</span>
+                          {karmicLessonMembers[lesson]?.length > 7 && (
+                            <span className="text-xs text-gray-500">+{karmicLessonMembers[lesson].length - 7} more</span>
                           )}
                         </div>
                       </div>
