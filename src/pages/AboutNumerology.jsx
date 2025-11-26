@@ -198,7 +198,7 @@ export default function AboutNumerology() {
               we create together all point to a family with purpose.
             </p>
             <p>
-              From Grandpop John Francis's visionary 22 to Mom Amy's healing 33 that connects our family, 
+              From Grandpop John Francis's visionary 22 to Grandma Elizabeth JoAnn's healing 33 that connects our family, 
               from Melanie's powerful 44 Master Healer energy to Stephen's seeking 7 and Christian's powerful double 8s—each of us plays a vital role in our family's 
               greater story.
             </p>
