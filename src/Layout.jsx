@@ -39,9 +39,13 @@ export default function Layout({ children, currentPageName }) {
       <header className="bg-black/30 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-amber-400" />
-            <span className="text-white font-bold text-lg">Maher Legacy</span>
-          </Link>
+              <img 
+                src="https://www.irishsurnames.com/coatsofarms/m/maher-coat-of-arms-family-crest.gif" 
+                alt="Maher Family Crest" 
+                className="w-8 h-8 object-contain"
+              />
+              <span className="text-white font-bold text-lg">Maher Legacy</span>
+            </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-4">
