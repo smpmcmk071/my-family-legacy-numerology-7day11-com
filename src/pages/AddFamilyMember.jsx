@@ -489,28 +489,44 @@ export default function AddFamilyMember() {
                     <div className="p-3 bg-white/5 rounded-lg">
                       <p className="text-xs text-gray-400 mb-1">Life Path</p>
                       <div className="flex items-center gap-2">
-                        <NumberBadge number={displayMethod === 'western' ? calculatedData.lifePath?.reduced : calculatedData.lifePathChaldean?.reduced} size="lg" />
+                        <NumberBadge 
+                          number={displayMethod === 'western' ? calculatedData.lifePath?.reduced : calculatedData.lifePathChaldean?.reduced} 
+                          rawTotal={displayMethod === 'western' ? calculatedData.lifePath?.total : calculatedData.lifePathChaldean?.total}
+                          size="lg" 
+                        />
                         <span className="text-white text-sm">{displayMethod === 'western' ? calculatedData.lifePath?.display : calculatedData.lifePathChaldean?.display}</span>
                       </div>
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg">
                       <p className="text-xs text-gray-400 mb-1">Expression</p>
                       <div className="flex items-center gap-2">
-                        <NumberBadge number={displayMethod === 'western' ? calculatedData.expression?.reduced : calculatedData.expressionChaldean?.reduced} size="lg" />
+                        <NumberBadge 
+                          number={displayMethod === 'western' ? calculatedData.expression?.reduced : calculatedData.expressionChaldean?.reduced} 
+                          rawTotal={displayMethod === 'western' ? calculatedData.expression?.sum : calculatedData.expressionChaldean?.sum}
+                          size="lg" 
+                        />
                         <span className="text-white text-sm">{displayMethod === 'western' ? calculatedData.expression?.display : calculatedData.expressionChaldean?.display}</span>
                       </div>
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg">
                       <p className="text-xs text-gray-400 mb-1">Soul Urge</p>
                       <div className="flex items-center gap-2">
-                        <NumberBadge number={displayMethod === 'western' ? calculatedData.soulUrge?.reduced : calculatedData.soulUrgeChaldean?.reduced} size="lg" />
+                        <NumberBadge 
+                          number={displayMethod === 'western' ? calculatedData.soulUrge?.reduced : calculatedData.soulUrgeChaldean?.reduced} 
+                          rawTotal={displayMethod === 'western' ? calculatedData.soulUrge?.sum : calculatedData.soulUrgeChaldean?.sum}
+                          size="lg" 
+                        />
                         <span className="text-white text-sm">{displayMethod === 'western' ? calculatedData.soulUrge?.display : calculatedData.soulUrgeChaldean?.display}</span>
                       </div>
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg">
                       <p className="text-xs text-gray-400 mb-1">Personality</p>
                       <div className="flex items-center gap-2">
-                        <NumberBadge number={displayMethod === 'western' ? calculatedData.personality?.reduced : calculatedData.personalityChaldean?.reduced} size="lg" />
+                        <NumberBadge 
+                          number={displayMethod === 'western' ? calculatedData.personality?.reduced : calculatedData.personalityChaldean?.reduced} 
+                          rawTotal={displayMethod === 'western' ? calculatedData.personality?.sum : calculatedData.personalityChaldean?.sum}
+                          size="lg" 
+                        />
                         <span className="text-white text-sm">{displayMethod === 'western' ? calculatedData.personality?.display : calculatedData.personalityChaldean?.display}</span>
                       </div>
                     </div>
