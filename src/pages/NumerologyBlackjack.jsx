@@ -18,9 +18,11 @@ const calculateValue = (name) => {
   return total;
 };
 
-const reduceNumber = (num) => {
-  if ([11, 22, 33].includes(num)) return num;
-  while (num > 9 && ![11, 22, 33].includes(num)) {
+// For blackjack, always reduce to single digit (no master number preservation)
+const getGameValue = (card) => {
+  let num = card.reduced_value;
+  // If it's a master number, reduce it for gameplay
+  while (num > 9) {
     num = String(num).split('').reduce((a, b) => a + parseInt(b), 0);
   }
   return num;
