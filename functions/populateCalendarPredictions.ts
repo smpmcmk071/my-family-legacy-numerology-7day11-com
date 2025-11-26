@@ -152,6 +152,100 @@ function identifySpecialDays(universalDay, personalDay, lifePath) {
   return special;
 }
 
+// Identify days of caution based on life path
+function identifyCautionDays(universalDay, personalDay, lifePath, karmicDebt = []) {
+  const cautions = [];
+  
+  // Life Path specific caution days
+  const lifepathChallenges = {
+    1: { numbers: [2, 6], reason: "Cooperation challenges - ego may clash with need for harmony" },
+    2: { numbers: [1, 8], reason: "Assertiveness pressure - may feel overwhelmed by aggressive energy" },
+    3: { numbers: [4, 7], reason: "Expression blocked - structure or solitude may feel stifling" },
+    4: { numbers: [3, 5], reason: "Chaos alert - scattered energy disrupts your need for order" },
+    5: { numbers: [4, 8], reason: "Freedom restricted - rigid expectations may feel suffocating" },
+    6: { numbers: [5, 7], reason: "Family disconnect - restlessness or isolation may strain bonds" },
+    7: { numbers: [4, 8], reason: "Spiritual fog - material focus can lead to overthinking & isolation" },
+    8: { numbers: [2, 7], reason: "Power diffused - introspection may slow momentum" },
+    9: { numbers: [1, 8], reason: "Ego trap - personal ambition conflicts with humanitarian calling" },
+    11: { numbers: [4, 8], reason: "Intuition blocked - material concerns cloud spiritual vision" },
+    22: { numbers: [5, 7], reason: "Building disrupted - instability or withdrawal threatens projects" },
+    33: { numbers: [1, 8], reason: "Service strain - personal ambition conflicts with healing mission" }
+  };
+  
+  const reducedLifePath = lifePath > 9 && ![11, 22, 33].includes(lifePath) ? reduceToDigit(lifePath, false) : lifePath;
+  const challenges = lifepathChallenges[reducedLifePath];
+  
+  if (challenges) {
+    // Check universal day
+    if (challenges.numbers.includes(universalDay)) {
+      cautions.push({
+        type: 'universal',
+        level: 'moderate',
+        message: `Universal ${universalDay} Day: ${challenges.reason}`
+      });
+    }
+    // Check personal day - higher caution
+    if (personalDay && challenges.numbers.includes(personalDay)) {
+      cautions.push({
+        type: 'personal',
+        level: 'high',
+        message: `Personal ${personalDay} Day: ${challenges.reason}`
+      });
+    }
+    // Double whammy - both universal and personal are challenging
+    if (challenges.numbers.includes(universalDay) && personalDay && challenges.numbers.includes(personalDay)) {
+      cautions.push({
+        type: 'combined',
+        level: 'critical',
+        message: `Double caution day - both energies challenge your Life Path ${lifePath}`
+      });
+    }
+  }
+  
+  // Karmic debt days - extra caution if your karmic numbers appear
+  if (karmicDebt && karmicDebt.length > 0) {
+    // Check if personal day reduces from a karmic number pattern
+    const karmicDayPatterns = {
+      13: [4], // 13 reduces to 4
+      14: [5], // 14 reduces to 5
+      16: [7], // 16 reduces to 7
+      19: [1]  // 19 reduces to 1
+    };
+    
+    karmicDebt.forEach(debt => {
+      const debtNum = parseInt(debt);
+      const reducedDebt = karmicDayPatterns[debtNum];
+      if (reducedDebt && (reducedDebt.includes(universalDay) || reducedDebt.includes(personalDay))) {
+        cautions.push({
+          type: 'karmic',
+          level: 'high',
+          message: `Karmic Debt ${debtNum} activation - past patterns may resurface. Stay mindful.`
+        });
+      }
+    });
+  }
+  
+  // 7 specific warnings (for deep seekers who can slip into isolation/overthinking)
+  if (reducedLifePath === 7 || lifePath === 7) {
+    if (universalDay === 7 || personalDay === 7) {
+      cautions.push({
+        type: 'lifepath_echo',
+        level: 'moderate', 
+        message: '7 on 7: Risk of over-analysis & isolation. Stay connected, don\'t retreat too deep.'
+      });
+    }
+    if ((universalDay === 4 && personalDay === 8) || (universalDay === 8 && personalDay === 4)) {
+      cautions.push({
+        type: 'material_trap',
+        level: 'high',
+        message: 'Heavy material energy today - skepticism & frustration may arise. Ground in nature.'
+      });
+    }
+  }
+  
+  return cautions;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
