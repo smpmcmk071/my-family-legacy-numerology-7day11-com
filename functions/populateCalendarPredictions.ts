@@ -349,11 +349,14 @@ Deno.serve(async (req) => {
       master_days: predictions.filter(p => p.is_master_day).length,
       aligned_days: predictions.filter(p => p.is_aligned).length,
       power_days: predictions.filter(p => p.is_power_day).length,
-      best_days_for_new_starts: predictions.filter(p => p.universal_day_number === 1).map(p => p.date),
-      best_days_for_business: predictions.filter(p => [1, 8, 22].includes(p.universal_day_number)).map(p => p.date),
-      best_days_for_family: predictions.filter(p => [2, 6].includes(p.universal_day_number)).map(p => p.date),
-      best_days_for_creativity: predictions.filter(p => [3, 5].includes(p.universal_day_number)).map(p => p.date),
-      best_days_for_reflection: predictions.filter(p => [7, 11].includes(p.universal_day_number)).map(p => p.date)
+      caution_days: predictions.filter(p => p.is_caution_day).length,
+      critical_caution_days: predictions.filter(p => p.caution_level === 'critical').map(p => p.date),
+      high_caution_days: predictions.filter(p => p.caution_level === 'high').map(p => p.date),
+      best_days_for_new_starts: predictions.filter(p => p.universal_day_number === 1 && !p.is_caution_day).map(p => p.date),
+      best_days_for_business: predictions.filter(p => [1, 8, 22].includes(p.universal_day_number) && !p.is_caution_day).map(p => p.date),
+      best_days_for_family: predictions.filter(p => [2, 6].includes(p.universal_day_number) && !p.is_caution_day).map(p => p.date),
+      best_days_for_creativity: predictions.filter(p => [3, 5].includes(p.universal_day_number) && !p.is_caution_day).map(p => p.date),
+      best_days_for_reflection: predictions.filter(p => [7, 11].includes(p.universal_day_number) && !p.is_caution_day).map(p => p.date)
     };
     
     return Response.json({ 
