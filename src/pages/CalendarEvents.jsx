@@ -39,6 +39,7 @@ export default function CalendarEvents() {
   const [isAdding, setIsAdding] = useState(false);
   const [accessDenied, setAccessDenied] = useState(false);
   const [checkingAccess, setCheckingAccess] = useState(true);
+  const [cautionAlerts, setCautionAlerts] = useState([]);
 
   useEffect(() => {
     loadUserAndMember();
