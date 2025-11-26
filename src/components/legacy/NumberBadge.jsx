@@ -14,7 +14,13 @@ const NUMBER_TITLES = {
   9: 'The Humanitarian - Compassion & Completion',
   11: 'Master Visionary - Intuition & Enlightenment',
   22: 'Master Builder - Manifestation & Legacy',
-  33: 'Master Teacher - Healing & Service'
+  33: 'Master Teacher - Healing & Service',
+  44: 'Master Healer - Physical Mastery & Architecture',
+  55: 'Master of Change - Transformation & Evolution',
+  66: 'Cosmic Parent - Universal Nurturing & Harmony',
+  77: 'Spiritual Master - Divine Wisdom & Mysticism',
+  88: 'Infinite Abundance - Karmic Mastery & Prosperity',
+  99: 'Universal Healer - Enlightenment & Completion'
 };
 
 export default function NumberBadge({ number, onClick, size = 'md' }) {
@@ -24,7 +30,7 @@ export default function NumberBadge({ number, onClick, size = 'md' }) {
     lg: 'w-10 h-10 text-base'
   };
 
-  const masterNumbers = [11, 22, 33];
+  const masterNumbers = [11, 22, 33, 44, 55, 66, 77, 88, 99];
   const isMaster = masterNumbers.includes(number);
   const title = NUMBER_TITLES[number] || `Number ${number}`;
 

@@ -25,7 +25,13 @@ const KARMIC_LESSON_MEANINGS = {
   9: 'Compassion & Release - Let go of attachments and serve humanity selflessly',
   11: 'Spiritual Illumination - Develop intuition and trust your visionary gifts',
   22: 'Master Building - Learn to manifest grand visions into physical reality',
-  33: 'Master Teaching - Embrace healing gifts and teach through unconditional love'
+  33: 'Master Teaching - Embrace healing gifts and teach through unconditional love',
+  44: 'Master Healing - Develop mastery over physical and material realms',
+  55: 'Master Change - Embrace transformation and help others evolve',
+  66: 'Cosmic Nurturing - Express love and care on a universal scale',
+  77: 'Spiritual Mastery - Channel divine wisdom and mystical understanding',
+  88: 'Infinite Abundance - Master karmic balance and material prosperity',
+  99: 'Universal Service - Complete cycles and serve all of humanity'
 };
 
 const ELEMENT_ICONS = {
