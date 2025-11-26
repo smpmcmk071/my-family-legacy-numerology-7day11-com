@@ -329,6 +329,44 @@ export default function CalendarEvents() {
                     <p className="text-green-100">{dayCalc.recommendations}</p>
                   </div>
                 )}
+
+                {/* Caution Alerts */}
+                {cautionAlerts.length > 0 && (
+                  <div className="space-y-2">
+                    {cautionAlerts.map((alert, idx) => (
+                      <div 
+                        key={idx} 
+                        className={`p-4 rounded-lg border flex items-start gap-3 ${
+                          alert.level === 'critical' ? 'bg-red-500/30 border-red-500/50' :
+                          alert.level === 'high' ? 'bg-orange-500/20 border-orange-500/40' :
+                          'bg-yellow-500/20 border-yellow-500/40'
+                        }`}
+                      >
+                        <AlertTriangle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
+                          alert.level === 'critical' ? 'text-red-400' :
+                          alert.level === 'high' ? 'text-orange-400' :
+                          'text-yellow-400'
+                        }`} />
+                        <div>
+                          <p className={`text-xs font-medium mb-1 ${
+                            alert.level === 'critical' ? 'text-red-300' :
+                            alert.level === 'high' ? 'text-orange-300' :
+                            'text-yellow-300'
+                          }`}>
+                            {alert.level === 'critical' ? '⚠️ Critical Caution' : 
+                             alert.level === 'high' ? '⚠️ High Caution' : 
+                             '⚠️ Day of Caution'}
+                          </p>
+                          <p className={`text-sm ${
+                            alert.level === 'critical' ? 'text-red-100' :
+                            alert.level === 'high' ? 'text-orange-100' :
+                            'text-yellow-100'
+                          }`}>{alert.message}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
               <p className="text-gray-400">Select a date to see day numbers</p>
