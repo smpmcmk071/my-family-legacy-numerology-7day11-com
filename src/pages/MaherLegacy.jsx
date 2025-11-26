@@ -101,9 +101,9 @@ export default function MaherLegacy() {
               guiding the next generation with love and purpose.
             </p>
             <p>
-              <strong className="text-gray-900">Christian, Kyle & Melanie</strong> (The Children): The inheritors of both lineages—carrying double <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />, 
+              <strong className="text-gray-900">Christian, Kyle & Melanie</strong> (The Children): The inheritors of the Maher legacy—carrying double <NumberBadge number={8} onClick={setSelectedNumber} size="sm" />, 
               master <NumberBadge number={11} onClick={setSelectedNumber} size="sm" />, <NumberBadge number={33} onClick={setSelectedNumber} size="sm" /> healing, 
-              and the complete legacy of both the Maher and Wilson families into the future.
+              and the complete legacy of the Maher family combined with Amy's gifts into the future.
             </p>
           </div>
         </div>
