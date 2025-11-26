@@ -797,6 +797,34 @@ export default function NumerologyBattle() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Character Toggle */}
+              <div className="flex flex-wrap items-center gap-4 p-3 bg-white/5 rounded-lg">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={useCharacters}
+                    onChange={(e) => setUseCharacters(e.target.checked)}
+                    className="w-4 h-4 accent-amber-500"
+                  />
+                  <span className="text-gray-300 text-sm">Include Special Characters</span>
+                </label>
+                {useCharacters && (
+                  <Select value={characterCategory} onValueChange={setCharacterCategory}>
+                    <SelectTrigger className="w-40 bg-white/10 border-white/20 text-white text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Characters</SelectItem>
+                      <SelectItem value="biblical">📖 Biblical Heroes</SelectItem>
+                      <SelectItem value="superhero">🦸 Superheroes</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+                {familyMembers.length === 0 && (
+                  <span className="text-amber-400 text-xs">No family members - use characters to battle!</span>
+                )}
+              </div>
+
               {battleMode === '1v1' ? (
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -805,12 +833,47 @@ export default function NumerologyBattle() {
                       <SelectTrigger className="bg-white/10 border-white/20 text-white">
                         <SelectValue placeholder="Select fighter" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {familyMembers.map(m => (
-                          <SelectItem key={m.id} value={m.id} disabled={m.id === player2Id}>
-                            {m.nickname || m.full_name} (LP: {m.life_path_western})
-                          </SelectItem>
-                        ))}
+                      <SelectContent className="max-h-64">
+                        {familyMembers.length > 0 && (
+                          <>
+                            <SelectItem value="__family_header" disabled className="font-bold text-amber-400">
+                              👨‍👩‍👧‍👦 Family Members
+                            </SelectItem>
+                            {familyMembers.map(m => (
+                              <SelectItem key={m.id} value={m.id} disabled={m.id === player2Id}>
+                                {m.nickname || m.full_name} (LP: {m.life_path_western})
+                              </SelectItem>
+                            ))}
+                          </>
+                        )}
+                        {useCharacters && (
+                          <>
+                            {(characterCategory === 'all' || characterCategory === 'biblical') && (
+                              <>
+                                <SelectItem value="__biblical_header" disabled className="font-bold text-amber-400">
+                                  📖 Biblical Heroes
+                                </SelectItem>
+                                {BATTLE_CHARACTERS.filter(c => c.category === 'biblical').map(c => (
+                                  <SelectItem key={c.id} value={c.id} disabled={c.id === player2Id}>
+                                    {c.name} (LP: {c.life_path_western})
+                                  </SelectItem>
+                                ))}
+                              </>
+                            )}
+                            {(characterCategory === 'all' || characterCategory === 'superhero') && (
+                              <>
+                                <SelectItem value="__superhero_header" disabled className="font-bold text-blue-400">
+                                  🦸 Superheroes
+                                </SelectItem>
+                                {BATTLE_CHARACTERS.filter(c => c.category === 'superhero').map(c => (
+                                  <SelectItem key={c.id} value={c.id} disabled={c.id === player2Id}>
+                                    {c.name} (LP: {c.life_path_western})
+                                  </SelectItem>
+                                ))}
+                              </>
+                            )}
+                          </>
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
@@ -820,12 +883,47 @@ export default function NumerologyBattle() {
                       <SelectTrigger className="bg-white/10 border-white/20 text-white">
                         <SelectValue placeholder="Select fighter" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {familyMembers.map(m => (
-                          <SelectItem key={m.id} value={m.id} disabled={m.id === player1Id}>
-                            {m.nickname || m.full_name} (LP: {m.life_path_western})
-                          </SelectItem>
-                        ))}
+                      <SelectContent className="max-h-64">
+                        {familyMembers.length > 0 && (
+                          <>
+                            <SelectItem value="__family_header" disabled className="font-bold text-amber-400">
+                              👨‍👩‍👧‍👦 Family Members
+                            </SelectItem>
+                            {familyMembers.map(m => (
+                              <SelectItem key={m.id} value={m.id} disabled={m.id === player1Id}>
+                                {m.nickname || m.full_name} (LP: {m.life_path_western})
+                              </SelectItem>
+                            ))}
+                          </>
+                        )}
+                        {useCharacters && (
+                          <>
+                            {(characterCategory === 'all' || characterCategory === 'biblical') && (
+                              <>
+                                <SelectItem value="__biblical_header" disabled className="font-bold text-amber-400">
+                                  📖 Biblical Heroes
+                                </SelectItem>
+                                {BATTLE_CHARACTERS.filter(c => c.category === 'biblical').map(c => (
+                                  <SelectItem key={c.id} value={c.id} disabled={c.id === player1Id}>
+                                    {c.name} (LP: {c.life_path_western})
+                                  </SelectItem>
+                                ))}
+                              </>
+                            )}
+                            {(characterCategory === 'all' || characterCategory === 'superhero') && (
+                              <>
+                                <SelectItem value="__superhero_header" disabled className="font-bold text-blue-400">
+                                  🦸 Superheroes
+                                </SelectItem>
+                                {BATTLE_CHARACTERS.filter(c => c.category === 'superhero').map(c => (
+                                  <SelectItem key={c.id} value={c.id} disabled={c.id === player1Id}>
+                                    {c.name} (LP: {c.life_path_western})
+                                  </SelectItem>
+                                ))}
+                              </>
+                            )}
+                          </>
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
