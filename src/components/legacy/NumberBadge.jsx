@@ -1,29 +1,22 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { compoundVibes, numerologyMeanings } from './numerologyData';
 
-const NUMBER_TITLES = {
-  1: 'The Leader - Independence & Innovation',
-  2: 'The Diplomat - Cooperation & Balance',
-  3: 'The Creator - Expression & Joy',
-  4: 'The Builder - Stability & Discipline',
-  5: 'The Free Spirit - Change & Adventure',
-  6: 'The Nurturer - Love & Responsibility',
-  7: 'The Seeker - Wisdom & Spirituality',
-  8: 'The Achiever - Power & Abundance',
-  9: 'The Humanitarian - Compassion & Completion',
-  11: 'Master Visionary - Intuition & Enlightenment',
-  22: 'Master Builder - Manifestation & Legacy',
-  33: 'Master Teacher - Healing & Service',
-  44: 'Master Healer - Physical Mastery & Architecture',
-  55: 'Master of Change - Transformation & Evolution',
-  66: 'Cosmic Parent - Universal Nurturing & Harmony',
-  77: 'Spiritual Master - Divine Wisdom & Mysticism',
-  88: 'Infinite Abundance - Karmic Mastery & Prosperity',
-  99: 'Universal Healer - Enlightenment & Completion'
+// Get title for any number (1-100)
+const getNumberTitle = (num) => {
+  // Check master/core numbers first
+  if (numerologyMeanings[num]) {
+    return numerologyMeanings[num].title;
+  }
+  // Check compound vibes (10-100)
+  if (compoundVibes[num]) {
+    return compoundVibes[num].title;
+  }
+  return `Number ${num}`;
 };
 
-export default function NumberBadge({ number, onClick, size = 'md' }) {
+export default function NumberBadge({ number, onClick, size = 'md', showRaw = false, rawTotal = null }) {
   const sizeClasses = {
     sm: 'w-6 h-6 text-xs',
     md: 'w-8 h-8 text-sm',
@@ -32,14 +25,17 @@ export default function NumberBadge({ number, onClick, size = 'md' }) {
 
   const masterNumbers = [11, 22, 33, 44, 55, 66, 77, 88, 99];
   const isMaster = masterNumbers.includes(number);
-  const title = NUMBER_TITLES[number] || `Number ${number}`;
+  const title = getNumberTitle(number);
+  
+  // Get compound vibe if raw total is provided
+  const rawTitle = rawTotal && rawTotal !== number ? getNumberTitle(rawTotal) : null;
 
   return (
     <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            onClick={() => onClick && onClick(number)}
+            onClick={() => onClick && onClick(number, rawTotal)}
             className={cn(
               "inline-flex items-center justify-center rounded-full font-bold transition-all print:cursor-default",
               sizeClasses[size],
@@ -55,6 +51,11 @@ export default function NumberBadge({ number, onClick, size = 'md' }) {
         </TooltipTrigger>
         <TooltipContent className="bg-gray-900 text-white border-gray-700 max-w-xs">
           <p className="font-medium">{title}</p>
+          {rawTitle && (
+            <p className="text-xs text-gray-400 mt-1">
+              From {rawTotal}: {rawTitle}
+            </p>
+          )}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
