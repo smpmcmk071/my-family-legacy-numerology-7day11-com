@@ -10,6 +10,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 
 import NumberBadge from '../components/legacy/NumberBadge';
 import TeamSelector from '../components/battle/TeamSelector';
 import TeamCard from '../components/battle/TeamCard';
+import { BATTLE_CHARACTERS, getCategoryIcon, getCategoryColor } from '../components/battle/BattleCharacters';
 
 export default function NumerologyBattle() {
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -33,6 +34,10 @@ export default function NumerologyBattle() {
   const [team2Ids, setTeam2Ids] = useState([]);
   const [team1Stats, setTeam1Stats] = useState([]);
   const [team2Stats, setTeam2Stats] = useState([]);
+  
+  // Character mode (family vs characters)
+  const [useCharacters, setUseCharacters] = useState(false);
+  const [characterCategory, setCharacterCategory] = useState('all');
 
   useEffect(() => {
     loadFamilyMembers();
@@ -68,6 +73,20 @@ export default function NumerologyBattle() {
     setCheckingAccess(false);
   };
 
+  // Get available fighters (family + characters if enabled)
+  const getAvailableFighters = () => {
+    let fighters = [...familyMembers.map(m => ({ ...m, isCharacter: false }))];
+    
+    if (useCharacters) {
+      const chars = characterCategory === 'all' 
+        ? BATTLE_CHARACTERS 
+        : BATTLE_CHARACTERS.filter(c => c.category === characterCategory);
+      fighters = [...fighters, ...chars.map(c => ({ ...c, isCharacter: true }))];
+    }
+    
+    return fighters;
+  };
+
   const getTeamSize = () => {
     if (battleMode === '2v2') return 2;
     if (battleMode === '3v3') return 3;
@@ -90,12 +109,97 @@ export default function NumerologyBattle() {
     }
   };
 
+  // Calculate stats for a character (not from database)
+  const calculateCharacterStats = (char) => {
+    const lifePath = char.life_path_western || 5;
+    const expression = char.expression_western || 5;
+    const soulUrge = char.soul_urge_western || 5;
+    const personality = char.personality_western || 5;
+    const birthday = char.birthday_number || 5;
+    
+    // Base stats from numerology
+    const health = 80 + (lifePath * 8) + (expression * 4);
+    const attack = 15 + (expression * 3) + (personality * 2);
+    const defense = 10 + (lifePath * 2) + (birthday * 2);
+    const speed = 20 + (soulUrge * 3) + (personality);
+    const evasion = 5 + (soulUrge * 1.5);
+    const critChance = 0.1 + (expression >= 11 ? 0.1 : 0) + (personality >= 11 ? 0.05 : 0);
+    const regen = soulUrge >= 6 ? Math.floor(soulUrge / 2) : 0;
+    
+    // Special abilities based on numbers
+    const abilities = [];
+    if (lifePath === 11 || expression === 11 || soulUrge === 11) abilities.push('Visionary Strike');
+    if (lifePath === 22 || expression === 22 || soulUrge === 22) abilities.push('Master Builder');
+    if (lifePath === 33 || expression === 33 || soulUrge === 33) abilities.push('Divine Healing');
+    if (lifePath === 8 || expression === 8) abilities.push('Power Surge');
+    if (lifePath === 7 || soulUrge === 7) abilities.push('Seeker\'s Insight');
+    if (lifePath === 1 || personality === 1) abilities.push('Leadership Aura');
+    if (char.special) abilities.push(char.special);
+    
+    return {
+      health: Math.floor(health),
+      attack: Math.floor(attack),
+      defense: Math.floor(defense),
+      speed: Math.floor(speed),
+      evasion: Math.floor(evasion),
+      critChance,
+      regen: Math.floor(regen),
+      specialAbilities: abilities.slice(0, 3)
+    };
+  };
+
   const loadBattleStats = async () => {
     // 1v1 mode
     if (battleMode === '1v1') {
       if (!player1Id || !player2Id) return;
       
       setIsLoading(true);
+      
+      const fighters = getAvailableFighters();
+      const p1Fighter = fighters.find(f => f.id === player1Id);
+      const p2Fighter = fighters.find(f => f.id === player2Id);
+      
+      // Check if either is a character (not from database)
+      if (p1Fighter?.isCharacter || p2Fighter?.isCharacter) {
+        // Handle character-based battles
+        let p1Stats, p2Stats;
+        
+        if (p1Fighter?.isCharacter) {
+          const stats = calculateCharacterStats(p1Fighter);
+          p1Stats = { ...stats, name: p1Fighter.name, abilities: stats.specialAbilities };
+        } else {
+          const response = await base44.functions.invoke('calculateBattleStats', {
+            action: 'getPlayerStats',
+            playerId: player1Id
+          });
+          if (response.data?.success) {
+            p1Stats = { ...response.data.data.stats, name: response.data.data.name, abilities: response.data.data.stats.specialAbilities };
+          }
+        }
+        
+        if (p2Fighter?.isCharacter) {
+          const stats = calculateCharacterStats(p2Fighter);
+          p2Stats = { ...stats, name: p2Fighter.name, abilities: stats.specialAbilities };
+        } else {
+          const response = await base44.functions.invoke('calculateBattleStats', {
+            action: 'getPlayerStats',
+            playerId: player2Id
+          });
+          if (response.data?.success) {
+            p2Stats = { ...response.data.data.stats, name: response.data.data.name, abilities: response.data.data.stats.specialAbilities };
+          }
+        }
+        
+        if (p1Stats && p2Stats) {
+          setPlayer1Stats(p1Stats);
+          setPlayer2Stats(p2Stats);
+          setBattleState('ready');
+        }
+        setIsLoading(false);
+        return;
+      }
+      
+      // Both are family members - use original API
       const response = await base44.functions.invoke('calculateBattleStats', {
         action: 'getBattlePreview',
         player1Id,
