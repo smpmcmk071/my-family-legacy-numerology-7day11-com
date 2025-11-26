@@ -134,7 +134,7 @@ export default function MaherHistory() {
                 <div className="text-center p-3 bg-black/30 rounded-lg">
                   <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl mb-2">5</div>
                   <p className="text-purple-300 text-xs">Expression</p>
-                  <p className="text-white font-semibold">95/5</p>
+                  <p className="text-white font-semibold">14/5</p>
                 </div>
                 <div className="text-center p-3 bg-black/30 rounded-lg">
                   <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl mb-2">1</div>
