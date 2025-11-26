@@ -1,149 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { base44 } from '@/api/base44Client';
 import NumberBadge from './NumberBadge';
+import { Loader2 } from 'lucide-react';
 
-const familyData = [
-  {
-    name: 'Thomas Francis Maher (Great-Grandpop)',
-    lifePath: 3,
-    expression: 11,
-    soulUrge: 5,
-    personality: 6,
-    birthday: '5',
-    masters: [3, 11, 5],
-    sign: 'Taurus / Earth',
-    highlight: true
-  },
-  {
-    name: 'Mary Agnes O\'Neill Maher (Great-Grandma)',
-    lifePath: 9,
-    expression: 8,
-    soulUrge: 7,
-    personality: 1,
-    birthday: '14/5',
-    masters: [9, 8, 7, 1],
-    sign: 'Virgo / Earth',
-    highlight: true
-  },
-  {
-    name: 'George Shotts Wilson (Pop Pop Wilson)',
-    lifePath: 1,
-    expression: 88,
-    soulUrge: 1,
-    personality: 6,
-    birthday: '23/5',
-    masters: [1, 44, 88],
-    sign: 'Scorpio / Water',
-    highlight: true
-  },
-  {
-    name: 'Elizabeth Elanor Wilson (Maternal Grandma)',
-    lifePath: 2,
-    expression: 6,
-    soulUrge: '33/6',
-    personality: 3,
-    birthday: '17/8',
-    masters: [2, 6, 8, 33],
-    sign: 'Leo / Fire-Water',
-    highlight: true
-  },
-  {
-    name: 'John Francis (Grandpop)',
-    lifePath: 7,
-    expression: 9,
-    soulUrge: 22,
-    personality: 5,
-    birthday: '22-25/7',
-    masters: [7, 11, 22, 9],
-    sign: 'Sag / Fire-Water',
-    highlight: true
-  },
-  {
-    name: 'Elizabeth JoAnn (Grandma)',
-    lifePath: 6,
-    expression: 7,
-    soulUrge: '33/6',
-    personality: 1,
-    birthday: '26/8',
-    masters: [6, 7, 8, 33],
-    sign: 'Cancer / Water-Earth',
-    highlight: true
-  },
-  {
-    name: 'Stephen (Dad)',
-    lifePath: 7,
-    expression: 11,
-    soulUrge: 8,
-    personality: 9,
-    birthday: '25/7',
-    masters: [7, 8, 9, 11],
-    sign: 'Scorpio / Water-Air',
-    highlight: true
-  },
-  {
-    name: 'Amy (Mom)',
-    lifePath: 11,
-    expression: 5,
-    soulUrge: 8,
-    personality: 6,
-    birthday: '27/9',
-    masters: [11, 8, 6],
-    sign: 'Capricorn / Earth',
-    highlight: true
-  },
-  {
-    name: 'Christian (Brother)',
-    lifePath: 8,
-    expression: 8,
-    soulUrge: 11,
-    personality: 6,
-    birthday: '25/7',
-    masters: [8, 7, 11],
-    sign: 'Scorpio / Water-Earth'
-  },
-  {
-    name: 'Kyle (Brother)',
-    lifePath: 5,
-    expression: 8,
-    soulUrge: 1,
-    personality: 7,
-    birthday: '19/1',
-    masters: [5, 7, 8, 1],
-    sign: 'Cancer / Water-Fire'
-  },
-  {
-    name: 'Melanie (Sister)',
-    lifePath: 1,
-    expression: 3,
-    soulUrge: '33/6',
-    personality: 6,
-    birthday: '28/1',
-    masters: [1, 3, 6, 33],
-    sign: 'Libra / Air-Earth'
-  },
-  {
-    name: 'David (Uncle)',
-    lifePath: 9,
-    expression: 3,
-    soulUrge: 11,
-    personality: 2,
-    birthday: '1',
-    masters: [9, 11, 3],
-    sign: 'Taurus / Earth'
-  },
-  {
-    name: 'Kenneth (Uncle)',
-    lifePath: 11,
-    expression: 5,
-    soulUrge: 11,
-    personality: 9,
-    birthday: '18/9',
-    masters: [11, 9, 5],
-    sign: 'Aquarius / Air'
-  }
-];
+export default function FamilyTable({ onNumberClick, highlightPerson, familyId }) {
+  const [familyData, setFamilyData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-export default function FamilyTable({ onNumberClick, highlightPerson }) {
+  useEffect(() => {
+    const loadFamilyMembers = async () => {
+      setLoading(true);
+      let members = [];
+      if (familyId) {
+        members = await base44.entities.FamilyMember.filter({ family_id: familyId });
+      } else {
+        members = await base44.entities.FamilyMember.list();
+      }
+      
+      // Transform database records to display format
+      const transformed = members.map(m => ({
+        name: m.nickname ? `${m.full_name} (${m.nickname})` : m.full_name,
+        lifePath: m.life_path_western || 0,
+        expression: m.expression_western || 0,
+        soulUrge: m.soul_urge_master || m.soul_urge_western || 0,
+        personality: m.personality_western || 0,
+        birthday: m.birthday_vibe || '',
+        masters: m.master_numbers ? m.master_numbers.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n)) : [],
+        sign: `${m.sun_sign || ''} / ${m.element || ''}${m.secondary_element ? '-' + m.secondary_element : ''}`.replace(' / -', ' / ').replace(' / /', ''),
+        relationship: m.relationship,
+        generation: m.generation
+      }));
+
+      // Sort by generation (oldest first) then by relationship
+      const relationshipOrder = ['great-great-great-grandparent', 'great-great-grandparent', 'great-grandparent', 'grandparent', 'parent', 'uncle', 'aunt', 'sibling', 'self', 'child', 'cousin', 'spouse'];
+      transformed.sort((a, b) => {
+        if (a.generation !== b.generation) return (a.generation || 99) - (b.generation || 99);
+        return relationshipOrder.indexOf(a.relationship) - relationshipOrder.indexOf(b.relationship);
+      });
+
+      setFamilyData(transformed);
+      setLoading(false);
+    };
+    loadFamilyMembers();
+  }, [familyId]);
+
   const parseNumber = (value) => {
     if (typeof value === 'string') {
       const parts = value.split('/');
@@ -151,6 +52,22 @@ export default function FamilyTable({ onNumberClick, highlightPerson }) {
     }
     return value;
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="w-8 h-8 animate-spin text-amber-600" />
+      </div>
+    );
+  }
+
+  if (familyData.length === 0) {
+    return (
+      <div className="text-center p-8 text-gray-500">
+        No family members found. Add members to see the legacy table.
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-auto rounded-lg border-2 border-gray-200 shadow-lg">
@@ -169,7 +86,7 @@ export default function FamilyTable({ onNumberClick, highlightPerson }) {
         </TableHeader>
         <TableBody>
           {familyData.map((person, idx) => {
-            const isHighlighted = highlightPerson ? person.name === highlightPerson : false;
+            const isHighlighted = highlightPerson ? person.name.includes(highlightPerson) : false;
             return (
               <TableRow 
                 key={idx} 
