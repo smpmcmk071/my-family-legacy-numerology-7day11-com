@@ -655,6 +655,7 @@ export default function AdminNumerology() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="universal">Universal Only</SelectItem>
+                    <SelectItem value="all_family">📊 All Family Members</SelectItem>
                     {familyMembers.map(m => (
                       <SelectItem key={m.id} value={m.id}>
                         {m.nickname || m.full_name} (LP: {m.life_path_western || '?'})
@@ -668,14 +669,42 @@ export default function AdminNumerology() {
             <Button
               onClick={async () => {
                 setIsLoadingPredictions(true);
-                const response = await base44.functions.invoke('populateCalendarPredictions', {
-                  startDate: predictionStart,
-                  endDate: predictionEnd,
-                  familyMemberId: selectedMemberForPrediction && selectedMemberForPrediction !== 'universal' ? selectedMemberForPrediction : null
-                });
-                if (response.data?.success) {
-                  setPredictions(response.data.data.predictions);
-                  setPredictionSummary(response.data.data.summary);
+                
+                if (selectedMemberForPrediction === 'all_family') {
+                  // Generate for all family members
+                  const allPredictions = [];
+                  const allSummaries = { total_days: 0, master_days: 0, aligned_days: 0, power_days: 0, best_days_for_new_starts: [] };
+                  
+                  for (const member of familyMembers) {
+                    const response = await base44.functions.invoke('populateCalendarPredictions', {
+                      startDate: predictionStart,
+                      endDate: predictionEnd,
+                      familyMemberId: member.id
+                    });
+                    if (response.data?.success) {
+                      const memberPreds = response.data.data.predictions.map(p => ({
+                        ...p,
+                        member_name: member.nickname || member.full_name?.split(' ')[0]
+                      }));
+                      allPredictions.push(...memberPreds);
+                      allSummaries.total_days += response.data.data.summary.total_days;
+                      allSummaries.master_days += response.data.data.summary.master_days;
+                      allSummaries.aligned_days += response.data.data.summary.aligned_days;
+                      allSummaries.power_days += response.data.data.summary.power_days;
+                    }
+                  }
+                  setPredictions(allPredictions);
+                  setPredictionSummary(allSummaries);
+                } else {
+                  const response = await base44.functions.invoke('populateCalendarPredictions', {
+                    startDate: predictionStart,
+                    endDate: predictionEnd,
+                    familyMemberId: selectedMemberForPrediction && selectedMemberForPrediction !== 'universal' ? selectedMemberForPrediction : null
+                  });
+                  if (response.data?.success) {
+                    setPredictions(response.data.data.predictions);
+                    setPredictionSummary(response.data.data.summary);
+                  }
                 }
                 setIsLoadingPredictions(false);
               }}
@@ -733,9 +762,12 @@ export default function AdminNumerology() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {predictions.map(p => (
-                      <TableRow key={p.date} className={`border-white/10 ${p.is_master_day ? 'bg-amber-500/10' : p.is_aligned ? 'bg-green-500/10' : p.is_power_day ? 'bg-purple-500/10' : ''}`}>
-                        <TableCell className="text-white font-medium">{p.date}</TableCell>
+                    {predictions.map((p, idx) => (
+                      <TableRow key={`${p.date}-${p.member_name || idx}`} className={`border-white/10 ${p.is_master_day ? 'bg-amber-500/10' : p.is_aligned ? 'bg-green-500/10' : p.is_power_day ? 'bg-purple-500/10' : ''}`}>
+                        <TableCell className="text-white font-medium">
+                          {p.date}
+                          {p.member_name && <span className="text-xs text-gray-400 ml-2">({p.member_name})</span>}
+                        </TableCell>
                         <TableCell className="text-amber-400 font-bold">{p.universal_day_number}</TableCell>
                         <TableCell className="text-purple-400 font-bold">{p.personal_day_number || '-'}</TableCell>
                         <TableCell className="text-gray-300 text-xs">{p.universal_vibe}</TableCell>
