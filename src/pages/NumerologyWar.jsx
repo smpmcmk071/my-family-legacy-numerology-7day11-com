@@ -5,6 +5,54 @@ import { base44 } from '@/api/base44Client';
 import { Sparkles, RotateCcw, Swords, Trophy, BookOpen, Loader2, Gamepad2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
+// Cannon sound effect for war
+const playCannonSound = () => {
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Create noise for explosion
+    const bufferSize = audioContext.sampleRate * 0.3;
+    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    const data = buffer.getChannelData(0);
+    
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
+    }
+    
+    const noise = audioContext.createBufferSource();
+    noise.buffer = buffer;
+    
+    // Low frequency oscillator for boom
+    const oscillator = audioContext.createOscillator();
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(30, audioContext.currentTime + 0.2);
+    
+    // Gain controls
+    const noiseGain = audioContext.createGain();
+    noiseGain.gain.setValueAtTime(0.8, audioContext.currentTime);
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    const oscGain = audioContext.createGain();
+    oscGain.gain.setValueAtTime(0.6, audioContext.currentTime);
+    oscGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    // Connect
+    noise.connect(noiseGain);
+    oscillator.connect(oscGain);
+    noiseGain.connect(audioContext.destination);
+    oscGain.connect(audioContext.destination);
+    
+    // Play
+    noise.start();
+    oscillator.start();
+    noise.stop(audioContext.currentTime + 0.3);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  } catch (e) {
+    // Audio not supported, ignore
+  }
+};
+
 // For War game: reduce to single digit BUT preserve master numbers 11, 22, 33
 const getWarValue = (card) => {
   let num = card.reduced_value || card.raw_value || 5;
@@ -117,6 +165,7 @@ export default function NumerologyWar() {
       setRoundResult('lose');
     } else {
       setRoundResult('war');
+      playCannonSound();
     }
   };
 
@@ -178,6 +227,7 @@ export default function NumerologyWar() {
       setRoundResult('lose');
     } else {
       setRoundResult('war'); // Double war!
+      playCannonSound();
     }
   };
 
