@@ -876,13 +876,17 @@ export default function NumerologyBattle() {
                 </label>
                 {useCharacters && (
                   <Select value={characterCategory} onValueChange={setCharacterCategory}>
-                    <SelectTrigger className="w-40 bg-white/10 border-white/20 text-white text-sm">
+                    <SelectTrigger className="w-44 bg-white/10 border-white/20 text-white text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Characters</SelectItem>
                       <SelectItem value="biblical">📖 Biblical Heroes</SelectItem>
                       <SelectItem value="superhero">🦸 Superheroes</SelectItem>
+                      <SelectItem value="civilian">👔 Civilians (Weak)</SelectItem>
+                      <SelectItem value="historical">🏛️ Historical</SelectItem>
+                      <SelectItem value="sports">🏆 Sports Legends</SelectItem>
+                      <SelectItem value="rock">🎸 Rock Legends</SelectItem>
                     </SelectContent>
                   </Select>
                 )}
