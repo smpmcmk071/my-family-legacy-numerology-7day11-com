@@ -28,7 +28,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Blackjack', page: 'NumerologyBlackjack', icon: Sparkles },
     { name: 'Community', page: 'Community', icon: Users },
     { name: 'Add Member', page: 'AddFamilyMember', icon: Users },
-    { name: 'Calendar', page: 'CalendarEvents', icon: Calendar },
+    { name: 'Cosmic Calendar', page: 'CalendarEvents', icon: Calendar },
     { name: 'About', page: 'AboutNumerology', icon: Sparkles },
     { name: 'Admin', page: 'AdminNumerology', icon: Settings },
   ];

@@ -6,6 +6,7 @@ import { Sparkles, Sun, Moon, Calendar, TrendingUp, Heart, Briefcase, Users, Loa
 import { createPageUrl } from '../utils';
 import NumberBadge from '../components/legacy/NumberBadge';
 import DailySongs from '../components/legacy/DailySongs';
+import DailyAstrologySummary from '../components/dashboard/DailyAstrologySummary';
 
 const NUMBER_MEANINGS = {
   1: { title: 'The Leader', keywords: ['independence', 'innovation', 'ambition'], advice: 'Take initiative today. Your leadership energy is strong.' },
