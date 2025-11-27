@@ -1,97 +1,99 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Sparkles, ArrowRight, Heart } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { Sparkles, Calculator, Swords, Spade, Users, Calendar, BookOpen, UserPlus, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Home() {
-  const generations = [
-    {
-      title: 'The Children',
-      members: [
-        {
-          name: 'Christian Stephen Maher',
-          title: 'The Builder',
-          description: 'Double 8, Soul 11, Birthday 25/7',
-          highlight: 'Master Builder & Visionary',
-          page: 'ChristianLegacy',
-          gradient: 'from-amber-500 to-orange-600'
-        },
-        {
-          name: 'Kyle Maher',
-          title: 'The Adventurer',
-          description: 'Life Path 5, Expression 8, Soul 1',
-          highlight: 'Freedom & Achievement',
-          page: 'KyleLegacy',
-          gradient: 'from-blue-500 to-cyan-600'
-        },
-        {
-          name: 'Melanie Maher',
-          title: 'The Healer',
-          description: 'Life Path 1, Expression 3, Personality 44',
-          highlight: 'Innovation & Compassion',
-          page: 'MelanieLegacy',
-          gradient: 'from-purple-500 to-pink-600'
+  const [user, setUser] = useState(null);
+  const [familyMember, setFamilyMember] = useState(null);
+  const [family, setFamily] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+
+        // Find family member record for this user
+        const members = await base44.entities.FamilyMember.filter({ email: currentUser.email });
+        if (members.length > 0) {
+          setFamilyMember(members[0]);
+          // Load family info
+          const families = await base44.entities.Family.filter({ id: members[0].family_id });
+          if (families.length > 0) {
+            setFamily(families[0]);
+          }
         }
-      ]
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+
+  const apps = [
+    {
+      name: 'Numerology Battle',
+      description: 'Battle family members using numerology-powered stats',
+      icon: Swords,
+      page: 'NumerologyBattle',
+      gradient: 'from-red-500 to-orange-600'
     },
     {
-      title: 'The Grandparents',
-      members: [
-        {
-          name: 'John Francis & Elizabeth JoAnn',
-          title: 'The Foundation',
-          description: 'Master Builder (22) & Master Healer (33)',
-          highlight: 'Wisdom & Love',
-          page: 'GrandparentsLegacy',
-          gradient: 'from-indigo-500 to-purple-600'
-        }
-      ]
+      name: 'Numerology Blackjack',
+      description: 'Play blackjack with numerology-valued cards',
+      icon: Spade,
+      page: 'NumerologyBlackjack',
+      gradient: 'from-green-500 to-emerald-600'
     },
     {
-      title: 'The Three Brothers',
-      members: [
-        {
-          name: 'David, Stephen & Kenneth',
-          title: 'The Trinity',
-          description: 'Humanitarian, Visionary & Master Intuitive',
-          highlight: 'United in Purpose',
-          page: 'BrothersLegacy',
-          gradient: 'from-violet-500 to-indigo-600'
-        }
-      ]
+      name: 'Personal Dashboard',
+      description: 'View your daily numerology insights and forecasts',
+      icon: Sparkles,
+      page: 'PersonalDashboard',
+      gradient: 'from-purple-500 to-pink-600'
     },
     {
-      title: 'The Parents',
-      members: [
-        {
-          name: 'Stephen Maher',
-          title: 'The Bridge',
-          description: 'Life Path 7, Expression 11, Soul 8',
-          highlight: 'Wisdom & Vision',
-          page: 'StephenLegacy',
-          gradient: 'from-slate-500 to-blue-600'
-        },
-        {
-          name: 'Amy Maher',
-          title: 'The Activator',
-          description: 'Life Path 11, Expression 5, Soul 8',
-          highlight: 'Vision & Action',
-          page: 'AmyLegacy',
-          gradient: 'from-emerald-500 to-teal-600'
-        },
-        {
-          name: 'Letter to Our Children',
-          title: 'From Mom & Dad',
-          description: 'A personal message about your legacy',
-          highlight: 'Love & Guidance',
-          page: 'ParentsLegacy',
-          gradient: 'from-rose-500 to-pink-600',
-          icon: Heart
-        }
-      ]
+      name: 'Calendar',
+      description: 'Numerology-enhanced calendar with daily vibes',
+      icon: Calendar,
+      page: 'CalendarEvents',
+      gradient: 'from-blue-500 to-cyan-600'
+    },
+    {
+      name: 'Community',
+      description: 'Share experiences and connect with family',
+      icon: Users,
+      page: 'Community',
+      gradient: 'from-amber-500 to-yellow-600'
+    },
+    {
+      name: 'Add Family Member',
+      description: 'Calculate numerology and add family members',
+      icon: UserPlus,
+      page: 'AddFamilyMember',
+      gradient: 'from-teal-500 to-cyan-600'
+    },
+    {
+      name: 'About Numerology',
+      description: 'Learn about the ancient systems of numerology',
+      icon: BookOpen,
+      page: 'AboutNumerology',
+      gradient: 'from-indigo-500 to-purple-600'
     }
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-amber-400 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 md:p-12">
@@ -101,78 +103,92 @@ export default function Home() {
           <div className="flex items-center justify-center gap-3 mb-6">
             <Sparkles className="w-12 h-12 text-amber-400" />
             <h1 className="text-5xl md:text-6xl font-bold text-white">
-              The Maher Legacy
+              7day11.com
             </h1>
             <Sparkles className="w-12 h-12 text-amber-400" />
           </div>
           <p className="text-xl text-gray-300 italic">
-            A family of visionaries, builders, and healers
+            Discover Your Numerological Legacy
           </p>
-          <p className="text-lg text-gray-400 mt-4">
-            Four generations of wisdom, power, and purpose
-          </p>
+          {family && (
+            <p className="text-lg text-amber-400 mt-4">
+              Welcome, {family.name}
+            </p>
+          )}
+          {!familyMember && (
+            <div className="mt-6 p-4 bg-amber-500/20 border border-amber-500/50 rounded-lg max-w-md mx-auto">
+              <p className="text-amber-300">
+                Get started by adding yourself as a family member to unlock all features!
+              </p>
+              <Link 
+                to={createPageUrl('AddFamilyMember')}
+                className="inline-block mt-3 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors"
+              >
+                <UserPlus className="w-4 h-4 inline mr-2" />
+                Set Up Your Profile
+              </Link>
+            </div>
+          )}
         </div>
 
-        {/* Generation Sections */}
-        {generations.map((generation, genIdx) => (
-          <div key={genIdx} className="mb-16">
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">
-              {generation.title}
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              {generation.members.map((member, idx) => {
-                const Icon = member.icon || Sparkles;
-                return (
-                  <Link key={idx} to={createPageUrl(member.page)}>
-                    <Card className="h-full transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 cursor-pointer group">
-                      <CardHeader>
-                        <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${member.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                          <Icon className="w-8 h-8 text-white" />
-                        </div>
-                        <CardTitle className="text-2xl text-white mb-2">
-                          {member.name}
-                        </CardTitle>
-                        <div className={`inline-block px-3 py-1 rounded-full bg-gradient-to-r ${member.gradient} text-white text-sm font-semibold`}>
-                          {member.title}
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <p className="text-gray-300 leading-relaxed">
-                          {member.description}
-                        </p>
-                        <div className="pt-4 border-t border-white/20">
-                          <div className="flex items-center justify-between text-amber-400 group-hover:text-amber-300 transition-colors">
-                            <span className="font-semibold">{member.highlight}</span>
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-
-        {/* Family Foundation */}
-        <div className="mt-16 p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-          <h2 className="text-3xl font-bold text-white mb-6 text-center">The Foundation</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="p-6 bg-white/5 rounded-lg">
-              <h3 className="text-xl font-bold text-amber-400 mb-2">Grandpop John Francis</h3>
-              <p className="text-gray-300">
-                The visionary (7, 11, 22) who laid the foundation of wisdom and master building for all generations
-              </p>
-            </div>
-            <div className="p-6 bg-white/5 rounded-lg">
-              <h3 className="text-xl font-bold text-pink-400 mb-2">Grandma Elizabeth JoAnn</h3>
-              <p className="text-gray-300">
-                The master healer (33/6) who anchors the family with love, intuition, and steady care
-              </p>
-            </div>
-          </div>
+        {/* Apps Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {apps.map((app, idx) => {
+            const Icon = app.icon;
+            return (
+              <Link key={idx} to={createPageUrl(app.page)}>
+                <Card className="h-full transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/10 backdrop-blur-sm border-white/20 cursor-pointer group">
+                  <CardHeader>
+                    <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${app.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                      <Icon className="w-8 h-8 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl text-white mb-2">
+                      {app.name}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-300 leading-relaxed">
+                      {app.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
+
+        {/* Quick Stats */}
+        {familyMember && (
+          <div className="mt-16 p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">Your Core Numbers</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {familyMember.life_path_western && (
+                <div className="p-4 bg-white/5 rounded-lg text-center">
+                  <p className="text-gray-400 text-sm">Life Path</p>
+                  <p className="text-3xl font-bold text-amber-400">{familyMember.life_path_western}</p>
+                </div>
+              )}
+              {familyMember.expression_western && (
+                <div className="p-4 bg-white/5 rounded-lg text-center">
+                  <p className="text-gray-400 text-sm">Expression</p>
+                  <p className="text-3xl font-bold text-purple-400">{familyMember.expression_western}</p>
+                </div>
+              )}
+              {familyMember.soul_urge_western && (
+                <div className="p-4 bg-white/5 rounded-lg text-center">
+                  <p className="text-gray-400 text-sm">Soul Urge</p>
+                  <p className="text-3xl font-bold text-pink-400">{familyMember.soul_urge_western}</p>
+                </div>
+              )}
+              {familyMember.personality_western && (
+                <div className="p-4 bg-white/5 rounded-lg text-center">
+                  <p className="text-gray-400 text-sm">Personality</p>
+                  <p className="text-3xl font-bold text-blue-400">{familyMember.personality_western}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
