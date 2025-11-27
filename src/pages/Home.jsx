@@ -44,12 +44,12 @@ export default function Home() {
       gradient: 'from-red-500 to-orange-600'
     },
     {
-      name: 'Numerology Blackjack',
-      description: 'Play blackjack with numerology-valued cards',
-      icon: Spade,
-      page: 'NumerologyBlackjack',
-      gradient: 'from-green-500 to-emerald-600'
-    },
+            name: 'Numerology War',
+            description: 'Battle with cards - highest numerology value wins!',
+            icon: Spade,
+            page: 'NumerologyWar',
+            gradient: 'from-red-500 to-rose-600'
+          },
     {
       name: 'Personal Dashboard',
       description: 'View your daily numerology insights and forecasts',

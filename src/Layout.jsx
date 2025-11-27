@@ -25,7 +25,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Home', page: 'Home', icon: Home },
     { name: 'Dashboard', page: 'PersonalDashboard', icon: Sparkles },
     { name: 'Battle', page: 'NumerologyBattle', icon: Sparkles },
-    { name: 'Blackjack', page: 'NumerologyBlackjack', icon: Sparkles },
+    { name: 'War', page: 'NumerologyWar', icon: Sparkles },
     { name: 'Community', page: 'Community', icon: Users },
     { name: 'Add Member', page: 'AddFamilyMember', icon: Users },
     { name: 'Cosmic Calendar', page: 'CalendarEvents', icon: Calendar },

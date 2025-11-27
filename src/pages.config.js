@@ -21,6 +21,7 @@ import NumerologyBattle from './pages/NumerologyBattle';
 import MaherHistory from './pages/MaherHistory';
 import GenealogyResearch from './pages/GenealogyResearch';
 import AboutNumerology from './pages/AboutNumerology';
+import NumerologyWar from './pages/NumerologyWar';
 import __Layout from './Layout.jsx';
 
 
@@ -48,6 +49,7 @@ export const PAGES = {
     "MaherHistory": MaherHistory,
     "GenealogyResearch": GenealogyResearch,
     "AboutNumerology": AboutNumerology,
+    "NumerologyWar": NumerologyWar,
 }
 
 export const pagesConfig = {
