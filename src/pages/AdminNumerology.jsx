@@ -353,76 +353,78 @@ export default function AdminNumerology() {
           </CardHeader>
           <CardContent>
             {family ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Swords className="w-4 h-4 text-red-400" />
-                    <span className="text-white text-sm">Battle</span>
-                  </div>
-                  <Switch
-                    checked={family.enable_battle !== false}
-                    onCheckedChange={(v) => updateFamilySetting('enable_battle', v)}
-                  />
-                </div>
-                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Gamepad2 className="w-4 h-4 text-green-400" />
-                    <span className="text-white text-sm">Blackjack</span>
-                  </div>
-                  <Switch
-                    checked={family.enable_blackjack !== false}
-                    onCheckedChange={(v) => updateFamilySetting('enable_blackjack', v)}
-                  />
-                </div>
-                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-blue-400" />
-                    <span className="text-white text-sm">Community</span>
-                  </div>
-                  <Switch
-                    checked={family.enable_community !== false}
-                    onCheckedChange={(v) => updateFamilySetting('enable_community', v)}
-                  />
-                </div>
-                <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-purple-400" />
-                    <span className="text-white text-sm">Calendar</span>
-                  </div>
-                  <Switch
-                    checked={family.enable_calendar !== false}
-                    onCheckedChange={(v) => updateFamilySetting('enable_calendar', v)}
-                  />
-                </div>
-              </div>
-              
-              {/* Member Limit Control */}
-              <div className="mt-4 p-4 bg-white/5 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-white font-medium">Member Limit</p>
-                    <p className="text-gray-400 text-xs">Free: 5 members, +4 per $33 upgrade</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="number"
-                      value={family.member_limit || 5}
-                      onChange={(e) => updateFamilySetting('member_limit', parseInt(e.target.value) || 5)}
-                      className="w-20 bg-white/10 border-white/20 text-white text-center"
-                      min={1}
-                      max={999}
+              <>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Swords className="w-4 h-4 text-red-400" />
+                      <span className="text-white text-sm">Battle</span>
+                    </div>
+                    <Switch
+                      checked={family.enable_battle !== false}
+                      onCheckedChange={(v) => updateFamilySetting('enable_battle', v)}
                     />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => updateFamilySetting('member_limit', 999)}
-                      className="border-amber-500/50 text-amber-400 hover:bg-amber-500/20"
-                    >
-                      Unlimited
-                    </Button>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Gamepad2 className="w-4 h-4 text-green-400" />
+                      <span className="text-white text-sm">Blackjack</span>
+                    </div>
+                    <Switch
+                      checked={family.enable_blackjack !== false}
+                      onCheckedChange={(v) => updateFamilySetting('enable_blackjack', v)}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4 text-blue-400" />
+                      <span className="text-white text-sm">Community</span>
+                    </div>
+                    <Switch
+                      checked={family.enable_community !== false}
+                      onCheckedChange={(v) => updateFamilySetting('enable_community', v)}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-purple-400" />
+                      <span className="text-white text-sm">Calendar</span>
+                    </div>
+                    <Switch
+                      checked={family.enable_calendar !== false}
+                      onCheckedChange={(v) => updateFamilySetting('enable_calendar', v)}
+                    />
                   </div>
                 </div>
-              </div>
+                
+                {/* Member Limit Control */}
+                <div className="mt-4 p-4 bg-white/5 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-medium">Member Limit</p>
+                      <p className="text-gray-400 text-xs">Free: 5 members, +4 per $33 upgrade</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        value={family.member_limit || 5}
+                        onChange={(e) => updateFamilySetting('member_limit', parseInt(e.target.value) || 5)}
+                        className="w-20 bg-white/10 border-white/20 text-white text-center"
+                        min={1}
+                        max={999}
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => updateFamilySetting('member_limit', 999)}
+                        className="border-amber-500/50 text-amber-400 hover:bg-amber-500/20"
+                      >
+                        Unlimited
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </>
             ) : (
               <p className="text-gray-400">No family settings found</p>
             )}
