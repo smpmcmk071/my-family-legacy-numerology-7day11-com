@@ -24,6 +24,7 @@ import AboutNumerology from './pages/AboutNumerology';
 import NumerologyWar from './pages/NumerologyWar';
 import Games from './pages/Games';
 import FamilyLegacy from './pages/FamilyLegacy';
+import JoinFamily from './pages/JoinFamily';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +55,7 @@ export const PAGES = {
     "NumerologyWar": NumerologyWar,
     "Games": Games,
     "FamilyLegacy": FamilyLegacy,
+    "JoinFamily": JoinFamily,
 }
 
 export const pagesConfig = {
