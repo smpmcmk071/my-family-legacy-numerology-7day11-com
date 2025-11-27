@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, RotateCcw, Swords, Trophy, BookOpen, Loader2, Gamepad2 } from 'lucide-react';
+import { Sparkles, RotateCcw, Swords, Trophy, BookOpen, Loader2, Gamepad2, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 // Cannon sound effect for war
@@ -318,6 +320,13 @@ export default function NumerologyWar() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-900 via-rose-900 to-red-950 p-6">
       <div className="max-w-4xl mx-auto">
+        {/* Back Button */}
+        <Link to={createPageUrl('Games')}>
+          <Button variant="ghost" className="text-gray-300 hover:text-white mb-4">
+            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
+          </Button>
+        </Link>
+
         {/* Header */}
         <div className="text-center mb-6">
           <h1 className="text-4xl font-bold text-amber-400 mb-2 flex items-center justify-center gap-3">

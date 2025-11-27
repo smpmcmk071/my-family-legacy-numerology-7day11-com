@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, Calculator, Swords, Spade, Users, Calendar, BookOpen, UserPlus, Loader2 } from 'lucide-react';
+import { Sparkles, Gamepad2, Users, Calendar, BookOpen, UserPlus, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Home() {
@@ -37,19 +37,12 @@ export default function Home() {
 
   const apps = [
     {
-      name: 'Numerology Battle',
-      description: 'Battle family members using numerology-powered stats',
-      icon: Swords,
-      page: 'NumerologyBattle',
+      name: 'Games',
+      description: 'Battle, War, and more numerology-powered games',
+      icon: Gamepad2,
+      page: 'Games',
       gradient: 'from-red-500 to-orange-600'
     },
-    {
-            name: 'Numerology War',
-            description: 'Battle with cards - highest numerology value wins!',
-            icon: Spade,
-            page: 'NumerologyWar',
-            gradient: 'from-red-500 to-rose-600'
-          },
     {
       name: 'Personal Dashboard',
       description: 'View your daily numerology insights and forecasts',
