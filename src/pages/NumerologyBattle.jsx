@@ -5,12 +5,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { base44 } from '@/api/base44Client';
-import { Swords, Zap, Shield, Heart, Wind, Sparkles, Trophy, RotateCcw, Loader2, History, Users } from 'lucide-react';
+import { Swords, Zap, Shield, Heart, Wind, Sparkles, Trophy, RotateCcw, Loader2, History, Users, Shuffle, Cpu } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import NumberBadge from '../components/legacy/NumberBadge';
 import TeamSelector from '../components/battle/TeamSelector';
 import TeamCard from '../components/battle/TeamCard';
-import { BATTLE_CHARACTERS, getCategoryIcon, getCategoryColor } from '../components/battle/BattleCharacters';
+import { BATTLE_CHARACTERS, getCategoryIcon, getCategoryColor, getAllCategories } from '../components/battle/BattleCharacters';
 
 export default function NumerologyBattle() {
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -110,6 +110,9 @@ export default function NumerologyBattle() {
     }
   };
 
+  // Karmic debt numbers - these reduce stats
+  const KARMIC_DEBT = [13, 14, 16, 19];
+  
   // Calculate stats for a character (not from database)
   const calculateCharacterStats = (char) => {
     const lifePath = char.life_path_western || 5;
@@ -117,15 +120,39 @@ export default function NumerologyBattle() {
     const soulUrge = char.soul_urge_western || 5;
     const personality = char.personality_western || 5;
     const birthday = char.birthday_number || 5;
+    const category = char.category || 'family';
     
+    // Reduced life path multiplier (was 8, now 5)
     // Base stats from numerology
-    const health = 80 + (lifePath * 8) + (expression * 4);
-    const attack = 15 + (expression * 3) + (personality * 2);
-    const defense = 10 + (lifePath * 2) + (birthday * 2);
-    const speed = 20 + (soulUrge * 3) + (personality);
-    const evasion = 5 + (soulUrge * 1.5);
-    const critChance = 0.1 + (expression >= 11 ? 0.1 : 0) + (personality >= 11 ? 0.05 : 0);
-    const regen = soulUrge >= 6 ? Math.floor(soulUrge / 2) : 0;
+    let health = 80 + (lifePath * 5) + (expression * 3);
+    let attack = 15 + (expression * 2.5) + (personality * 1.5);
+    let defense = 10 + (lifePath * 1.5) + (birthday * 1.5);
+    let speed = 20 + (soulUrge * 2.5) + (personality * 0.8);
+    let evasion = 5 + (soulUrge * 1.2);
+    let critChance = 0.1 + (expression >= 11 ? 0.08 : 0) + (personality >= 11 ? 0.04 : 0);
+    let regen = soulUrge >= 6 ? Math.floor(soulUrge / 3) : 0;
+    
+    // Soul urge bonus (new)
+    attack += soulUrge * 0.5;
+    defense += soulUrge * 0.3;
+    
+    // Civilian penalty - they're much weaker
+    if (category === 'civilian') {
+      health *= 0.65;
+      attack *= 0.55;
+      defense *= 0.6;
+      speed *= 0.85;
+      evasion *= 0.7;
+      critChance *= 0.5;
+    }
+    
+    // Karmic debt penalties (small HP/stat reductions)
+    const hasKarmicDebt = [lifePath, expression, birthday].some(n => KARMIC_DEBT.includes(n));
+    if (hasKarmicDebt) {
+      health -= 8;
+      attack -= 3;
+      defense -= 2;
+    }
     
     // Special abilities based on numbers
     const abilities = [];
@@ -135,15 +162,16 @@ export default function NumerologyBattle() {
     if (lifePath === 8 || expression === 8) abilities.push('Power Surge');
     if (lifePath === 7 || soulUrge === 7) abilities.push('Seeker\'s Insight');
     if (lifePath === 1 || personality === 1) abilities.push('Leadership Aura');
+    if (hasKarmicDebt) abilities.push('Karmic Burden');
     if (char.special) abilities.push(char.special);
     
     return {
-      health: Math.floor(health),
-      attack: Math.floor(attack),
-      defense: Math.floor(defense),
-      speed: Math.floor(speed),
-      evasion: Math.floor(evasion),
-      critChance,
+      health: Math.floor(Math.max(50, health)),
+      attack: Math.floor(Math.max(10, attack)),
+      defense: Math.floor(Math.max(5, defense)),
+      speed: Math.floor(Math.max(15, speed)),
+      evasion: Math.floor(Math.max(3, evasion)),
+      critChance: Math.max(0.05, critChance),
       regen: Math.floor(regen),
       specialAbilities: abilities.slice(0, 3)
     };
