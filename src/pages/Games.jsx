@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Swords, Spade, Gamepad2, ArrowLeft } from 'lucide-react';
+import { Swords, Spade, Gamepad2, ArrowLeft, Club } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -20,6 +20,13 @@ export default function Games() {
       icon: Spade,
       page: 'NumerologyWar',
       gradient: 'from-red-500 to-rose-600'
+    },
+    {
+      name: 'Numerology Blackjack',
+      description: 'Hit 21 using numerology values! Card names determine their power.',
+      icon: Club,
+      page: 'NumerologyBlackjack',
+      gradient: 'from-green-500 to-emerald-600'
     }
   ];
 
