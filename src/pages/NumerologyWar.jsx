@@ -1,76 +1,138 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, RotateCcw, Swords, Trophy, BookOpen, Loader2, Gamepad2, ArrowLeft } from 'lucide-react';
+import { Sparkles, RotateCcw, Swords, Trophy, BookOpen, Loader2, Gamepad2, ArrowLeft, Flame, Zap, Volume2, VolumeX } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Cannon sound effect for war
-const playCannonSound = () => {
-  try {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    
-    // Create noise for explosion
-    const bufferSize = audioContext.sampleRate * 0.3;
-    const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-    const data = buffer.getChannelData(0);
-    
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
-    }
-    
-    const noise = audioContext.createBufferSource();
-    noise.buffer = buffer;
-    
-    // Low frequency oscillator for boom
-    const oscillator = audioContext.createOscillator();
-    oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(30, audioContext.currentTime + 0.2);
-    
-    // Gain controls
-    const noiseGain = audioContext.createGain();
-    noiseGain.gain.setValueAtTime(0.8, audioContext.currentTime);
-    noiseGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-    
-    const oscGain = audioContext.createGain();
-    oscGain.gain.setValueAtTime(0.6, audioContext.currentTime);
-    oscGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-    
-    // Connect
-    noise.connect(noiseGain);
-    oscillator.connect(oscGain);
-    noiseGain.connect(audioContext.destination);
-    oscGain.connect(audioContext.destination);
-    
-    // Play
-    noise.start();
-    oscillator.start();
-    noise.stop(audioContext.currentTime + 0.3);
-    oscillator.stop(audioContext.currentTime + 0.3);
-  } catch (e) {
-    // Audio not supported, ignore
+// Sound manager
+class SoundManager {
+  constructor() {
+    this.audioContext = null;
+    this.enabled = true;
   }
-};
 
-// For War game: reduce to single digit BUT preserve master numbers 11, 22, 33
+  init() {
+    if (!this.audioContext) {
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume();
+    }
+  }
+
+  playCannon() {
+    if (!this.enabled) return;
+    this.init();
+    try {
+      const ctx = this.audioContext;
+      const now = ctx.currentTime;
+
+      // Deep boom
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(80, now);
+      osc.frequency.exponentialRampToValueAtTime(20, now + 0.4);
+      oscGain.gain.setValueAtTime(0.8, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.4);
+
+      // Explosion noise
+      const bufferSize = ctx.sampleRate * 0.5;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 1.5);
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.6, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+      noise.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+      noise.start(now);
+      noise.stop(now + 0.5);
+    } catch (e) {}
+  }
+
+  playFlip() {
+    if (!this.enabled) return;
+    this.init();
+    try {
+      const ctx = this.audioContext;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.1);
+    } catch (e) {}
+  }
+
+  playWin() {
+    if (!this.enabled) return;
+    this.init();
+    try {
+      const ctx = this.audioContext;
+      const now = ctx.currentTime;
+      [523, 659, 784].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.15, now + i * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.1);
+        osc.stop(now + i * 0.1 + 0.2);
+      });
+    } catch (e) {}
+  }
+
+  playLose() {
+    if (!this.enabled) return;
+    this.init();
+    try {
+      const ctx = this.audioContext;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, now);
+      osc.frequency.exponentialRampToValueAtTime(100, now + 0.3);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.3);
+    } catch (e) {}
+  }
+}
+
+const soundManager = new SoundManager();
+
 const getWarValue = (card) => {
   let num = card.reduced_value || card.raw_value || 5;
-  
-  // Check if it's a master number BEFORE any reduction
-  if (num === 11 || num === 22 || num === 33) {
-    return num; // Masters stay as-is
-  }
-  
-  // Reduce to single digit
+  if (num === 11 || num === 22 || num === 33) return num;
   while (num > 9) {
     num = String(num).split('').reduce((a, b) => a + parseInt(b), 0);
-    // Check again after reduction in case we hit a master
-    if (num === 11 || num === 22 || num === 33) {
-      return num;
-    }
+    if (num === 11 || num === 22 || num === 33) return num;
   }
   return num;
 };
@@ -82,13 +144,24 @@ export default function NumerologyWar() {
   const [playerCard, setPlayerCard] = useState(null);
   const [cpuCard, setCpuCard] = useState(null);
   const [warPile, setWarPile] = useState([]);
-  const [gameState, setGameState] = useState('ready'); // ready, flipped, war, warFlipped, ended
+  const [gameState, setGameState] = useState('ready');
   const [roundResult, setRoundResult] = useState(null);
   const [showLearning, setShowLearning] = useState(false);
   const [highlightCategory, setHighlightCategory] = useState('all');
   const [accessDenied, setAccessDenied] = useState(false);
   const [checkingAccess, setCheckingAccess] = useState(true);
-  const [gameHistory, setGameHistory] = useState([]);
+  const [streak, setStreak] = useState(0);
+  const [maxStreak, setMaxStreak] = useState(0);
+  const [roundsWon, setRoundsWon] = useState(0);
+  const [roundsLost, setRoundsLost] = useState(0);
+  const [warCount, setWarCount] = useState(0);
+  const [showExplosion, setShowExplosion] = useState(false);
+  const [cardFlipping, setCardFlipping] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+
+  useEffect(() => {
+    soundManager.enabled = soundEnabled;
+  }, [soundEnabled]);
 
   useEffect(() => {
     checkAccessAndLoadCards();
@@ -129,10 +202,9 @@ export default function NumerologyWar() {
   };
 
   const startGame = () => {
-    // Always use ALL cards to ensure full deck
+    soundManager.init();
     const shuffled = shuffleDeck(allCards);
     const half = Math.floor(shuffled.length / 2);
-    
     setPlayerDeck(shuffled.slice(0, half));
     setCpuDeck(shuffled.slice(half));
     setPlayerCard(null);
@@ -140,7 +212,11 @@ export default function NumerologyWar() {
     setWarPile([]);
     setGameState('ready');
     setRoundResult(null);
-    setGameHistory([]);
+    setStreak(0);
+    setMaxStreak(0);
+    setRoundsWon(0);
+    setRoundsLost(0);
+    setWarCount(0);
   };
 
   const flipCards = () => {
@@ -149,66 +225,81 @@ export default function NumerologyWar() {
       return;
     }
 
-    const pCard = playerDeck[0];
-    const cCard = cpuDeck[0];
-    
-    setPlayerCard(pCard);
-    setCpuCard(cCard);
-    setPlayerDeck(playerDeck.slice(1));
-    setCpuDeck(cpuDeck.slice(1));
-    setGameState('flipped');
+    setCardFlipping(true);
+    soundManager.playFlip();
 
-    const pVal = getWarValue(pCard);
-    const cVal = getWarValue(cCard);
+    setTimeout(() => {
+      const pCard = playerDeck[0];
+      const cCard = cpuDeck[0];
+      
+      setPlayerCard(pCard);
+      setCpuCard(cCard);
+      setPlayerDeck(playerDeck.slice(1));
+      setCpuDeck(cpuDeck.slice(1));
+      setGameState('flipped');
+      setCardFlipping(false);
 
-    if (pVal > cVal) {
-      setRoundResult('win');
-    } else if (cVal > pVal) {
-      setRoundResult('lose');
-    } else {
-      setRoundResult('war');
-      playCannonSound();
-    }
+      const pVal = getWarValue(pCard);
+      const cVal = getWarValue(cCard);
+
+      if (pVal > cVal) {
+        setRoundResult('win');
+        soundManager.playWin();
+        setStreak(s => {
+          const newStreak = s + 1;
+          if (newStreak > maxStreak) setMaxStreak(newStreak);
+          return newStreak;
+        });
+        setRoundsWon(r => r + 1);
+      } else if (cVal > pVal) {
+        setRoundResult('lose');
+        soundManager.playLose();
+        setStreak(0);
+        setRoundsLost(r => r + 1);
+      } else {
+        setRoundResult('war');
+        setWarCount(w => w + 1);
+        setShowExplosion(true);
+        soundManager.playCannon();
+        setTimeout(() => setShowExplosion(false), 1000);
+      }
+    }, 300);
   };
 
   const collectCards = () => {
     if (roundResult === 'war') {
-      // Start war - add current cards to pile
       setWarPile([...warPile, playerCard, cpuCard]);
       setGameState('war');
       setRoundResult(null);
       setPlayerCard(null);
       setCpuCard(null);
     } else if (roundResult === 'win') {
-      // Player wins - collect all cards
       const wonCards = [playerCard, cpuCard, ...warPile];
       setPlayerDeck([...playerDeck, ...shuffleDeck(wonCards)]);
-      setGameHistory([...gameHistory, { winner: 'player', cards: wonCards }]);
       resetRound();
     } else {
-      // CPU wins
       const wonCards = [playerCard, cpuCard, ...warPile];
       setCpuDeck([...cpuDeck, ...shuffleDeck(wonCards)]);
-      setGameHistory([...gameHistory, { winner: 'cpu', cards: wonCards }]);
       resetRound();
     }
   };
 
   const executeWar = () => {
-    // Each player puts 3 cards face down, then 1 face up
     const pFaceDown = playerDeck.slice(0, 3);
     const cFaceDown = cpuDeck.slice(0, 3);
     
     if (playerDeck.length < 4) {
-      // Not enough cards, player loses
       setGameState('ended');
       return;
     }
     if (cpuDeck.length < 4) {
-      // CPU doesn't have enough, player wins
       setGameState('ended');
       return;
     }
+
+    soundManager.playCannon();
+    setShowExplosion(true);
+    setTimeout(() => setShowExplosion(false), 1000);
 
     const pWarCard = playerDeck[3];
     const cWarCard = cpuDeck[3];
@@ -225,11 +316,22 @@ export default function NumerologyWar() {
 
     if (pVal > cVal) {
       setRoundResult('win');
+      soundManager.playWin();
+      setStreak(s => {
+        const newStreak = s + 1;
+        if (newStreak > maxStreak) setMaxStreak(newStreak);
+        return newStreak;
+      });
+      setRoundsWon(r => r + 1);
     } else if (cVal > pVal) {
       setRoundResult('lose');
+      soundManager.playLose();
+      setStreak(0);
+      setRoundsLost(r => r + 1);
     } else {
-      setRoundResult('war'); // Double war!
-      playCannonSound();
+      setRoundResult('war');
+      setWarCount(w => w + 1);
+      soundManager.playCannon();
     }
   };
 
@@ -240,41 +342,55 @@ export default function NumerologyWar() {
     setGameState('ready');
     setRoundResult(null);
 
-    // Check for game end
     if (playerDeck.length === 0 || cpuDeck.length === 0) {
       setGameState('ended');
     }
   };
 
-  const endGame = () => {
-    setGameState('ended');
+  const endGame = () => setGameState('ended');
+  const getWinner = () => {
+    if (playerDeck.length > cpuDeck.length) return 'player';
+    if (cpuDeck.length > playerDeck.length) return 'cpu';
+    return 'tie';
   };
 
-  const renderCard = (card, faceDown = false) => {
+  const renderCard = (card, faceDown = false, isPlayer = false) => {
     if (!card) return null;
     
     const warVal = getWarValue(card);
     const isMaster = warVal === 11 || warVal === 22 || warVal === 33;
-    const isHighlighted = highlightCategory === 'all' || card.category === highlightCategory;
     
     return (
-      <div className={`relative w-32 h-44 rounded-xl shadow-lg transition-all transform hover:scale-105 ${
-        faceDown 
-          ? 'bg-gradient-to-br from-purple-800 to-indigo-900' 
-          : isMaster 
-            ? 'bg-gradient-to-br from-purple-400 via-pink-400 to-amber-300 ring-4 ring-amber-400'
-            : 'bg-gradient-to-br from-amber-100 to-amber-50'
-      } ${!isHighlighted && !faceDown ? 'opacity-60' : ''}`}>
+      <motion.div
+        initial={{ rotateY: 180, scale: 0.8 }}
+        animate={{ rotateY: 0, scale: 1 }}
+        transition={{ duration: 0.4, type: "spring" }}
+        whileHover={{ scale: 1.05 }}
+        className={`relative w-32 h-44 rounded-xl shadow-2xl ${
+          faceDown 
+            ? 'bg-gradient-to-br from-purple-800 to-indigo-900' 
+            : isMaster 
+              ? 'bg-gradient-to-br from-purple-400 via-pink-400 to-amber-300 ring-4 ring-amber-400 animate-pulse'
+              : 'bg-gradient-to-br from-amber-100 to-amber-50'
+        }`}
+      >
         {faceDown ? (
           <div className="absolute inset-0 flex items-center justify-center">
-            <Sparkles className="w-10 h-10 text-amber-400" />
+            <motion.div animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }}>
+              <Sparkles className="w-10 h-10 text-amber-400" />
+            </motion.div>
           </div>
         ) : (
           <div className="absolute inset-0 p-2 flex flex-col">
-            <div className={`text-3xl font-bold text-center ${isMaster ? 'text-white' : 'text-purple-900'}`}>
+            <motion.div 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring" }}
+              className={`text-3xl font-bold text-center ${isMaster ? 'text-white' : 'text-purple-900'}`}
+            >
               {warVal}
-              {isMaster && <span className="text-xs ml-1">✨</span>}
-            </div>
+              {isMaster && <Zap className="w-4 h-4 inline ml-1 text-yellow-300" />}
+            </motion.div>
             <div className="flex-1 flex items-center justify-center">
               <p className={`text-sm text-center font-semibold px-1 leading-tight ${isMaster ? 'text-white' : 'text-purple-800'}`}>
                 {card.name}
@@ -285,14 +401,8 @@ export default function NumerologyWar() {
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
     );
-  };
-
-  const getWinner = () => {
-    if (playerDeck.length > cpuDeck.length) return 'player';
-    if (cpuDeck.length > playerDeck.length) return 'cpu';
-    return 'tie';
   };
 
   if (checkingAccess) {
@@ -318,43 +428,114 @@ export default function NumerologyWar() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-rose-900 to-red-950 p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
-        <Link to={createPageUrl('Games')}>
-          <Button variant="ghost" className="text-gray-300 hover:text-white mb-4">
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
-          </Button>
-        </Link>
+    <div className="min-h-screen bg-gradient-to-br from-red-900 via-rose-900 to-red-950 p-6 relative overflow-hidden">
+      {/* Explosion Effect */}
+      <AnimatePresence>
+        {showExplosion && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 3 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+          >
+            <div className="relative">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+                className="text-9xl"
+              >
+                💥
+              </motion.div>
+              <motion.p
+                initial={{ scale: 0 }}
+                animate={{ scale: 1.5 }}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl font-black text-white drop-shadow-lg"
+              >
+                WAR!
+              </motion.p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
+      <div className="max-w-4xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <Link to={createPageUrl('Games')}>
+            <Button variant="ghost" className="text-gray-300 hover:text-white">
+              <ArrowLeft className="w-4 h-4 mr-2" /> Back
+            </Button>
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            className="text-gray-300 hover:text-white"
+          >
+            {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+          </Button>
+        </div>
+
+        {/* Title */}
+        <motion.div 
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="text-center mb-6"
+        >
           <h1 className="text-4xl font-bold text-amber-400 mb-2 flex items-center justify-center gap-3">
             <Swords className="w-10 h-10" />
             Numerology War
             <Swords className="w-10 h-10" />
           </h1>
-          <p className="text-red-200">Higher number wins! Master numbers (11, 22, 33) are powerful!</p>
-        </div>
+          <p className="text-red-200">Higher number wins! Master numbers are powerful!</p>
+        </motion.div>
 
-        {/* Deck Counts */}
+        {/* Stats Bar */}
         {gameState !== 'ended' && (playerDeck.length > 0 || cpuDeck.length > 0) && (
-          <div className="flex justify-between mb-6 px-4">
-            <div className="text-center">
-              <p className="text-amber-300 font-bold text-2xl">{playerDeck.length}</p>
-              <p className="text-red-200 text-sm">Your Cards</p>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="grid grid-cols-5 gap-2 mb-6 text-center"
+          >
+            <div className="bg-amber-500/20 rounded-lg p-2">
+              <p className="text-amber-300 font-bold text-xl">{playerDeck.length}</p>
+              <p className="text-xs text-gray-400">Your Cards</p>
             </div>
-            {warPile.length > 0 && (
-              <div className="text-center">
-                <p className="text-purple-300 font-bold text-2xl">{warPile.length}</p>
-                <p className="text-red-200 text-sm">War Pile</p>
-              </div>
-            )}
-            <div className="text-center">
-              <p className="text-red-300 font-bold text-2xl">{cpuDeck.length}</p>
-              <p className="text-red-200 text-sm">CPU Cards</p>
+            <div className="bg-green-500/20 rounded-lg p-2">
+              <p className="text-green-300 font-bold text-xl">{roundsWon}</p>
+              <p className="text-xs text-gray-400">Wins</p>
             </div>
-          </div>
+            <div className="bg-purple-500/20 rounded-lg p-2">
+              <p className="text-purple-300 font-bold text-xl flex items-center justify-center gap-1">
+                {streak > 2 && <Flame className="w-4 h-4 text-orange-400" />}
+                {streak}
+              </p>
+              <p className="text-xs text-gray-400">Streak</p>
+            </div>
+            <div className="bg-red-500/20 rounded-lg p-2">
+              <p className="text-red-300 font-bold text-xl">{roundsLost}</p>
+              <p className="text-xs text-gray-400">Losses</p>
+            </div>
+            <div className="bg-red-500/20 rounded-lg p-2">
+              <p className="text-red-300 font-bold text-xl">{cpuDeck.length}</p>
+              <p className="text-xs text-gray-400">CPU Cards</p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* War Pile */}
+        {warPile.length > 0 && (
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="text-center mb-4"
+          >
+            <div className="inline-flex items-center gap-2 bg-purple-600/30 px-4 py-2 rounded-full border border-purple-500">
+              <Swords className="w-5 h-5 text-purple-300" />
+              <span className="text-purple-300 font-bold">{warPile.length} cards at stake!</span>
+              <Swords className="w-5 h-5 text-purple-300" />
+            </div>
+          </motion.div>
         )}
 
         {/* Game Area */}
@@ -367,57 +548,47 @@ export default function NumerologyWar() {
                   <p className="text-red-200">Loading cards...</p>
                 </>
               ) : gameState === 'ended' ? (
-                <>
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
                   <Trophy className={`w-20 h-20 mx-auto mb-4 ${getWinner() === 'player' ? 'text-amber-400' : 'text-red-400'}`} />
                   <h2 className="text-3xl text-white mb-4">
-                    {getWinner() === 'player' ? '🎉 You Won!' : getWinner() === 'cpu' ? 'CPU Wins!' : "It's a Tie!"}
+                    {getWinner() === 'player' ? '🎉 Victory!' : getWinner() === 'cpu' ? 'Defeat!' : "It's a Tie!"}
                   </h2>
-                  <p className="text-red-200 mb-6">
-                    Final: You {playerDeck.length} - CPU {cpuDeck.length}
-                  </p>
+                  <div className="grid grid-cols-4 gap-4 max-w-md mx-auto mb-6">
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-green-400 font-bold text-xl">{roundsWon}</p>
+                      <p className="text-xs text-gray-400">Wins</p>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-red-400 font-bold text-xl">{roundsLost}</p>
+                      <p className="text-xs text-gray-400">Losses</p>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-purple-400 font-bold text-xl">{warCount}</p>
+                      <p className="text-xs text-gray-400">Wars</p>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-amber-400 font-bold text-xl">{maxStreak}</p>
+                      <p className="text-xs text-gray-400">Best Streak</p>
+                    </div>
+                  </div>
                   <div className="flex justify-center gap-4">
                     <Button onClick={startGame} className="bg-amber-600 hover:bg-amber-700">
                       <RotateCcw className="w-4 h-4 mr-2" /> Play Again
                     </Button>
-                    <Button onClick={() => setShowLearning(true)} variant="outline" className="border-purple-500 text-purple-300">
-                      <BookOpen className="w-4 h-4 mr-2" /> Review Cards
-                    </Button>
                   </div>
-                </>
+                </motion.div>
               ) : (
                 <>
                   <Swords className="w-16 h-16 text-amber-400 mx-auto mb-4" />
                   <h2 className="text-2xl text-white mb-4">Ready for War?</h2>
                   <p className="text-red-200 mb-2">{allCards.length} cards in the deck</p>
                   <p className="text-purple-300 mb-6 text-sm">Master numbers 11, 22, 33 keep their power!</p>
-                  
-                  {/* Category filter for research */}
-                  <div className="mb-6">
-                    <p className="text-red-200 text-sm mb-2">Highlight category during play:</p>
-                    <div className="flex justify-center gap-2 flex-wrap">
-                      {['all', 'biblical', 'historical', 'sports', 'rock', 'superhero', 'family'].map(cat => (
-                        <Button
-                          key={cat}
-                          variant={highlightCategory === cat ? 'default' : 'outline'}
-                          size="sm"
-                          onClick={() => setHighlightCategory(cat)}
-                          className={highlightCategory === cat 
-                            ? 'bg-purple-600 hover:bg-purple-700' 
-                            : 'border-red-500 text-red-300 hover:bg-red-800'
-                          }
-                        >
-                          {cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                  
                   <Button 
                     onClick={startGame} 
                     size="lg"
                     className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-xl px-12"
                   >
-                    Start War!
+                    <Swords className="w-5 h-5 mr-2" /> Start War!
                   </Button>
                 </>
               )}
@@ -429,95 +600,137 @@ export default function NumerologyWar() {
             <div className="flex justify-center items-center gap-8 mb-8">
               {/* Player Card */}
               <div className="text-center">
-                <p className="text-amber-300 font-bold mb-2">You</p>
-                {playerCard ? renderCard(playerCard) : (
-                  <div className="w-32 h-44 rounded-xl border-2 border-dashed border-amber-500/50 flex items-center justify-center">
-                    <span className="text-amber-500/50">?</span>
-                  </div>
-                )}
+                <p className="text-amber-300 font-bold mb-2 flex items-center justify-center gap-2">
+                  You
+                  {streak > 2 && <Flame className="w-4 h-4 text-orange-400 animate-pulse" />}
+                </p>
+                <AnimatePresence mode="wait">
+                  {playerCard ? (
+                    <motion.div key="card">{renderCard(playerCard, false, true)}</motion.div>
+                  ) : (
+                    <motion.div
+                      key="empty"
+                      animate={cardFlipping ? { rotateY: [0, 90] } : {}}
+                      className="w-32 h-44 rounded-xl border-2 border-dashed border-amber-500/50 flex items-center justify-center bg-amber-500/10"
+                    >
+                      <span className="text-amber-500/50 text-4xl">?</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* VS */}
               <div className="text-center">
-                <Swords className="w-12 h-12 text-red-400" />
-                {roundResult && (
-                  <p className={`font-bold mt-2 ${
-                    roundResult === 'win' ? 'text-green-400' : 
-                    roundResult === 'lose' ? 'text-red-400' : 
-                    'text-purple-400'
-                  }`}>
-                    {roundResult === 'win' ? 'WIN!' : roundResult === 'lose' ? 'LOSE' : '⚔️ WAR! ⚔️'}
-                  </p>
-                )}
+                <motion.div
+                  animate={roundResult === 'war' ? { rotate: [0, 10, -10, 0], scale: [1, 1.2, 1] } : {}}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Swords className="w-12 h-12 text-red-400" />
+                </motion.div>
+                <AnimatePresence>
+                  {roundResult && (
+                    <motion.p
+                      initial={{ scale: 0, y: 10 }}
+                      animate={{ scale: 1, y: 0 }}
+                      exit={{ scale: 0 }}
+                      className={`font-bold mt-2 text-xl ${
+                        roundResult === 'win' ? 'text-green-400' : 
+                        roundResult === 'lose' ? 'text-red-400' : 
+                        'text-purple-400'
+                      }`}
+                    >
+                      {roundResult === 'win' ? '🏆 WIN!' : roundResult === 'lose' ? '💀 LOSE' : '⚔️ WAR!'}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* CPU Card */}
               <div className="text-center">
                 <p className="text-red-300 font-bold mb-2">CPU</p>
-                {cpuCard ? renderCard(cpuCard) : (
-                  <div className="w-32 h-44 rounded-xl border-2 border-dashed border-red-500/50 flex items-center justify-center">
-                    <span className="text-red-500/50">?</span>
-                  </div>
-                )}
+                <AnimatePresence mode="wait">
+                  {cpuCard ? (
+                    <motion.div key="card">{renderCard(cpuCard)}</motion.div>
+                  ) : (
+                    <motion.div
+                      key="empty"
+                      animate={cardFlipping ? { rotateY: [0, 90] } : {}}
+                      className="w-32 h-44 rounded-xl border-2 border-dashed border-red-500/50 flex items-center justify-center bg-red-500/10"
+                    >
+                      <span className="text-red-500/50 text-4xl">?</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
-
-            {/* War Pile Indicator */}
-            {warPile.length > 0 && (
-              <div className="text-center mb-4">
-                <p className="text-purple-300">⚔️ {warPile.length} cards in the war pile! ⚔️</p>
-              </div>
-            )}
 
             {/* Action Buttons */}
             <div className="flex justify-center gap-4">
               {gameState === 'ready' && (
-                <Button 
-                  onClick={flipCards}
-                  size="lg"
-                  className="bg-amber-600 hover:bg-amber-700"
-                  disabled={playerDeck.length === 0}
-                >
-                  <Swords className="w-5 h-5 mr-2" /> Flip Cards!
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button 
+                    onClick={flipCards}
+                    size="lg"
+                    className="bg-amber-600 hover:bg-amber-700 text-lg px-8"
+                    disabled={playerDeck.length === 0}
+                  >
+                    <Swords className="w-5 h-5 mr-2" /> Flip Cards!
+                  </Button>
+                </motion.div>
               )}
               
               {(gameState === 'flipped' || gameState === 'warFlipped') && roundResult !== 'war' && (
-                <Button 
-                  onClick={collectCards}
-                  size="lg"
-                  className={roundResult === 'win' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}
-                >
-                  {roundResult === 'win' ? 'Collect Cards!' : 'Continue...'}
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button 
+                    onClick={collectCards}
+                    size="lg"
+                    className={`text-lg px-8 ${roundResult === 'win' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
+                  >
+                    {roundResult === 'win' ? '🎉 Collect Cards!' : 'Continue...'}
+                  </Button>
+                </motion.div>
               )}
 
               {(gameState === 'flipped' || gameState === 'warFlipped') && roundResult === 'war' && (
-                <Button 
-                  onClick={collectCards}
-                  size="lg"
-                  className="bg-purple-600 hover:bg-purple-700"
+                <motion.div 
+                  whileHover={{ scale: 1.05 }} 
+                  whileTap={{ scale: 0.95 }}
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ repeat: Infinity, duration: 1 }}
                 >
-                  ⚔️ Go to War! ⚔️
-                </Button>
+                  <Button 
+                    onClick={collectCards}
+                    size="lg"
+                    className="bg-purple-600 hover:bg-purple-700 text-lg px-8"
+                  >
+                    ⚔️ Go to War! ⚔️
+                  </Button>
+                </motion.div>
               )}
 
               {gameState === 'war' && (
-                <Button 
-                  onClick={executeWar}
-                  size="lg"
-                  className="bg-purple-600 hover:bg-purple-700 animate-pulse"
+                <motion.div 
+                  whileHover={{ scale: 1.05 }} 
+                  whileTap={{ scale: 0.95 }}
+                  animate={{ scale: [1, 1.08, 1] }}
+                  transition={{ repeat: Infinity, duration: 0.8 }}
                 >
-                  ⚔️ Draw War Cards! ⚔️
-                </Button>
+                  <Button 
+                    onClick={executeWar}
+                    size="lg"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg px-8"
+                  >
+                    💥 Draw War Cards! 💥
+                  </Button>
+                </motion.div>
               )}
 
               <Button 
                 onClick={() => setShowLearning(true)}
                 variant="outline"
-                className="border-purple-500 text-purple-300"
+                className="border-purple-500 text-purple-300 hover:bg-purple-500/20"
               >
-                <BookOpen className="w-4 h-4 mr-2" /> Learn
+                <BookOpen className="w-4 h-4 mr-2" /> Cards
               </Button>
             </div>
           </>
@@ -528,13 +741,12 @@ export default function NumerologyWar() {
           <DialogContent className="bg-slate-900 border-purple-500 text-white max-w-2xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-amber-400 flex items-center gap-2">
-                <BookOpen className="w-5 h-5" /> Card Research
+                <BookOpen className="w-5 h-5" /> Card Reference
               </DialogTitle>
             </DialogHeader>
             <div className="mb-4">
-              <p className="text-gray-400 text-sm mb-2">Filter by category:</p>
               <div className="flex gap-2 flex-wrap">
-                {['all', 'biblical', 'historical', 'sports', 'rock', 'superhero', 'family'].map(cat => (
+                {['all', 'biblical', 'historical', 'sports', 'rock'].map(cat => (
                   <Button
                     key={cat}
                     variant={highlightCategory === cat ? 'default' : 'outline'}
@@ -547,7 +759,7 @@ export default function NumerologyWar() {
                 ))}
               </div>
             </div>
-            <div className="space-y-3 max-h-96 overflow-y-auto">
+            <div className="space-y-2 max-h-96 overflow-y-auto">
               {allCards
                 .filter(c => highlightCategory === 'all' || c.category === highlightCategory)
                 .sort((a, b) => getWarValue(b) - getWarValue(a))
@@ -555,17 +767,14 @@ export default function NumerologyWar() {
                   const warVal = getWarValue(card);
                   const isMaster = warVal === 11 || warVal === 22 || warVal === 33;
                   return (
-                    <div key={i} className={`p-3 rounded-lg ${isMaster ? 'bg-purple-500/20 border border-purple-500' : 'bg-white/10'}`}>
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-bold text-amber-300">{card.name}</h3>
-                        <div className="flex gap-2">
-                          <span className={`px-2 py-0.5 rounded text-sm ${isMaster ? 'bg-purple-600' : 'bg-gray-600'}`}>
-                            War Value: {warVal}{isMaster ? ' ✨' : ''}
-                          </span>
-                        </div>
+                    <div key={i} className={`p-3 rounded-lg flex items-center justify-between ${isMaster ? 'bg-purple-500/20 border border-purple-500' : 'bg-white/10'}`}>
+                      <div>
+                        <span className="font-bold text-amber-300">{card.name}</span>
+                        <span className="text-gray-400 text-sm ml-2 capitalize">({card.category})</span>
                       </div>
-                      <p className="text-gray-400 text-xs capitalize">{card.category}</p>
-                      {card.short_bio && <p className="text-gray-300 text-sm mt-1">{card.short_bio}</p>}
+                      <span className={`px-3 py-1 rounded-full text-sm font-bold ${isMaster ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300'}`}>
+                        {warVal}{isMaster ? ' ⚡' : ''}
+                      </span>
                     </div>
                   );
                 })}
