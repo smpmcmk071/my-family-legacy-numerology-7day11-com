@@ -22,15 +22,16 @@ export default function Layout({ children, currentPageName }) {
   };
 
   const navItems = [
-    { name: 'Home', page: 'Home', icon: Home },
-    { name: 'Dashboard', page: 'PersonalDashboard', icon: Sparkles },
-    { name: 'Games', page: 'Games', icon: Sparkles },
-    { name: 'Community', page: 'Community', icon: Users },
-    { name: 'Add Member', page: 'AddFamilyMember', icon: Users },
-    { name: 'Cosmic Calendar', page: 'CalendarEvents', icon: Calendar },
-    { name: 'About', page: 'AboutNumerology', icon: Sparkles },
-    { name: 'Admin', page: 'AdminNumerology', icon: Settings },
-  ];
+            { name: 'Home', page: 'Home', icon: Home },
+            { name: 'Dashboard', page: 'PersonalDashboard', icon: Sparkles },
+            { name: 'Family Legacy', page: 'FamilyLegacy', icon: Users },
+            { name: 'Games', page: 'Games', icon: Sparkles },
+            { name: 'Community', page: 'Community', icon: Users },
+            { name: 'Add Member', page: 'AddFamilyMember', icon: Users },
+            { name: 'Cosmic Calendar', page: 'CalendarEvents', icon: Calendar },
+            { name: 'About', page: 'AboutNumerology', icon: Sparkles },
+            { name: 'Admin', page: 'AdminNumerology', icon: Settings },
+          ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
