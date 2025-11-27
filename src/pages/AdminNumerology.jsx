@@ -395,6 +395,34 @@ export default function AdminNumerology() {
                   />
                 </div>
               </div>
+              
+              {/* Member Limit Control */}
+              <div className="mt-4 p-4 bg-white/5 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-white font-medium">Member Limit</p>
+                    <p className="text-gray-400 text-xs">Free: 5 members, +4 per $33 upgrade</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      value={family.member_limit || 5}
+                      onChange={(e) => updateFamilySetting('member_limit', parseInt(e.target.value) || 5)}
+                      className="w-20 bg-white/10 border-white/20 text-white text-center"
+                      min={1}
+                      max={999}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateFamilySetting('member_limit', 999)}
+                      className="border-amber-500/50 text-amber-400 hover:bg-amber-500/20"
+                    >
+                      Unlimited
+                    </Button>
+                  </div>
+                </div>
+              </div>
             ) : (
               <p className="text-gray-400">No family settings found</p>
             )}
