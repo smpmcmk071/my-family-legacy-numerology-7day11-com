@@ -40,13 +40,21 @@ export default function AddFamilyMember() {
     full_name: '',
     nickname: '',
     email: '',
-    birth_date: '',
-    birth_time: '',
+    birth_year: '',
+    birth_month: '',
+    birth_day: '',
+    birth_hour: '',
+    birth_minute: '',
+    birth_ampm: '',
+    birth_time_period: '',
     birth_place: '',
+    birth_city: '',
+    birth_state: '',
     relationship: '',
     generation: '',
     family_name: '',
   });
+  const [errors, setErrors] = useState({});
   const [isCalculating, setIsCalculating] = useState(false);
   const [calculatedData, setCalculatedData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -118,17 +126,30 @@ export default function AddFamilyMember() {
 
   const loadMemberForEdit = (member) => {
     setEditingMemberId(member.id);
+    // Parse masked birth date (MM/DD format)
+    const dateParts = member.birth_date?.split('/') || [];
+    // Parse birth place
+    const placeParts = member.birth_place?.split(',') || [];
+    
     setFormData({
       full_name: member.full_name || '',
       nickname: member.nickname || '',
       email: member.email || '',
-      birth_date: member.birth_date || '',
-      birth_time: member.birth_time || '',
-      birth_place: member.birth_place || '',
+      birth_year: '', // Year is encrypted, leave blank for re-entry
+      birth_month: dateParts[0] || '',
+      birth_day: dateParts[1] || '',
+      birth_hour: '',
+      birth_minute: '',
+      birth_ampm: '',
+      birth_time_period: member.birth_time || '',
+      birth_place: '',
+      birth_city: placeParts[0]?.trim() || '',
+      birth_state: placeParts[placeParts.length - 1]?.trim() || member.birth_place || '',
       relationship: member.relationship || '',
       generation: member.generation?.toString() || ''
     });
     setCalculatedData(null);
+    setErrors({});
   };
 
   const clearForm = () => {
@@ -137,28 +158,96 @@ export default function AddFamilyMember() {
       full_name: '',
       nickname: '',
       email: '',
-      birth_date: '',
-      birth_time: '',
+      birth_year: '',
+      birth_month: '',
+      birth_day: '',
+      birth_hour: '',
+      birth_minute: '',
+      birth_ampm: '',
+      birth_time_period: '',
       birth_place: '',
+      birth_city: '',
+      birth_state: '',
       relationship: '',
       generation: ''
     });
     setCalculatedData(null);
     setSaved(false);
+    setErrors({});
+  };
+
+  // Build birth date from parts
+  const getBirthDate = () => {
+    if (formData.birth_year && formData.birth_month && formData.birth_day) {
+      return `${formData.birth_year}-${formData.birth_month}-${formData.birth_day}`;
+    }
+    return '';
+  };
+
+  // Build birth time from parts
+  const getBirthTime = () => {
+    if (formData.birth_hour && formData.birth_minute && formData.birth_ampm) {
+      return `${formData.birth_hour}:${formData.birth_minute} ${formData.birth_ampm}`;
+    }
+    return formData.birth_time_period || '';
+  };
+
+  // Build birth place from parts
+  const getBirthPlace = () => {
+    if (formData.birth_city && formData.birth_state) {
+      return `${formData.birth_city}, ${formData.birth_state}`;
+    }
+    return formData.birth_place || '';
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.full_name?.trim()) {
+      newErrors.full_name = 'Full name is required';
+    }
+    
+    if (!formData.birth_year || !formData.birth_month || !formData.birth_day) {
+      newErrors.birth_date = 'Complete birth date is required';
+    } else {
+      // Validate date is real
+      const year = parseInt(formData.birth_year);
+      const month = parseInt(formData.birth_month);
+      const day = parseInt(formData.birth_day);
+      const testDate = new Date(year, month - 1, day);
+      if (testDate.getMonth() !== month - 1 || testDate.getDate() !== day) {
+        newErrors.birth_date = 'Invalid date (e.g., Feb 30 doesn\'t exist)';
+      }
+      if (year > new Date().getFullYear()) {
+        newErrors.birth_date = 'Year cannot be in the future';
+      }
+    }
+    
+    if (!userFamily && !formData.family_name?.trim()) {
+      newErrors.family_name = 'Family name is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleCalculate = async () => {
-        if (!formData.full_name || !formData.birth_date) return;
+        if (!validateForm()) return;
 
         setIsCalculating(true);
         setCalculatedData(null);
 
+        const birthDate = getBirthDate();
+        const birthTime = getBirthTime();
+        const birthPlace = getBirthPlace();
+
         const response = await base44.functions.invoke('calculateNumerology', {
           type: 'name',
           name: formData.full_name,
-          birthDate: formData.birth_date,
-          birthTime: formData.birth_time_exact || formData.birth_time,
-          birthPlace: formData.birth_place
+          birthDate,
+          birthTime,
+          birthPlace
         });
 
         if (response.data?.success) {
@@ -189,13 +278,17 @@ export default function AddFamilyMember() {
           return;
         }
 
+        const birthDate = getBirthDate();
+        const birthTime = getBirthTime();
+        const birthPlace = getBirthPlace();
+
         // Encrypt sensitive data
         const encryptResponse = await base44.functions.invoke('encryptData', {
           action: 'encrypt',
           data: {
-            birth_date: formData.birth_date,
-            birth_place: formData.birth_place,
-            birth_time: formData.birth_time_exact || formData.birth_time || '',
+            birth_date: birthDate,
+            birth_place: birthPlace,
+            birth_time: birthTime,
             email: formData.email
           }
         });
@@ -203,10 +296,8 @@ export default function AddFamilyMember() {
         const encrypted = encryptResponse.data?.encrypted || {};
 
         // Mask display values (show month/day only for birth_date, state only for place)
-        const birthParts = formData.birth_date?.split('-') || [];
-        const maskedBirthDate = birthParts.length === 3 ? `${birthParts[1]}/${birthParts[2]}` : '';
-        const placeParts = formData.birth_place?.split(',') || [];
-        const maskedPlace = placeParts.length > 1 ? placeParts[placeParts.length - 1].trim() : formData.birth_place;
+        const maskedBirthDate = formData.birth_month && formData.birth_day ? `${formData.birth_month}/${formData.birth_day}` : '';
+        const maskedPlace = formData.birth_state || birthPlace;
         const maskedEmail = formData.email ? formData.email.replace(/(.{2}).*(@.*)/, '$1***$2') : null;
 
         const calcData = buildMemberDataFromCalc(calculatedData);
@@ -218,7 +309,7 @@ export default function AddFamilyMember() {
             email_encrypted: encrypted.email_encrypted,
             birth_date: maskedBirthDate,
             birth_date_encrypted: encrypted.birth_date_encrypted,
-            birth_time: formData.birth_time || 'unknown',
+            birth_time: formData.birth_time_period || 'unknown',
             birth_time_encrypted: encrypted.birth_time_encrypted,
             birth_place: maskedPlace,
             birth_place_encrypted: encrypted.birth_place_encrypted,
@@ -319,8 +410,11 @@ export default function AddFamilyMember() {
                     value={formData.family_name}
                     onChange={(e) => setFormData({ ...formData, family_name: e.target.value })}
                     placeholder="Smith Family"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                    className={`bg-white/10 border-white/20 text-white placeholder:text-gray-500 ${errors.family_name ? 'border-red-500' : ''}`}
                   />
+                  {errors.family_name && (
+                    <p className="text-red-400 text-xs mt-1">{errors.family_name}</p>
+                  )}
                   <p className="text-xs text-gray-500 mt-1">This will be your family group name</p>
                 </div>
               )}
@@ -331,8 +425,11 @@ export default function AddFamilyMember() {
                   value={formData.full_name}
                   onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                   placeholder="John Francis Smith"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                  className={`bg-white/10 border-white/20 text-white placeholder:text-gray-500 ${errors.full_name ? 'border-red-500' : ''}`}
                 />
+                {errors.full_name && (
+                  <p className="text-red-400 text-xs mt-1">{errors.full_name}</p>
+                )}
               </div>
 
               <div>
@@ -374,101 +471,166 @@ export default function AddFamilyMember() {
                 <p className="text-xs text-gray-500 mt-1">Link to their user account for personal dashboard</p>
               </div>
 
+              {/* Birth Date */}
               <div>
                 <label className="text-sm text-gray-300 mb-1 block">Birth Date *</label>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <Select 
-                    value={formData.birth_date?.split('-')[0] || ''} 
-                    onValueChange={(year) => {
-                      const parts = (formData.birth_date || '--').split('-');
-                      setFormData({ ...formData, birth_date: `${year}-${parts[1] || ''}-${parts[2] || ''}` });
-                    }}
+                    value={formData.birth_month} 
+                    onValueChange={(v) => setFormData({ ...formData, birth_month: v })}
                   >
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white flex-1">
-                      <SelectValue placeholder="Year" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-60">
-                      {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                        <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select 
-                    value={formData.birth_date?.split('-')[1] || ''} 
-                    onValueChange={(month) => {
-                      const parts = (formData.birth_date || '--').split('-');
-                      setFormData({ ...formData, birth_date: `${parts[0] || ''}-${month}-${parts[2] || ''}` });
-                    }}
-                  >
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white flex-1">
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
                       <SelectValue placeholder="Month" />
                     </SelectTrigger>
                     <SelectContent>
-                      {['01-Jan','02-Feb','03-Mar','04-Apr','05-May','06-Jun','07-Jul','08-Aug','09-Sep','10-Oct','11-Nov','12-Dec'].map(m => (
-                        <SelectItem key={m.split('-')[0]} value={m.split('-')[0]}>{m.split('-')[1]}</SelectItem>
+                      {[
+                        { val: '01', label: 'January' },
+                        { val: '02', label: 'February' },
+                        { val: '03', label: 'March' },
+                        { val: '04', label: 'April' },
+                        { val: '05', label: 'May' },
+                        { val: '06', label: 'June' },
+                        { val: '07', label: 'July' },
+                        { val: '08', label: 'August' },
+                        { val: '09', label: 'September' },
+                        { val: '10', label: 'October' },
+                        { val: '11', label: 'November' },
+                        { val: '12', label: 'December' },
+                      ].map(m => (
+                        <SelectItem key={m.val} value={m.val}>{m.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   <Select 
-                    value={formData.birth_date?.split('-')[2] || ''} 
-                    onValueChange={(day) => {
-                      const parts = (formData.birth_date || '--').split('-');
-                      setFormData({ ...formData, birth_date: `${parts[0] || ''}-${parts[1] || ''}-${day}` });
-                    }}
+                    value={formData.birth_day} 
+                    onValueChange={(v) => setFormData({ ...formData, birth_day: v })}
                   >
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white flex-1">
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
                       <SelectValue placeholder="Day" />
                     </SelectTrigger>
                     <SelectContent className="max-h-60">
                       {Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0')).map(day => (
-                        <SelectItem key={day} value={day}>{day}</SelectItem>
+                        <SelectItem key={day} value={day}>{parseInt(day)}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select 
+                    value={formData.birth_year} 
+                    onValueChange={(v) => setFormData({ ...formData, birth_year: v })}
+                  >
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                      <SelectValue placeholder="Year" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {Array.from({ length: 150 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                        <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
+                {errors.birth_date && (
+                  <p className="text-red-400 text-xs mt-1">{errors.birth_date}</p>
+                )}
               </div>
 
+              {/* Birth Time */}
               <div>
-                <label className="text-sm text-gray-300 mb-1 block">Birth Time</label>
-                <Select value={formData.birth_time} onValueChange={(v) => setFormData({ ...formData, birth_time: v })}>
-                  <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                    <SelectValue placeholder="Select time of day" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="morning">Morning (6am - 12pm)</SelectItem>
-                    <SelectItem value="midday">Midday (12pm - 2pm)</SelectItem>
-                    <SelectItem value="afternoon">Afternoon (2pm - 6pm)</SelectItem>
-                    <SelectItem value="evening">Evening (6pm - 9pm)</SelectItem>
-                    <SelectItem value="night">Night (9pm - 12am)</SelectItem>
-                    <SelectItem value="late_night">Late Night (12am - 6am)</SelectItem>
-                    <SelectItem value="unknown">Unknown</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Input
-                  value={formData.birth_time_exact || ''}
-                  onChange={(e) => setFormData({ ...formData, birth_time_exact: e.target.value })}
-                  placeholder="Or enter exact time (e.g., 11:06 PM EST)"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 mt-2"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm text-gray-300 mb-1 block">Birth Place</label>
-                <div className="flex gap-2">
-                  <Input
-                    value={formData.zip_code || ''}
-                    onChange={(e) => setFormData({ ...formData, zip_code: e.target.value })}
-                    placeholder="ZIP Code"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 w-28"
-                    maxLength={5}
-                  />
-                  <Input
-                    value={formData.birth_place}
-                    onChange={(e) => setFormData({ ...formData, birth_place: e.target.value })}
-                    placeholder="City, State"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 flex-1"
-                  />
+                <label className="text-sm text-gray-300 mb-1 block">Birth Time (optional)</label>
+                <div className="space-y-2">
+                  {/* Approximate time */}
+                  <Select 
+                    value={formData.birth_time_period} 
+                    onValueChange={(v) => setFormData({ ...formData, birth_time_period: v })}
+                  >
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                      <SelectValue placeholder="Select approximate time..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="early_morning">Early Morning (12am - 6am)</SelectItem>
+                      <SelectItem value="morning">Morning (6am - 12pm)</SelectItem>
+                      <SelectItem value="afternoon">Afternoon (12pm - 6pm)</SelectItem>
+                      <SelectItem value="evening">Evening (6pm - 12am)</SelectItem>
+                      <SelectItem value="unknown">Unknown</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  
+                  {/* Exact time */}
+                  <p className="text-xs text-gray-500">Or enter exact time:</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <Select 
+                      value={formData.birth_hour} 
+                      onValueChange={(v) => setFormData({ ...formData, birth_hour: v })}
+                    >
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                        <SelectValue placeholder="Hour" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60">
+                        {Array.from({ length: 12 }, (_, i) => String(i + 1)).map(hour => (
+                          <SelectItem key={hour} value={hour}>{hour}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Select 
+                      value={formData.birth_minute} 
+                      onValueChange={(v) => setFormData({ ...formData, birth_minute: v })}
+                    >
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                        <SelectValue placeholder="Min" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60">
+                        {Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0')).map(min => (
+                          <SelectItem key={min} value={min}>{min}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Select 
+                      value={formData.birth_ampm} 
+                      onValueChange={(v) => setFormData({ ...formData, birth_ampm: v })}
+                    >
+                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                        <SelectValue placeholder="AM/PM" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="AM">AM</SelectItem>
+                        <SelectItem value="PM">PM</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
+              </div>
+
+              {/* Birth Place */}
+              <div>
+                <label className="text-sm text-gray-300 mb-1 block">Birth Place (optional)</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Input
+                    value={formData.birth_city}
+                    onChange={(e) => setFormData({ ...formData, birth_city: e.target.value })}
+                    placeholder="City"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                  />
+                  <Select 
+                    value={formData.birth_state} 
+                    onValueChange={(v) => setFormData({ ...formData, birth_state: v })}
+                  >
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                      <SelectValue placeholder="State" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {[
+                        'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+                        'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+                        'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+                        'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+                        'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY',
+                        'DC', 'Other'
+                      ].map(state => (
+                        <SelectItem key={state} value={state}>{state}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">For more accurate astrology calculations</p>
               </div>
 
               <div>
@@ -509,7 +671,7 @@ export default function AddFamilyMember() {
 
               <Button
                 onClick={handleCalculate}
-                disabled={!formData.full_name || !formData.birth_date || isCalculating || (!userFamily && !formData.family_name)}
+                disabled={!formData.full_name || !formData.birth_year || !formData.birth_month || !formData.birth_day || isCalculating || (!userFamily && !formData.family_name)}
                 className="w-full bg-amber-600 hover:bg-amber-700"
               >
                 {isCalculating ? (
