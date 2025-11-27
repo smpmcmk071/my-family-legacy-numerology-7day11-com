@@ -12,9 +12,23 @@ export default function FamilyTable({ onNumberClick, highlightPerson, familyId }
     const loadFamilyMembers = async () => {
       setLoading(true);
       let members = [];
-      // Default to Maher family if no familyId provided
-      const targetFamilyId = familyId || '6924ccd20f6a90ebd590f527';
-      members = await base44.entities.FamilyMember.filter({ family_id: targetFamilyId });
+      // Use provided familyId or get current user's family
+      if (familyId) {
+        members = await base44.entities.FamilyMember.filter({ family_id: familyId });
+      } else {
+        // Try to get current user's family
+        const { base44: b44 } = await import('@/api/base44Client');
+        const user = await b44.auth.me();
+        let memberRecord = await b44.entities.FamilyMember.filter({ email: user.email });
+        let selfMember = memberRecord.find(m => m.relationship === 'self') || memberRecord[0];
+        if (!selfMember) {
+          const createdMembers = await b44.entities.FamilyMember.filter({ created_by: user.email });
+          selfMember = createdMembers[0];
+        }
+        if (selfMember?.family_id) {
+          members = await b44.entities.FamilyMember.filter({ family_id: selfMember.family_id });
+        }
+      }
       
       // Transform database records to display format
       const transformed = members.map(m => ({
