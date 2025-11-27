@@ -716,6 +716,50 @@ export default function NumerologyBattle() {
     setPlayer2Id('');
   };
 
+  // Balanced team randomizer - ensures teams aren't too lopsided
+  const randomizeTeams = () => {
+    const fighters = getAvailableFighters();
+    if (fighters.length < getTeamSize() * 2) return;
+    
+    // Shuffle fighters
+    const shuffled = [...fighters].sort(() => Math.random() - 0.5);
+    
+    // Pick team size * 2 fighters
+    const picked = shuffled.slice(0, getTeamSize() * 2);
+    
+    // Sort by estimated power (life path + expression)
+    picked.sort((a, b) => {
+      const aPower = (a.life_path_western || 5) + (a.expression_western || 5);
+      const bPower = (b.life_path_western || 5) + (b.expression_western || 5);
+      return bPower - aPower;
+    });
+    
+    // Distribute alternating to balance teams
+    const t1 = [];
+    const t2 = [];
+    picked.forEach((f, i) => {
+      if (i % 2 === 0) t1.push(f.id);
+      else t2.push(f.id);
+    });
+    
+    setTeam1Ids(t1);
+    setTeam2Ids(t2);
+  };
+
+  // Computer picks team 2 randomly
+  const randomizeVsComputer = () => {
+    const fighters = getAvailableFighters();
+    if (fighters.length < getTeamSize() * 2) return;
+    
+    // Shuffle and pick for computer team
+    const shuffled = [...fighters].sort(() => Math.random() - 0.5);
+    const computerTeam = shuffled.slice(0, getTeamSize()).map(f => f.id);
+    
+    // Clear team 1 and set computer team
+    setTeam1Ids([]);
+    setTeam2Ids(computerTeam);
+  };
+
   const StatBar = ({ label, value, max, color, icon: Icon }) => (
     <div className="space-y-1">
       <div className="flex justify-between text-xs">
