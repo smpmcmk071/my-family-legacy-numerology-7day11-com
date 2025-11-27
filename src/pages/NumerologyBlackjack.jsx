@@ -20,8 +20,8 @@ const calculateValue = (name) => {
 
 // For blackjack, always reduce to single digit (no master number preservation)
 const getGameValue = (card) => {
-  let num = card.reduced_value;
-  // If it's a master number, reduce it for gameplay
+  let num = card.reduced_value || card.raw_value || 5;
+  // Always reduce to single digit for gameplay
   while (num > 9) {
     num = String(num).split('').reduce((a, b) => a + parseInt(b), 0);
   }
@@ -165,32 +165,38 @@ export default function NumerologyBlackjack() {
     }
   };
 
-  const renderCard = (card, faceDown = false) => (
-    <div className={`relative w-24 h-36 rounded-xl shadow-lg transition-all transform hover:scale-105 ${
-      faceDown 
-        ? 'bg-gradient-to-br from-purple-800 to-indigo-900' 
-        : 'bg-gradient-to-br from-amber-100 to-amber-50'
-    }`}>
-      {faceDown ? (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Sparkles className="w-8 h-8 text-amber-400" />
-        </div>
-      ) : (
-        <div className="absolute inset-0 p-2 flex flex-col">
-          <div className="text-2xl font-bold text-purple-900 text-center">{card.raw_value}</div>
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-xs text-center text-purple-800 font-semibold px-1 leading-tight">
-              {card.name}
-            </p>
+  const renderCard = (card, faceDown = false) => {
+    const gameVal = getGameValue(card);
+    const rawVal = card.raw_value || 0;
+    const reducedVal = card.reduced_value || gameVal;
+    
+    return (
+      <div className={`relative w-24 h-36 rounded-xl shadow-lg transition-all transform hover:scale-105 ${
+        faceDown 
+          ? 'bg-gradient-to-br from-purple-800 to-indigo-900' 
+          : 'bg-gradient-to-br from-amber-100 to-amber-50'
+      }`}>
+        {faceDown ? (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Sparkles className="w-8 h-8 text-amber-400" />
           </div>
-          <div className="text-[10px] text-center text-purple-500">
-            vibe: {card.reduced_value}{[11,22,33].includes(card.reduced_value) ? ` → ${getGameValue(card)}` : ''}
+        ) : (
+          <div className="absolute inset-0 p-2 flex flex-col">
+            <div className="text-2xl font-bold text-purple-900 text-center">{gameVal}</div>
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-xs text-center text-purple-800 font-semibold px-1 leading-tight">
+                {card.name}
+              </p>
+            </div>
+            <div className="text-[10px] text-center text-purple-500">
+              {rawVal}/{reducedVal}{reducedVal !== gameVal ? `→${gameVal}` : ''}
+            </div>
+            <div className="text-xs text-center text-purple-600 capitalize">{card.category}</div>
           </div>
-          <div className="text-xs text-center text-purple-600 capitalize">{card.category}</div>
-        </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );
+  };
 
   const getResultMessage = () => {
     switch (result) {
@@ -249,7 +255,7 @@ export default function NumerologyBlackjack() {
               <h2 className="text-2xl text-white mb-6">Choose Your Deck</h2>
               
               <div className="flex justify-center gap-3 mb-8 flex-wrap">
-                {['all', 'biblical', 'historical', 'family'].map(cat => (
+                {['all', 'biblical', 'historical', 'sports', 'rock', 'superhero'].map(cat => (
                   <Button
                     key={cat}
                     variant={selectedCategory === cat ? 'default' : 'outline'}
@@ -259,7 +265,7 @@ export default function NumerologyBlackjack() {
                       : 'border-green-500 text-green-300 hover:bg-green-800'
                     }
                   >
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {cat === 'all' ? 'All' : cat === 'biblical' ? '📖 Biblical' : cat === 'historical' ? '🏛️ Historical' : cat === 'sports' ? '🏆 Sports' : cat === 'rock' ? '🎸 Rock' : '🦸 Heroes'}
                   </Button>
                 ))}
               </div>
