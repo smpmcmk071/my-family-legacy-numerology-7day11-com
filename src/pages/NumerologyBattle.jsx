@@ -5,7 +5,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { base44 } from '@/api/base44Client';
-import { Swords, Zap, Shield, Heart, Wind, Sparkles, Trophy, RotateCcw, Loader2, History, Users, Shuffle, Cpu } from 'lucide-react';
+import { Swords, Zap, Shield, Heart, Wind, Sparkles, Trophy, RotateCcw, Loader2, History, Users, Shuffle, Cpu, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import NumberBadge from '../components/legacy/NumberBadge';
 import TeamSelector from '../components/battle/TeamSelector';
@@ -882,6 +884,13 @@ export default function NumerologyBattle() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
       <div className="max-w-5xl mx-auto">
+        {/* Back Button */}
+        <Link to={createPageUrl('Games')}>
+          <Button variant="ghost" className="text-gray-300 hover:text-white mb-4">
+            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
+          </Button>
+        </Link>
+
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-2 flex items-center justify-center gap-3">
             <Swords className="w-10 h-10 text-amber-400" />
