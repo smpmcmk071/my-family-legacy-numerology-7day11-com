@@ -229,13 +229,17 @@ export default function AboutNumerology() {
               <li>Personalized recommendations for family harmony</li>
             </ul>
             <div className="pt-4 border-t border-white/10">
-              <p className="text-white font-medium mb-3">Contact us to order:</p>
+              <div className="bg-white/10 rounded-lg p-4 mb-4">
+                <p className="text-amber-400 font-medium mb-2">💳 Donate via Zelle:</p>
+                <p className="text-white font-mono text-lg">7day11.com@gmail.com</p>
+              </div>
+              <p className="text-white font-medium mb-3">Questions or to order a report:</p>
               <a 
-                href="mailto:support@7day11.com?subject=Personalized Family Numerology Report"
+                href="mailto:7day11.com@gmail.com?subject=Personalized Family Numerology Report"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
               >
                 <Mail className="w-4 h-4" />
-                support@7day11.com
+                7day11.com@gmail.com
               </a>
             </div>
           </CardContent>
