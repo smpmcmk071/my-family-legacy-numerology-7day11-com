@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Heart, BookOpen, Star, Globe, History, Users } from 'lucide-react';
+import { Sparkles, Heart, BookOpen, Star, Globe, History, Users, Gift, Mail } from 'lucide-react';
 
 export default function AboutNumerology() {
   return (
@@ -205,6 +205,39 @@ export default function AboutNumerology() {
             <p className="text-amber-300 font-medium">
               May this app bring insight, connection, and a little bit of fun to your family for generations to come.
             </p>
+          </CardContent>
+        </Card>
+
+        {/* Order Personalized Report */}
+        <Card className="bg-gradient-to-br from-purple-900/50 to-indigo-900/50 backdrop-blur-sm border-purple-500/30 mb-8">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Gift className="w-6 h-6 text-pink-400" />
+              Order a Personalized Family Report
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-gray-300">
+            <p>
+              Want a deep dive into your family's numerological legacy? Order a personalized report that includes:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-sm">
+              <li>Full numerology analysis for each family member</li>
+              <li>Family tree with numerological connections highlighted</li>
+              <li>Master number lineage tracking across generations</li>
+              <li>Karmic patterns and lessons flowing through your bloodline</li>
+              <li>Compatibility analysis between family members</li>
+              <li>Personalized recommendations for family harmony</li>
+            </ul>
+            <div className="pt-4 border-t border-white/10">
+              <p className="text-white font-medium mb-3">Contact us to order:</p>
+              <a 
+                href="mailto:support@7day11.com?subject=Personalized Family Numerology Report"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+              >
+                <Mail className="w-4 h-4" />
+                support@7day11.com
+              </a>
+            </div>
           </CardContent>
         </Card>
       </div>

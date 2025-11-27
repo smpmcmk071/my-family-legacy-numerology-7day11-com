@@ -256,9 +256,39 @@ export default function CalendarEvents() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 md:p-12">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Calendar & Day Numbers</h1>
-          <p className="text-gray-300">See your universal and personal day vibes</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Cosmic Calendar</h1>
+          <p className="text-gray-300">Retrogrades, day numbers, and cosmic timing</p>
         </div>
+
+        {/* Retrogrades Bar */}
+        <Card className="bg-gradient-to-r from-red-900/30 via-orange-900/30 to-red-900/30 backdrop-blur-sm border-red-500/30 mb-6">
+          <CardContent className="py-3">
+            <div className="flex items-center gap-4 overflow-x-auto">
+              <div className="flex items-center gap-2 text-red-400 flex-shrink-0">
+                <AlertTriangle className="w-4 h-4" />
+                <span className="text-sm font-medium">Active Retrogrades:</span>
+              </div>
+              <div className="flex gap-3 flex-wrap">
+                <div className="px-3 py-1 bg-red-500/20 rounded-full text-sm flex items-center gap-2">
+                  <span className="text-red-300">☿ Mercury</span>
+                  <span className="text-red-400 text-xs">Nov 25 - Dec 15</span>
+                </div>
+                <div className="px-3 py-1 bg-orange-500/20 rounded-full text-sm flex items-center gap-2">
+                  <span className="text-orange-300">♂ Mars</span>
+                  <span className="text-orange-400 text-xs">Dec 6 - Feb 23</span>
+                </div>
+                <div className="px-3 py-1 bg-purple-500/20 rounded-full text-sm flex items-center gap-2">
+                  <span className="text-purple-300">♅ Uranus</span>
+                  <span className="text-purple-400 text-xs">Sep 1 - Jan 30</span>
+                </div>
+                <div className="px-3 py-1 bg-blue-500/20 rounded-full text-sm flex items-center gap-2">
+                  <span className="text-blue-300">♆ Neptune</span>
+                  <span className="text-blue-400 text-xs">Jul 2 - Dec 7</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* User Info */}
         {userMember && (

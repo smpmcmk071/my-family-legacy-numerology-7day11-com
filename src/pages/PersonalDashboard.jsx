@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, Sun, Moon, Calendar, TrendingUp, Heart, Briefcase, Users, Loader2, ChevronLeft, ChevronRight, User, X } from 'lucide-react';
+import { Sparkles, Sun, Moon, Calendar, TrendingUp, Heart, Briefcase, Users, Loader2, ChevronLeft, ChevronRight, User, X, AlertTriangle, Star } from 'lucide-react';
 import { createPageUrl } from '../utils';
 import NumberBadge from '../components/legacy/NumberBadge';
 import DailySongs from '../components/legacy/DailySongs';
@@ -449,6 +449,19 @@ export default function PersonalDashboard() {
             </CardContent>
           </Card>
         )}
+
+        {/* Daily Astrology Summary */}
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Star className="w-5 h-5 text-purple-400" />
+              Today's Astrology Summary
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DailyAstrologySummary userMember={userMember} />
+          </CardContent>
+        </Card>
 
         {/* Daily Songs */}
         <div className="mb-6">
