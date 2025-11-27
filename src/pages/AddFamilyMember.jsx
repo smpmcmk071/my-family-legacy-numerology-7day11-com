@@ -106,6 +106,8 @@ export default function AddFamilyMember() {
         // Load existing members
         const members = await base44.entities.FamilyMember.filter({ family_id: families[0].id });
         setExistingMembers(members);
+        // Check if they have premium slots
+        setMemberLimit(families[0].member_limit || 5);
       } else if (isSetupSelf) {
         // Don't create family yet - wait for user to enter family name
         // Family will be created when they save their profile
