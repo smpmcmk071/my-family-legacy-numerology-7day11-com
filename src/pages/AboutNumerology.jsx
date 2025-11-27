@@ -20,29 +20,29 @@ export default function AboutNumerology() {
           </p>
         </div>
 
-        {/* Why I Built This */}
+        {/* Welcome */}
         <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-8">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Heart className="w-6 h-6 text-pink-400" />
-              Why I Built This for My Family
+              Welcome to Your Numerology Journey
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-gray-300">
             <p>
-              This project began as a gift to my family—a way to explore who we are through the ancient lens of numerology. 
-              I wanted to create something that would help us understand the invisible threads that connect us across generations, 
-              and to see how our individual numbers weave together into a greater family tapestry.
+              This app was created to help families explore who they are through the ancient lens of numerology. 
+              Discover the invisible threads that connect you across generations and see how your individual numbers 
+              weave together into a greater family tapestry.
             </p>
             <p>
-              Numbers have always fascinated me. They're not just mathematical symbols—they're the language of the universe. 
+              Numbers aren't just mathematical symbols—they're the language of the universe. 
               Every birth date, every name carries a vibration, a meaning that ancient cultures understood deeply. 
-              I wanted to bring that wisdom into our modern family life.
+              Now you can bring that wisdom into your modern family life.
             </p>
             <p>
-              Whether it's understanding why certain family members naturally connect, why some of us are drawn to leadership 
+              Whether it's understanding why certain family members naturally connect, why some are drawn to leadership 
               while others are healers, or simply having fun with the games and predictions—this app is meant to spark 
-              conversations, create connections, and honor the legacy we're all building together.
+              conversations, create connections, and honor the legacy you're building together.
             </p>
           </CardContent>
         </Card>
@@ -183,31 +183,27 @@ export default function AboutNumerology() {
           </CardContent>
         </Card>
 
-        {/* Family Legacy Note */}
+        {/* Your Family's Journey */}
         <Card className="bg-gradient-to-br from-amber-900/30 to-orange-900/30 backdrop-blur-sm border-amber-500/30">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Users className="w-6 h-6 text-amber-400" />
-              Our Family's Numerological Tapestry
+              Your Family's Numerological Tapestry
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-gray-300">
             <p>
-              What makes our family special isn't just the individual numbers we carry—it's how they weave together. 
-              The master numbers that flow through our lineage, the karmic patterns we share, and the elemental balance 
-              we create together all point to a family with purpose.
+              What makes your family special isn't just the individual numbers you carry—it's how they weave together. 
+              The master numbers that flow through your lineage, the karmic patterns you share, and the elemental balance 
+              you create together all point to a family with purpose.
             </p>
             <p>
-              From Grandpop John Francis's visionary 22 to Grandma Elizabeth JoAnn's healing 33 that connects our family, 
-              from Melanie's powerful 44 Master Healer energy to Stephen's seeking 7 and Christian's powerful double 8s—each of us plays a vital role in our family's 
-              greater story.
+              Start by adding yourself and your family members to discover your core numbers. Watch as patterns emerge—
+              the wisdom seekers, the master builders, the healers, and the visionaries. Each person plays a vital role 
+              in your family's greater story.
             </p>
             <p className="text-amber-300 font-medium">
-              This app is my way of honoring that story and helping us all understand it better. May it bring insight, 
-              connection, and a little bit of fun to our family for generations to come.
-            </p>
-            <p className="text-right text-gray-400 italic mt-4">
-              — Built with love ❤️
+              May this app bring insight, connection, and a little bit of fun to your family for generations to come.
             </p>
           </CardContent>
         </Card>
