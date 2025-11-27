@@ -168,41 +168,65 @@ export default function AddFamilyMember() {
       };
 
   const handleSave = async () => {
-    if (!calculatedData) return;
+        if (!calculatedData) return;
 
-    setIsSaving(true);
+        setIsSaving(true);
 
-    // Create family if doesn't exist and we have a name
-    let familyToUse = userFamily;
-    if (!familyToUse && formData.family_name) {
-      const user = await base44.auth.me();
-      familyToUse = await base44.entities.Family.create({
-        name: formData.family_name,
-        admin_email: user.email,
-        description: `Family group for ${formData.family_name}`
-      });
-      setUserFamily(familyToUse);
-    }
-    
-    if (!familyToUse) {
-      setIsSaving(false);
-      return;
-    }
+        // Create family if doesn't exist and we have a name
+        let familyToUse = userFamily;
+        if (!familyToUse && formData.family_name) {
+          const user = await base44.auth.me();
+          familyToUse = await base44.entities.Family.create({
+            name: formData.family_name,
+            admin_email: user.email,
+            description: `Family group for ${formData.family_name}`
+          });
+          setUserFamily(familyToUse);
+        }
 
-    const calcData = buildMemberDataFromCalc(calculatedData);
-      const memberData = {
-        family_id: familyToUse.id,
-        full_name: formData.full_name,
-        nickname: formData.nickname || formData.full_name.split(' ')[0],
-        email: formData.email || null,
-        birth_date: formData.birth_date,
-        birth_time: formData.birth_time_exact || formData.birth_time || '',
-        birth_place: formData.birth_place,
-        relationship: formData.relationship,
-        generation: formData.generation ? parseInt(formData.generation) : null,
-        ...calcData,
-        is_active: true
-      };
+        if (!familyToUse) {
+          setIsSaving(false);
+          return;
+        }
+
+        // Encrypt sensitive data
+        const encryptResponse = await base44.functions.invoke('encryptData', {
+          action: 'encrypt',
+          data: {
+            birth_date: formData.birth_date,
+            birth_place: formData.birth_place,
+            birth_time: formData.birth_time_exact || formData.birth_time || '',
+            email: formData.email
+          }
+        });
+
+        const encrypted = encryptResponse.data?.encrypted || {};
+
+        // Mask display values (show month/day only for birth_date, state only for place)
+        const birthParts = formData.birth_date?.split('-') || [];
+        const maskedBirthDate = birthParts.length === 3 ? `${birthParts[1]}/${birthParts[2]}` : '';
+        const placeParts = formData.birth_place?.split(',') || [];
+        const maskedPlace = placeParts.length > 1 ? placeParts[placeParts.length - 1].trim() : formData.birth_place;
+        const maskedEmail = formData.email ? formData.email.replace(/(.{2}).*(@.*)/, '$1***$2') : null;
+
+        const calcData = buildMemberDataFromCalc(calculatedData);
+          const memberData = {
+            family_id: familyToUse.id,
+            full_name: formData.full_name,
+            nickname: formData.nickname || formData.full_name.split(' ')[0],
+            email: maskedEmail,
+            email_encrypted: encrypted.email_encrypted,
+            birth_date: maskedBirthDate,
+            birth_date_encrypted: encrypted.birth_date_encrypted,
+            birth_time: formData.birth_time || 'unknown',
+            birth_time_encrypted: encrypted.birth_time_encrypted,
+            birth_place: maskedPlace,
+            birth_place_encrypted: encrypted.birth_place_encrypted,
+            relationship: formData.relationship,
+            generation: formData.generation ? parseInt(formData.generation) : null,
+            ...calcData,
+            is_active: true
+          };
 
     if (editingMemberId) {
       await base44.entities.FamilyMember.update(editingMemberId, memberData);
