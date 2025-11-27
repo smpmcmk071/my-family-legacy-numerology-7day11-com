@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
-import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw, MapPin, Music } from 'lucide-react';
+import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw, MapPin, Music, Mail } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
 import { buildMemberDataFromCalc } from '../components/utils/numerologyHelpers';
 import { getSongRecommendations } from '../components/utils/songRecommendations';
@@ -283,13 +283,30 @@ export default function AddFamilyMember() {
 
               <div>
                 <label className="text-sm text-gray-300 mb-1 block">Email (for dashboard access)</label>
-                <Input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="family@example.com"
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
-                />
+                <div className="flex gap-2">
+                  <Input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="family@example.com"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 flex-1"
+                  />
+                  {formData.email && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        window.open(`/invite?email=${encodeURIComponent(formData.email)}`, '_blank');
+                      }}
+                      className="border-amber-500/50 text-amber-400 hover:bg-amber-500/20"
+                      title="Invite this person to the app"
+                    >
+                      <Mail className="w-4 h-4 mr-1" />
+                      Invite
+                    </Button>
+                  )}
+                </div>
                 <p className="text-xs text-gray-500 mt-1">Link to their user account for personal dashboard</p>
               </div>
 
