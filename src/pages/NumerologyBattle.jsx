@@ -895,6 +895,28 @@ export default function NumerologyBattle() {
                 )}
               </div>
 
+              {/* Roulette buttons for team modes */}
+              {battleMode !== '1v1' && (
+                <div className="flex gap-3 mb-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => randomizeTeams()}
+                    className="border-amber-500/50 text-amber-400 hover:bg-amber-500/20"
+                  >
+                    <Shuffle className="w-4 h-4 mr-2" /> Roulette Teams
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => randomizeVsComputer()}
+                    className="border-blue-500/50 text-blue-400 hover:bg-blue-500/20"
+                  >
+                    <Cpu className="w-4 h-4 mr-2" /> vs Computer
+                  </Button>
+                </div>
+              )}
+
               {battleMode === '1v1' ? (
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
