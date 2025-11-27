@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
-import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw, MapPin, Music, Mail } from 'lucide-react';
+import { UserPlus, Calculator, Loader2, CheckCircle2, Sparkles, Users, RefreshCw, MapPin, Music, Mail, Copy, Share2 } from 'lucide-react';
 import NumberBadge from '../components/legacy/NumberBadge';
 import { buildMemberDataFromCalc } from '../components/utils/numerologyHelpers';
 import { getSongRecommendations } from '../components/utils/songRecommendations';
@@ -265,10 +265,15 @@ export default function AddFamilyMember() {
         let familyToUse = userFamily;
         if (!familyToUse && formData.family_name) {
           const user = await base44.auth.me();
+          // Generate a simple invite code from family name
+          const baseCode = formData.family_name.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 5);
+          const inviteCode = baseCode + Math.floor(Math.random() * 900 + 100);
+          
           familyToUse = await base44.entities.Family.create({
             name: formData.family_name,
             admin_email: user.email,
-            description: `Family group for ${formData.family_name}`
+            description: `Family group for ${formData.family_name}`,
+            invite_code: inviteCode
           });
           setUserFamily(familyToUse);
         }
@@ -356,6 +361,34 @@ export default function AddFamilyMember() {
                 <span className="text-red-400 ml-2">• Limit reached</span>
               )}
             </p>
+          )}
+
+          {/* Invite Code Section */}
+          {userFamily?.invite_code && (
+            <div className="mt-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg max-w-md mx-auto">
+              <p className="text-green-300 text-sm mb-2 flex items-center justify-center gap-2">
+                <Share2 className="w-4 h-4" /> Share this code with family:
+              </p>
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-2xl font-bold text-white tracking-widest bg-white/10 px-4 py-2 rounded">
+                  {userFamily.invite_code}
+                </span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    navigator.clipboard.writeText(userFamily.invite_code);
+                    alert('Code copied!');
+                  }}
+                  className="text-green-300 hover:text-white"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+              <p className="text-gray-400 text-xs mt-2 text-center">
+                They can enter this code at "Join Family" to connect with you
+              </p>
+            </div>
           )}
         </div>
 
