@@ -55,6 +55,7 @@ export default function AddFamilyMember() {
   const [existingMembers, setExistingMembers] = useState([]);
   const [editingMemberId, setEditingMemberId] = useState(null);
   const [displayMethod, setDisplayMethod] = useState('western'); // 'western' or 'chaldean'
+  const [memberLimit, setMemberLimit] = useState(5); // Free tier = 5 members
 
   // ZIP code lookup effect
   useEffect(() => {
@@ -230,6 +231,14 @@ export default function AddFamilyMember() {
           <p className="text-gray-300">Enter details and calculate numerology</p>
           {userFamily && (
             <p className="text-amber-400 mt-2">{userFamily.name}</p>
+          )}
+          {userFamily && (
+            <p className="text-gray-400 text-sm mt-1">
+              {existingMembers.length} / {memberLimit} members used
+              {existingMembers.length >= memberLimit && !editingMemberId && (
+                <span className="text-red-400 ml-2">• Limit reached</span>
+              )}
+            </p>
           )}
         </div>
 
@@ -736,10 +745,53 @@ export default function AddFamilyMember() {
                     </div>
                   )}
 
-                  <div className="p-4 bg-yellow-500/20 border border-yellow-500/50 rounded-lg text-center">
-                    <p className="text-yellow-300 font-medium">🚧 Out of Order 🚧</p>
-                    <p className="text-yellow-200/70 text-sm mt-1">Saving is temporarily disabled</p>
-                  </div>
+                  {/* Check member limit */}
+                  {existingMembers.length >= memberLimit && !editingMemberId ? (
+                    <div className="space-y-3">
+                      <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-center">
+                        <p className="text-red-300 font-medium">Member Limit Reached</p>
+                        <p className="text-red-200/70 text-sm mt-1">
+                          You've used all {memberLimit} member slots
+                        </p>
+                      </div>
+                      <div className="p-4 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/50 rounded-lg text-center">
+                        <p className="text-white font-bold text-lg mb-2">Add 4 More Members - $33</p>
+                        <p className="text-gray-300 text-sm mb-3">
+                          Expand your family tree with 4 additional member slots
+                        </p>
+                        <a 
+                          href="mailto:support@7day11.com?subject=Add%20Family%20Members%20-%20$33&body=I%20would%20like%20to%20add%204%20more%20family%20member%20slots%20to%20my%20account.%0A%0AFamily%20Name:%20{userFamily?.name}%0AEmail:%20"
+                          className="inline-block px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                        >
+                          Purchase 4 Slots - $33
+                        </a>
+                        <p className="text-gray-500 text-xs mt-2">Contact: support@7day11.com</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="w-full bg-green-600 hover:bg-green-700"
+                    >
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Saving...
+                        </>
+                      ) : saved ? (
+                        <>
+                          <CheckCircle2 className="w-4 h-4 mr-2" />
+                          Saved!
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus className="w-4 h-4 mr-2" />
+                          {editingMemberId ? 'Update Member' : 'Save Member'}
+                        </>
+                      )}
+                    </Button>
+                  )}
                 </div>
               )}
             </CardContent>
