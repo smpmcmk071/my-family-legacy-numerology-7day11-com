@@ -45,6 +45,7 @@ export default function AddFamilyMember() {
     birth_place: '',
     relationship: '',
     generation: '',
+    family_name: '',
   });
   const [isCalculating, setIsCalculating] = useState(false);
   const [calculatedData, setCalculatedData] = useState(null);
@@ -73,11 +74,13 @@ export default function AddFamilyMember() {
       
       if (isSetupSelf) {
         // Pre-fill with user's info for self-setup
+        const lastName = user.full_name?.split(' ').pop() || '';
         setFormData(prev => ({
           ...prev,
           full_name: user.full_name || '',
           email: user.email,
-          relationship: 'self'
+          relationship: 'self',
+          family_name: lastName ? `${lastName} Family` : ''
         }));
       }
       
@@ -103,13 +106,8 @@ export default function AddFamilyMember() {
         const members = await base44.entities.FamilyMember.filter({ family_id: families[0].id });
         setExistingMembers(members);
       } else if (isSetupSelf) {
-        // Only create a new family if this is self-setup (new user creating profile)
-        const newFamily = await base44.entities.Family.create({
-          name: `${user.full_name?.split(' ').pop() || 'My'} Family`,
-          admin_email: user.email,
-          description: `Family group for ${user.full_name || user.email}`
-        });
-        setUserFamily(newFamily);
+        // Don't create family yet - wait for user to enter family name
+        // Family will be created when they save their profile
       }
     };
     loadUserFamily();
@@ -167,13 +165,30 @@ export default function AddFamilyMember() {
       };
 
   const handleSave = async () => {
-    if (!calculatedData || !userFamily) return;
+    if (!calculatedData) return;
 
     setIsSaving(true);
 
+    // Create family if doesn't exist and we have a name
+    let familyToUse = userFamily;
+    if (!familyToUse && formData.family_name) {
+      const user = await base44.auth.me();
+      familyToUse = await base44.entities.Family.create({
+        name: formData.family_name,
+        admin_email: user.email,
+        description: `Family group for ${formData.family_name}`
+      });
+      setUserFamily(familyToUse);
+    }
+    
+    if (!familyToUse) {
+      setIsSaving(false);
+      return;
+    }
+
     const calcData = buildMemberDataFromCalc(calculatedData);
       const memberData = {
-        family_id: userFamily.id,
+        family_id: familyToUse.id,
         full_name: formData.full_name,
         nickname: formData.nickname || formData.full_name.split(' ')[0],
         email: formData.email || null,
@@ -193,7 +208,7 @@ export default function AddFamilyMember() {
     }
     
     // Refresh members list
-    const members = await base44.entities.FamilyMember.filter({ family_id: userFamily.id });
+    const members = await base44.entities.FamilyMember.filter({ family_id: familyToUse.id });
     setExistingMembers(members);
     
     setIsSaving(false);
@@ -261,12 +276,26 @@ export default function AddFamilyMember() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Family Name - show if no family yet */}
+              {!userFamily && (
+                <div>
+                  <label className="text-sm text-gray-300 mb-1 block">Family Name *</label>
+                  <Input
+                    value={formData.family_name}
+                    onChange={(e) => setFormData({ ...formData, family_name: e.target.value })}
+                    placeholder="Smith Family"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">This will be your family group name</p>
+                </div>
+              )}
+
               <div>
                 <label className="text-sm text-gray-300 mb-1 block">Full Name *</label>
                 <Input
                   value={formData.full_name}
                   onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                  placeholder="John Francis Maher"
+                  placeholder="John Francis Smith"
                   className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
                 />
               </div>
@@ -445,7 +474,7 @@ export default function AddFamilyMember() {
 
               <Button
                 onClick={handleCalculate}
-                disabled={!formData.full_name || !formData.birth_date || isCalculating}
+                disabled={!formData.full_name || !formData.birth_date || isCalculating || (!userFamily && !formData.family_name)}
                 className="w-full bg-amber-600 hover:bg-amber-700"
               >
                 {isCalculating ? (
