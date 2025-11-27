@@ -948,18 +948,18 @@ export default function AddFamilyMember() {
                                                       Expand your family tree with 4 additional member slots
                                                     </p>
                                                     <div className="bg-white/10 rounded-lg p-3 mb-3">
-                                                      <p className="text-amber-400 font-medium mb-1">💳 Zelle to donate:</p>
-                                                      <p className="text-white font-mono">7day11.com@gmail.com</p>
-                                                    </div>
-                                                    <p className="text-gray-400 text-sm">
-                                                      After payment, email us with your Family Name to activate slots
-                                                    </p>
-                                                    <a 
-                                                      href="mailto:7day11.com@gmail.com?subject=Add%20Family%20Members%20-%20$33&body=I%20sent%20$33%20via%20Zelle%20to%20add%204%20more%20family%20member%20slots.%0A%0AFamily%20Name:%20%0AMy%20Email:%20"
-                                                      className="inline-block px-6 py-2 mt-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
-                                                    >
-                                                      📧 Email After Payment
-                                                    </a>
+                                                                                    <p className="text-amber-400 font-medium mb-1">💳 Zelle to donate:</p>
+                                                                                    <p className="text-white font-mono">smaher500@gmail.com</p>
+                                                                                  </div>
+                                                                                  <p className="text-gray-400 text-sm">
+                                                                                    After payment, email us with your Family Name to activate slots
+                                                                                  </p>
+                                                                                  <a 
+                                                                                    href="mailto:7day11com@gmail.com?subject=Add%20Family%20Members%20-%20$33&body=I%20sent%20$33%20via%20Zelle%20to%20add%204%20more%20family%20member%20slots.%0A%0AFamily%20Name:%20%0AMy%20Email:%20"
+                                                                                    className="inline-block px-6 py-2 mt-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                                                                                  >
+                                                                                    📧 Email After Payment
+                                                                                  </a>
                                                   </div>
                     </div>
                   ) : (
