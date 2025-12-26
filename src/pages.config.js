@@ -26,6 +26,7 @@ import Games from './pages/Games';
 import FamilyLegacy from './pages/FamilyLegacy';
 import JoinFamily from './pages/JoinFamily';
 import BoujeeZodiacRoyale from './pages/BoujeeZodiacRoyale';
+import MealRecommendations from './pages/MealRecommendations';
 import __Layout from './Layout.jsx';
 
 
@@ -58,6 +59,7 @@ export const PAGES = {
     "FamilyLegacy": FamilyLegacy,
     "JoinFamily": JoinFamily,
     "BoujeeZodiacRoyale": BoujeeZodiacRoyale,
+    "MealRecommendations": MealRecommendations,
 }
 
 export const pagesConfig = {
