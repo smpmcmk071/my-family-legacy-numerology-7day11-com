@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, Sun, Moon, Calendar, TrendingUp, Heart, Briefcase, Users, Loader2, ChevronLeft, ChevronRight, User, X, AlertTriangle, Star } from 'lucide-react';
+import { Sparkles, Sun, Moon, Calendar, TrendingUp, Heart, Briefcase, Users, Loader2, ChevronLeft, ChevronRight, User, X, AlertTriangle, Star, Utensils } from 'lucide-react';
 import { createPageUrl } from '../utils';
 import NumberBadge from '../components/legacy/NumberBadge';
 import DailySongs from '../components/legacy/DailySongs';
@@ -461,6 +461,25 @@ export default function PersonalDashboard() {
           </CardHeader>
           <CardContent>
             <DailyAstrologySummary userMember={userMember} />
+          </CardContent>
+        </Card>
+
+        {/* Daily Meal Recommendations Link */}
+        <Card className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 backdrop-blur-sm border-amber-500/30 mb-6 hover:scale-[1.02] transition-all cursor-pointer"
+          onClick={() => window.location.href = createPageUrl('MealRecommendations')}>
+          <CardContent className="py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Utensils className="w-10 h-10 text-amber-400" />
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-1">Daily Meal Recommendations</h3>
+                  <p className="text-gray-300 text-sm">Get personalized meal suggestions based on your numerology and today's energy</p>
+                </div>
+              </div>
+              <Button className="bg-amber-600 hover:bg-amber-700">
+                View Meals
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
