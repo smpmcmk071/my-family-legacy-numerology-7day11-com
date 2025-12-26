@@ -16,6 +16,20 @@ const getESTDate = () => {
   return estParts; // Returns YYYY-MM-DD format directly
 };
 
+/**
+ * Extracts birth month and day from a date of birth
+ * @param {string|Date|null} dateOfBirth - The date of birth (ISO date string like 'YYYY-MM-DD' or Date object)
+ * @returns {{birthMonth: number|null, birthDay: number|null}} Birth month (1-12) and day (1-31), or null if not available
+ */
+const extractBirthMonthDay = (dateOfBirth) => {
+  if (!dateOfBirth) return { birthMonth: null, birthDay: null };
+  const birthDate = new Date(dateOfBirth);
+  return {
+    birthMonth: birthDate.getUTCMonth() + 1,
+    birthDay: birthDate.getUTCDate()
+  };
+};
+
 export default function CalendarEvents() {
   const [selectedDate, setSelectedDate] = useState(() => {
     const now = new Date();
@@ -116,10 +130,15 @@ export default function CalendarEvents() {
     setIsLoading(true);
     setCautionAlerts([]);
     
+    // Extract birth month and day from userMember
+    const { birthMonth, birthDay } = extractBirthMonthDay(userMember?.date_of_birth);
+    
     const response = await base44.functions.invoke('calculateNumerology', {
       type: 'dayNumbers',
       date: selectedDate,
-      lifePath: userMember?.life_path_western || null
+      lifePath: userMember?.life_path_western || null,
+      birthMonth: birthMonth,
+      birthDay: birthDay
     });
 
     if (response.data?.success) {
@@ -181,11 +200,16 @@ export default function CalendarEvents() {
       let eventNumerology = { universalDay: null, personalDay: null, vibeSummary: '', recommendations: '' };
       
       if (newEvent.attach_numerology) {
+        // Extract birth month and day from userMember
+        const { birthMonth, birthDay } = extractBirthMonthDay(userMember?.date_of_birth);
+        
         // Calculate accurate numerology for each specific date
         const calcResponse = await base44.functions.invoke('calculateNumerology', {
           type: 'dayNumbers',
           date: eventDate,
-          lifePath: userMember?.life_path_western || null
+          lifePath: userMember?.life_path_western || null,
+          birthMonth: birthMonth,
+          birthDay: birthDay
         });
         
         if (calcResponse.data?.success) {

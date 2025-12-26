@@ -1384,11 +1384,18 @@ function calculateFamilyMember(name, birthDate) {
     };
   }
 
-  // ============================================================================
-  // DAY NUMBERS CALCULATION (Universal & Personal)
-  // ============================================================================
-
-  function calculateDayNumbers(dateStr, lifePath = null) {
+  /**
+   * Calculate universal and personal day numbers for a given date
+   * @param {string} dateStr - Date in ISO format (YYYY-MM-DD)
+   * @param {number|null} lifePath - Life path number (used for reference)
+   * @param {number|null} birthMonth - Birth month (1-12), required for personal calculations
+   * @param {number|null} birthDay - Birth day (1-31), required for personal calculations
+   * @returns {Object} Universal and personal day numbers with vibes and recommendations
+   * 
+   * Note: Personal year/month/day calculations require all three parameters (lifePath, birthMonth, birthDay).
+   * If birthMonth or birthDay is not provided, only universal calculations will be returned.
+   */
+  function calculateDayNumbers(dateStr, lifePath = null, birthMonth = null, birthDay = null) {
     const date = new Date(dateStr);
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -1419,12 +1426,14 @@ function calculateFamilyMember(name, birthDate) {
       recommendations: getUniversalDayRecommendations(universalDay)
     };
 
-    // Personal cycles if life path provided
-    if (lifePath) {
-      // Personal Year = birth month + birth day + current year, reduced
-      // Since we don't have birth date here, we use life path directly
-      // Personal Year = Life Path + Universal Year, reduced
-      const personalYear = reduceToDigit(lifePath + universalYear);
+    // Personal year calculation requires lifePath and birth date (month and day)
+    // Note: This requires all three parameters to be provided for personal calculations
+    // If only lifePath is available without birthMonth/birthDay, personal calculations will be skipped
+    // Personal cycles if life path and birth date provided
+    if (lifePath && birthMonth && birthDay) {
+      // Correct personal year calculation: birthMonth + birthDay + currentYear
+      // Using the full year value, not the reduced universal year
+      const personalYear = reduceToDigit(birthMonth + birthDay + year);
 
       // Personal Month = Personal Year + calendar month, reduced  
       const personalMonth = reduceToDigit(personalYear + month);
@@ -1510,7 +1519,7 @@ Deno.serve(async (req) => {
         if (!date) {
           return Response.json({ error: 'Date required' }, { status: 400 });
         }
-        result = calculateDayNumbers(date, body.lifePath);
+        result = calculateDayNumbers(date, body.lifePath, body.birthMonth, body.birthDay);
         break;
         
       case 'name':

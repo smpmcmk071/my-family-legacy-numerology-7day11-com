@@ -25,8 +25,18 @@ function reduceToDigit(n, keepMaster = true) {
   return n;
 }
 
-// Calculate universal and personal day numbers
-function calculateDayNumbers(dateStr, lifePath = null) {
+/**
+ * Calculate universal and personal day numbers for a given date
+ * @param {string} dateStr - Date in ISO format (YYYY-MM-DD)
+ * @param {number|null} lifePath - Life path number (used for reference)
+ * @param {number|null} birthMonth - Birth month (1-12), required for personal calculations
+ * @param {number|null} birthDay - Birth day (1-31), required for personal calculations
+ * @returns {Object} Universal and personal day numbers with vibes
+ * 
+ * Note: Personal year/month/day calculations require all three parameters (lifePath, birthMonth, birthDay).
+ * If birthMonth or birthDay is not provided, only universal calculations will be returned.
+ */
+function calculateDayNumbers(dateStr, lifePath = null, birthMonth = null, birthDay = null) {
   const date = new Date(dateStr);
   const day = date.getDate();
   const month = date.getMonth() + 1;
@@ -53,8 +63,14 @@ function calculateDayNumbers(dateStr, lifePath = null) {
     universalDay
   };
 
-  if (lifePath) {
-    const personalYear = reduceToDigit(lifePath + universalYear);
+  // Personal year calculation requires lifePath and birth date (month and day)
+  // Note: This requires all three parameters to be provided for personal calculations
+  // If only lifePath is available without birthMonth/birthDay, personal calculations will be skipped
+  // Personal cycles if life path and birth date provided
+  if (lifePath && birthMonth && birthDay) {
+    // Correct personal year calculation: birthMonth + birthDay + currentYear
+    // Using the full year value, not the reduced universal year
+    const personalYear = reduceToDigit(birthMonth + birthDay + year);
     const personalMonthSum = personalYear + month;
     const personalMonthReduced = reduceToDigit(personalMonthSum, false);
     const personalMonthMaster = [11, 22].includes(month) ? month : null;
@@ -262,12 +278,23 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'startDate and endDate required' }, { status: 400 });
     }
     
-    // Get life path from family member if provided
+    // Get life path and birth date from family member if provided
     let memberLifePath = lifePath;
-    if (familyMemberId && !lifePath) {
+    let memberBirthMonth = null;
+    let memberBirthDay = null;
+    if (familyMemberId) {
       const members = await base44.entities.FamilyMember.filter({ id: familyMemberId });
       if (members.length > 0) {
-        memberLifePath = members[0].life_path_western || members[0].life_path_chaldean;
+        // Use provided lifePath or get from member
+        if (!lifePath) {
+          memberLifePath = members[0].life_path_western || members[0].life_path_chaldean;
+        }
+        // Always extract birth date if available
+        if (members[0].date_of_birth) {
+          const birthDate = new Date(members[0].date_of_birth);
+          memberBirthMonth = birthDate.getUTCMonth() + 1;
+          memberBirthDay = birthDate.getUTCDate();
+        }
       }
     }
     
@@ -286,7 +313,7 @@ Deno.serve(async (req) => {
     
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
       const dateStr = d.toISOString().split('T')[0];
-      const dayNumbers = calculateDayNumbers(dateStr, memberLifePath);
+      const dayNumbers = calculateDayNumbers(dateStr, memberLifePath, memberBirthMonth, memberBirthDay);
       
       const specialDays = identifySpecialDays(
         dayNumbers.universalDay, 
