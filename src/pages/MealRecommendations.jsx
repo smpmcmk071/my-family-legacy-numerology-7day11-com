@@ -7,8 +7,8 @@ import {
   Zap, Home, Coffee, Clock, CheckCircle2, AlertCircle,
   Sparkles, RefreshCw, Calendar
 } from 'lucide-react';
-import { createPageUrl } from '../utils';
-import NumberBadge from '../components/legacy/NumberBadge';
+import { createPageUrl } from '@/utils';
+import NumberBadge from '@/components/legacy/NumberBadge';
 
 // Get current date in EST timezone
 const getESTDate = () => {
@@ -17,6 +17,17 @@ const getESTDate = () => {
   const month = now.toLocaleString('en-US', { timeZone: 'America/New_York', month: '2-digit' });
   const day = now.toLocaleString('en-US', { timeZone: 'America/New_York', day: '2-digit' });
   return `${year}-${month}-${day}`;
+};
+
+// Format date for display in EST timezone
+const formatESTDate = () => {
+  const now = new Date();
+  return now.toLocaleDateString('en-US', { 
+    timeZone: 'America/New_York',
+    weekday: 'long', 
+    month: 'long', 
+    day: 'numeric' 
+  });
 };
 
 export default function MealRecommendations() {
@@ -222,7 +233,7 @@ export default function MealRecommendations() {
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Calendar className="w-5 h-5 text-green-400" />
-              Today's Energy - {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+              Today's Energy - {formatESTDate()}
             </CardTitle>
           </CardHeader>
           <CardContent>
