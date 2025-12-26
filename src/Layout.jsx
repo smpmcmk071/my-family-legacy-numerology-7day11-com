@@ -4,6 +4,7 @@ import { createPageUrl } from './utils';
 import { base44 } from '@/api/base44Client';
 import { Home, Users, Calendar, Settings, LogOut, Menu, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Toaster } from 'sonner';
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -126,6 +127,7 @@ export default function Layout({ children, currentPageName }) {
           </p>
         </div>
       </footer>
+      <Toaster richColors position="top-center" />
       </div>
       );
       }

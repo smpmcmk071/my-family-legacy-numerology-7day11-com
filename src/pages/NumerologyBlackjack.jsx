@@ -2,21 +2,21 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, RotateCcw, Plus, Hand, Trophy, Skull, BookOpen, Loader2, Gamepad2, ArrowLeft, History, Users, Crown, Coins } from 'lucide-react';
+import { Sparkles, RotateCcw, Plus, Hand, Trophy, Skull, BookOpen, Loader2, Gamepad2, ArrowLeft, History, Users, Crown, Coins, AlertTriangle, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 import BlackjackCard, { getGameValue } from '../components/blackjack/BlackjackCard';
 import BettingPanel from '../components/blackjack/BettingPanel';
 import GameHistory from '../components/blackjack/GameHistory';
 import Leaderboard from '../components/blackjack/Leaderboard';
 import ResultAnimation from '../components/blackjack/ResultAnimation';
 import CoopMode from '../components/blackjack/CoopMode';
-
-const STARTING_BALANCE = 1000;
-const BLACKJACK_MULTIPLIER = 2.5;
+import { STARTING_BALANCE, BLACKJACK_MULTIPLIER, MINIMUM_BET } from '@/constants/blackjackConstants';
 
 export default function NumerologyBlackjack() {
   const [user, setUser] = useState(null);
@@ -37,6 +37,10 @@ export default function NumerologyBlackjack() {
   const [accessDenied, setAccessDenied] = useState(false);
   const [checkingAccess, setCheckingAccess] = useState(true);
   
+  // Bankruptcy system
+  const [bankruptcyCount, setBankruptcyCount] = useState(0);
+  const [showBankruptcyDialog, setShowBankruptcyDialog] = useState(false);
+  
   // Betting system
   const [balance, setBalance] = useState(STARTING_BALANCE);
   const [currentBet, setCurrentBet] = useState(0);
@@ -53,16 +57,28 @@ export default function NumerologyBlackjack() {
     checkAccessAndLoadCards();
   }, []);
 
+  // Auto-detect bankruptcy (balance too low to play)
+  useEffect(() => {
+    if (balance < MINIMUM_BET && balance >= 0 && !showBankruptcyDialog && gameState === 'menu') {
+      setShowBankruptcyDialog(true);
+    }
+  }, [balance, gameState, showBankruptcyDialog]);
+
   const checkAccessAndLoadCards = async () => {
     const currentUser = await base44.auth.me();
     setUser(currentUser);
     
-    // Load user's saved balance
+    // Load user's saved balance and bankruptcy count
     if (currentUser.blackjack_balance !== undefined) {
       setBalance(currentUser.blackjack_balance);
     } else {
       // First time player - give starting balance
       await base44.auth.updateMe({ blackjack_balance: STARTING_BALANCE });
+    }
+    
+    // Load bankruptcy count
+    if (currentUser.bankruptcy_count !== undefined) {
+      setBankruptcyCount(currentUser.bankruptcy_count);
     }
     
     let members = await base44.entities.FamilyMember.filter({ email: currentUser.email });
@@ -94,6 +110,14 @@ export default function NumerologyBlackjack() {
     await base44.auth.updateMe({ blackjack_balance: newBalance });
   };
 
+  const handleBankruptcyReset = async () => {
+    const newCount = bankruptcyCount + 1;
+    setBankruptcyCount(newCount);
+    await saveBalance(STARTING_BALANCE);
+    await base44.auth.updateMe({ bankruptcy_count: newCount });
+    setShowBankruptcyDialog(false);
+  };
+
   const getPlayerTotal = () => playerHand.reduce((sum, card) => sum + getGameValue(card), 0);
   const getDealerTotal = () => dealerHand.reduce((sum, card) => sum + getGameValue(card), 0);
   const getPartnerTotal = () => partnerHand.reduce((sum, card) => sum + getGameValue(card), 0);
@@ -108,13 +132,25 @@ export default function NumerologyBlackjack() {
   };
 
   const startGame = () => {
+    // Check for minimum bet
+    if (currentBet < MINIMUM_BET) {
+      toast.error(`Minimum bet is ${MINIMUM_BET} chips`);
+      return;
+    }
+    
+    // Check for sufficient balance
+    if (balance < currentBet) {
+      toast.error('Insufficient balance for this bet');
+      return;
+    }
+    
     let cardsToUse = allCards;
     if (selectedCategory !== 'all') {
       cardsToUse = allCards.filter(c => c.category === selectedCategory);
     }
     
     if (cardsToUse.length < 10) {
-      alert('Not enough cards in this category. Need at least 10.');
+      toast.error('Not enough cards in this category. Need at least 10.');
       return;
     }
 
@@ -323,11 +359,45 @@ export default function NumerologyBlackjack() {
               key={balance}
               initial={{ scale: 1.2 }}
               animate={{ scale: 1 }}
-              className="flex items-center gap-2 bg-black/30 px-4 py-2 rounded-full"
+              className={`flex items-center gap-2 px-4 py-2 rounded-full ${
+                balance < MINIMUM_BET 
+                  ? 'bg-red-900/50 border border-red-500' 
+                  : balance < 50 
+                  ? 'bg-amber-900/50 border border-amber-500' 
+                  : 'bg-black/30'
+              }`}
             >
-              <Coins className="w-5 h-5 text-amber-400" />
-              <span className="text-amber-400 font-bold">{balance.toLocaleString()}</span>
+              <Coins className={`w-5 h-5 ${
+                balance < MINIMUM_BET 
+                  ? 'text-red-400' 
+                  : balance < 50 
+                  ? 'text-amber-400 animate-pulse' 
+                  : 'text-amber-400'
+              }`} />
+              <span className={`font-bold ${
+                balance < MINIMUM_BET 
+                  ? 'text-red-400' 
+                  : balance < 50 
+                  ? 'text-amber-400' 
+                  : 'text-amber-400'
+              }`}>
+                {balance.toLocaleString()}
+              </span>
+              {balance < MINIMUM_BET && (
+                <AlertTriangle className="w-4 h-4 text-red-400 animate-pulse" />
+              )}
             </motion.div>
+            
+            {balance < MINIMUM_BET && (
+              <Button
+                onClick={() => setShowBankruptcyDialog(true)}
+                size="sm"
+                className="bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800"
+              >
+                <DollarSign className="w-4 h-4 mr-1" />
+                Reset Balance
+              </Button>
+            )}
             
             <Button
               variant="ghost"
@@ -364,6 +434,11 @@ export default function NumerologyBlackjack() {
               {gameMode === 'tournament' ? '🏆 Tournament Mode' : `👥 Co-op with ${coopPartner?.nickname || coopPartner?.full_name}`}
             </p>
           )}
+          {bankruptcyCount > 0 && (
+            <p className="text-gray-500 text-xs mt-1">
+              Bailouts used: {bankruptcyCount}
+            </p>
+          )}
         </motion.div>
 
         {/* Game Menu */}
@@ -383,7 +458,8 @@ export default function NumerologyBlackjack() {
                 <div className="grid gap-3">
                   <Button
                     onClick={() => { setGameMode('solo'); setGameState('betting'); }}
-                    className="w-full py-6 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-lg"
+                    disabled={balance < MINIMUM_BET}
+                    className="w-full py-6 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Gamepad2 className="w-5 h-5 mr-2" />
                     Solo Play
@@ -393,7 +469,8 @@ export default function NumerologyBlackjack() {
                     <>
                       <Button
                         onClick={() => { setGameMode('tournament'); setGameState('betting'); }}
-                        className="w-full py-6 bg-gradient-to-r from-amber-600 to-orange-700 hover:from-amber-700 hover:to-orange-800 text-lg"
+                        disabled={balance < MINIMUM_BET}
+                        className="w-full py-6 bg-gradient-to-r from-amber-600 to-orange-700 hover:from-amber-700 hover:to-orange-800 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Crown className="w-5 h-5 mr-2" />
                         Tournament Mode
@@ -401,7 +478,8 @@ export default function NumerologyBlackjack() {
                       
                       <Button
                         onClick={() => setShowCoopSetup(true)}
-                        className="w-full py-6 bg-gradient-to-r from-purple-600 to-pink-700 hover:from-purple-700 hover:to-pink-800 text-lg"
+                        disabled={balance < MINIMUM_BET}
+                        className="w-full py-6 bg-gradient-to-r from-purple-600 to-pink-700 hover:from-purple-700 hover:to-pink-800 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Users className="w-5 h-5 mr-2" />
                         Co-op Mode
@@ -409,6 +487,15 @@ export default function NumerologyBlackjack() {
                     </>
                   )}
                 </div>
+
+                {balance < MINIMUM_BET && (
+                  <div className="mt-4 p-3 bg-red-900/30 border border-red-500 rounded-lg">
+                    <p className="text-red-400 text-sm text-center flex items-center justify-center gap-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      Balance too low to play. Use the "Reset Balance" button above.
+                    </p>
+                  </div>
+                )}
 
                 {/* Category Selection */}
                 <div className="pt-4 border-t border-white/10">
@@ -439,12 +526,31 @@ export default function NumerologyBlackjack() {
         {/* Betting Phase */}
         {gameState === 'betting' && (
           <div className="max-w-md mx-auto">
+            {balance < MINIMUM_BET && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 p-4 bg-red-900/30 border border-red-500 rounded-lg"
+              >
+                <p className="text-red-400 text-sm text-center flex items-center justify-center gap-2">
+                  <AlertTriangle className="w-5 h-5" />
+                  Your balance is too low. You need at least {MINIMUM_BET} chips to play.
+                </p>
+                <Button
+                  onClick={() => setShowBankruptcyDialog(true)}
+                  className="w-full mt-3 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800"
+                >
+                  <DollarSign className="w-4 h-4 mr-2" />
+                  Reset Balance to {STARTING_BALANCE}
+                </Button>
+              </motion.div>
+            )}
             <BettingPanel
               balance={balance}
               currentBet={currentBet}
               onBetChange={setCurrentBet}
               onDeal={startGame}
-              disabled={allCards.length < 10}
+              disabled={allCards.length < 10 || balance < MINIMUM_BET}
             />
             <Button
               variant="ghost"
@@ -671,6 +777,45 @@ export default function NumerologyBlackjack() {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Bankruptcy Reset Dialog */}
+        <AlertDialog open={showBankruptcyDialog} onOpenChange={setShowBankruptcyDialog}>
+          <AlertDialogContent className="bg-slate-900 border-red-700 text-white">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-red-400 flex items-center gap-2">
+                <AlertTriangle className="w-6 h-6" />
+                Balance Too Low
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-gray-300">
+                Your balance is below the minimum bet of {MINIMUM_BET} chips. You cannot continue playing.
+                {bankruptcyCount > 0 && (
+                  <p className="mt-2 text-amber-400">
+                    You've used {bankruptcyCount} bailout{bankruptcyCount !== 1 ? 's' : ''} so far.
+                  </p>
+                )}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="my-4 p-4 bg-green-900/20 rounded-lg border border-green-700">
+              <p className="text-green-300 font-semibold mb-2">Emergency Bailout Available!</p>
+              <p className="text-gray-300 text-sm">
+                Reset your balance to {STARTING_BALANCE.toLocaleString()} chips and continue playing. 
+                This will be tracked as a bailout.
+              </p>
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="bg-gray-700 hover:bg-gray-600 text-white">
+                Maybe Later
+              </AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleBankruptcyReset}
+                className="bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800"
+              >
+                <DollarSign className="w-4 h-4 mr-2" />
+                Reset Balance
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Learning Modal */}
         <Dialog open={showLearning} onOpenChange={setShowLearning}>
