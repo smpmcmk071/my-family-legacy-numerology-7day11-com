@@ -1388,7 +1388,7 @@ function calculateFamilyMember(name, birthDate) {
   // DAY NUMBERS CALCULATION (Universal & Personal)
   // ============================================================================
 
-  function calculateDayNumbers(dateStr, lifePath = null) {
+  function calculateDayNumbers(dateStr, lifePath = null, birthMonth = null, birthDay = null) {
     const date = new Date(dateStr);
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -1419,12 +1419,10 @@ function calculateFamilyMember(name, birthDate) {
       recommendations: getUniversalDayRecommendations(universalDay)
     };
 
-    // Personal cycles if life path provided
-    if (lifePath) {
-      // Personal Year = birth month + birth day + current year, reduced
-      // Since we don't have birth date here, we use life path directly
-      // Personal Year = Life Path + Universal Year, reduced
-      const personalYear = reduceToDigit(lifePath + universalYear);
+    // Personal cycles if life path and birth date provided
+    if (lifePath && birthMonth && birthDay) {
+      // Correct personal year calculation: birthMonth + birthDay + currentYear
+      const personalYear = reduceToDigit(birthMonth + birthDay + universalYear);
 
       // Personal Month = Personal Year + calendar month, reduced  
       const personalMonth = reduceToDigit(personalYear + month);
@@ -1510,7 +1508,7 @@ Deno.serve(async (req) => {
         if (!date) {
           return Response.json({ error: 'Date required' }, { status: 400 });
         }
-        result = calculateDayNumbers(date, body.lifePath);
+        result = calculateDayNumbers(date, body.lifePath, body.birthMonth, body.birthDay);
         break;
         
       case 'name':

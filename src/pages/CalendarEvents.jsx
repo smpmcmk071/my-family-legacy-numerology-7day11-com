@@ -116,10 +116,21 @@ export default function CalendarEvents() {
     setIsLoading(true);
     setCautionAlerts([]);
     
+    // Extract birth month and day from userMember
+    let birthMonth = null;
+    let birthDay = null;
+    if (userMember?.date_of_birth) {
+      const birthDate = new Date(userMember.date_of_birth);
+      birthMonth = birthDate.getUTCMonth() + 1;
+      birthDay = birthDate.getUTCDate();
+    }
+    
     const response = await base44.functions.invoke('calculateNumerology', {
       type: 'dayNumbers',
       date: selectedDate,
-      lifePath: userMember?.life_path_western || null
+      lifePath: userMember?.life_path_western || null,
+      birthMonth: birthMonth,
+      birthDay: birthDay
     });
 
     if (response.data?.success) {
@@ -181,11 +192,22 @@ export default function CalendarEvents() {
       let eventNumerology = { universalDay: null, personalDay: null, vibeSummary: '', recommendations: '' };
       
       if (newEvent.attach_numerology) {
+        // Extract birth month and day from userMember
+        let birthMonth = null;
+        let birthDay = null;
+        if (userMember?.date_of_birth) {
+          const birthDate = new Date(userMember.date_of_birth);
+          birthMonth = birthDate.getUTCMonth() + 1;
+          birthDay = birthDate.getUTCDate();
+        }
+        
         // Calculate accurate numerology for each specific date
         const calcResponse = await base44.functions.invoke('calculateNumerology', {
           type: 'dayNumbers',
           date: eventDate,
-          lifePath: userMember?.life_path_western || null
+          lifePath: userMember?.life_path_western || null,
+          birthMonth: birthMonth,
+          birthDay: birthDay
         });
         
         if (calcResponse.data?.success) {
