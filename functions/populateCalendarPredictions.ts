@@ -63,9 +63,10 @@ function calculateDayNumbers(dateStr, lifePath = null, birthMonth = null, birthD
     universalDay
   };
 
-  // Personal year calculation requires birth date (month and day)
+  // Personal year calculation requires lifePath and birth date (month and day)
   // Note: This requires all three parameters to be provided for personal calculations
   // If only lifePath is available without birthMonth/birthDay, personal calculations will be skipped
+  // Personal cycles if life path and birth date provided
   if (lifePath && birthMonth && birthDay) {
     // Correct personal year calculation: birthMonth + birthDay + currentYear
     // Using the full year value, not the reduced universal year

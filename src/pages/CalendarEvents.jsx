@@ -17,8 +17,8 @@ const getESTDate = () => {
 };
 
 /**
- * Extracts birth month and day from a date of birth string
- * @param {string|Date} dateOfBirth - The date of birth
+ * Extracts birth month and day from a date of birth
+ * @param {string|Date|null} dateOfBirth - The date of birth (ISO date string like 'YYYY-MM-DD' or Date object)
  * @returns {{birthMonth: number|null, birthDay: number|null}} Birth month (1-12) and day (1-31), or null if not available
  */
 const extractBirthMonthDay = (dateOfBirth) => {
