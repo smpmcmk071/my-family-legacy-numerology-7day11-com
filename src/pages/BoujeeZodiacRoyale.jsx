@@ -93,16 +93,18 @@ export default function BoujeeZodiacRoyale() {
   const getZodiacSign = (month, day) => {
     for (const [key, sign] of Object.entries(ZODIAC_SIGNS)) {
       const [[startMonth, startDay], [endMonth, endDay]] = sign.dates;
-      // Handle year-spanning signs (like Capricorn)
+      // Handle year-spanning signs (like Capricorn: Dec 22 - Jan 19)
       if (startMonth > endMonth) {
-        // Year-spanning: either after start date OR before end date
-        if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay) || 
-            (month > startMonth) || (month < endMonth)) {
+        // Year-spanning: check if in late year (>= start) OR early year (<= end)
+        const inLateYear = (month === startMonth && day >= startDay) || (month > startMonth);
+        const inEarlyYear = (month === endMonth && day <= endDay) || (month < endMonth);
+        if (inLateYear || inEarlyYear) {
           return { key, ...sign };
         }
       } else {
-        // Normal range
-        if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay) ||
+        // Normal range: within same year
+        if ((month === startMonth && day >= startDay) || 
+            (month === endMonth && day <= endDay) ||
             (month > startMonth && month < endMonth)) {
           return { key, ...sign };
         }
@@ -114,6 +116,8 @@ export default function BoujeeZodiacRoyale() {
   // Calculate Chinese Zodiac Animal and Element
   const getChineseZodiac = (year) => {
     // Chinese zodiac starts with Rat in 1900 (Year of the Rat)
+    // Note: This uses Western calendar year for simplicity in the game.
+    // Traditional Chinese zodiac uses lunar calendar and Chinese New Year dates.
     const baseYear = 1900;
     const animalIndex = (year - baseYear) % 12;
     // Elements follow a 2-year cycle within the 60-year cycle
