@@ -9,16 +9,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 import BlackjackCard, { getGameValue } from '../components/blackjack/BlackjackCard';
 import BettingPanel from '../components/blackjack/BettingPanel';
 import GameHistory from '../components/blackjack/GameHistory';
 import Leaderboard from '../components/blackjack/Leaderboard';
 import ResultAnimation from '../components/blackjack/ResultAnimation';
 import CoopMode from '../components/blackjack/CoopMode';
-
-const STARTING_BALANCE = 1000;
-const BLACKJACK_MULTIPLIER = 2.5;
-const MINIMUM_BET = 10;
+import { STARTING_BALANCE, BLACKJACK_MULTIPLIER, MINIMUM_BET } from '@/constants/blackjackConstants';
 
 export default function NumerologyBlackjack() {
   const [user, setUser] = useState(null);
@@ -136,13 +134,13 @@ export default function NumerologyBlackjack() {
   const startGame = () => {
     // Check for minimum bet
     if (currentBet < MINIMUM_BET) {
-      alert(`Minimum bet is ${MINIMUM_BET} chips`);
+      toast.error(`Minimum bet is ${MINIMUM_BET} chips`);
       return;
     }
     
     // Check for sufficient balance
     if (balance < currentBet) {
-      alert('Insufficient balance for this bet');
+      toast.error('Insufficient balance for this bet');
       return;
     }
     
@@ -152,7 +150,7 @@ export default function NumerologyBlackjack() {
     }
     
     if (cardsToUse.length < 10) {
-      alert('Not enough cards in this category. Need at least 10.');
+      toast.error('Not enough cards in this category. Need at least 10.');
       return;
     }
 

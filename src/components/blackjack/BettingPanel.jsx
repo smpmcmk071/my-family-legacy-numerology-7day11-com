@@ -2,9 +2,9 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coins, Minus, Plus, Sparkles, AlertTriangle } from 'lucide-react';
+import { MINIMUM_BET } from '@/constants/blackjackConstants';
 
 const CHIP_VALUES = [10, 25, 50, 100, 250, 500];
-const MINIMUM_BET = 10;
 const CHIP_COLORS = {
   10: 'from-blue-500 to-blue-700',
   25: 'from-green-500 to-green-700',
@@ -31,18 +31,14 @@ export default function BettingPanel({ balance, currentBet, onBetChange, onDeal,
     >
       {/* Balance Display */}
       <div className="flex items-center justify-center gap-3 mb-6">
-        <Coins className={`w-8 h-8 ${balance < MINIMUM_BET ? 'text-red-400' : balance < 50 ? 'text-amber-400' : 'text-amber-400'}`} />
+        <Coins className={`w-8 h-8 ${balance < MINIMUM_BET ? 'text-red-400' : 'text-amber-400'}`} />
         <div className="text-center">
           <p className="text-gray-400 text-sm">Your Balance</p>
           <motion.p
             key={balance}
             initial={{ scale: 1.2 }}
             animate={{ scale: 1 }}
-            className={`text-3xl font-bold ${
-              balance < MINIMUM_BET ? 'text-red-400' : 
-              balance < 50 ? 'text-amber-400' : 
-              'text-amber-400'
-            }`}
+            className={`text-3xl font-bold ${balance < MINIMUM_BET ? 'text-red-400' : 'text-amber-400'}`}
           >
             {balance.toLocaleString()}
           </motion.p>
