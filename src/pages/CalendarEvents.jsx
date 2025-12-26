@@ -16,7 +16,11 @@ const getESTDate = () => {
   return estParts; // Returns YYYY-MM-DD format directly
 };
 
-// Helper function to extract birth month and day from a date
+/**
+ * Extracts birth month and day from a date of birth string
+ * @param {string|Date} dateOfBirth - The date of birth
+ * @returns {{birthMonth: number|null, birthDay: number|null}} Birth month (1-12) and day (1-31), or null if not available
+ */
 const extractBirthMonthDay = (dateOfBirth) => {
   if (!dateOfBirth) return { birthMonth: null, birthDay: null };
   const birthDate = new Date(dateOfBirth);

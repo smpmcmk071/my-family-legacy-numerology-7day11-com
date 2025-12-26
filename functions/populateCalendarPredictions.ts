@@ -25,7 +25,17 @@ function reduceToDigit(n, keepMaster = true) {
   return n;
 }
 
-// Calculate universal and personal day numbers
+/**
+ * Calculate universal and personal day numbers for a given date
+ * @param {string} dateStr - Date in ISO format (YYYY-MM-DD)
+ * @param {number|null} lifePath - Life path number (used for reference)
+ * @param {number|null} birthMonth - Birth month (1-12), required for personal calculations
+ * @param {number|null} birthDay - Birth day (1-31), required for personal calculations
+ * @returns {Object} Universal and personal day numbers with vibes
+ * 
+ * Note: Personal year/month/day calculations require all three parameters (lifePath, birthMonth, birthDay).
+ * If birthMonth or birthDay is not provided, only universal calculations will be returned.
+ */
 function calculateDayNumbers(dateStr, lifePath = null, birthMonth = null, birthDay = null) {
   const date = new Date(dateStr);
   const day = date.getDate();
