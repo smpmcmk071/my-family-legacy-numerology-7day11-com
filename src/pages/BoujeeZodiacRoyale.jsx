@@ -93,8 +93,19 @@ export default function BoujeeZodiacRoyale() {
   const getZodiacSign = (month, day) => {
     for (const [key, sign] of Object.entries(ZODIAC_SIGNS)) {
       const [[startMonth, startDay], [endMonth, endDay]] = sign.dates;
-      if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay)) {
-        return { key, ...sign };
+      // Handle year-spanning signs (like Capricorn)
+      if (startMonth > endMonth) {
+        // Year-spanning: either after start date OR before end date
+        if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay) || 
+            (month > startMonth) || (month < endMonth)) {
+          return { key, ...sign };
+        }
+      } else {
+        // Normal range
+        if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay) ||
+            (month > startMonth && month < endMonth)) {
+          return { key, ...sign };
+        }
       }
     }
     return { key: 'aries', ...ZODIAC_SIGNS.aries };
@@ -102,9 +113,11 @@ export default function BoujeeZodiacRoyale() {
 
   // Calculate Chinese Zodiac Animal and Element
   const getChineseZodiac = (year) => {
-    // Chinese zodiac starts with Rat in 1924
-    const baseYear = 1924;
+    // Chinese zodiac starts with Rat in 1900 (Year of the Rat)
+    const baseYear = 1900;
     const animalIndex = (year - baseYear) % 12;
+    // Elements follow a 2-year cycle within the 60-year cycle
+    // Each element lasts 2 years: Wood(0-1), Fire(2-3), Earth(4-5), Metal(6-7), Water(8-9)
     const elementIndex = Math.floor(((year - baseYear) % 10) / 2);
     
     return {
@@ -134,11 +147,10 @@ export default function BoujeeZodiacRoyale() {
     // Expression number (full name)
     const expression = reduceToSingle(nameValue(name.replace(/[^a-zA-Z]/g, '')));
 
-    // Life path from birth date
+    // Life path from birth date - add all digits first, then reduce
     const [year, month, day] = birthDate.split('-').map(n => parseInt(n));
-    const lifePath = reduceToSingle(
-      reduceToSingle(year, false) + reduceToSingle(month, false) + reduceToSingle(day, false)
-    );
+    const dateSum = year + month + day;
+    const lifePath = reduceToSingle(dateSum);
 
     // Soul urge (vowels)
     const vowels = name.replace(/[^aeiouAEIOU]/g, '');
