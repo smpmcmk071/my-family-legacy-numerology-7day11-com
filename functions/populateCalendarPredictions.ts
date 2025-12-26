@@ -55,7 +55,8 @@ function calculateDayNumbers(dateStr, lifePath = null, birthMonth = null, birthD
 
   if (lifePath && birthMonth && birthDay) {
     // Correct personal year calculation: birthMonth + birthDay + currentYear
-    const personalYear = reduceToDigit(birthMonth + birthDay + universalYear);
+    // Using the full year value, not the reduced universal year
+    const personalYear = reduceToDigit(birthMonth + birthDay + year);
     const personalMonthSum = personalYear + month;
     const personalMonthReduced = reduceToDigit(personalMonthSum, false);
     const personalMonthMaster = [11, 22].includes(month) ? month : null;

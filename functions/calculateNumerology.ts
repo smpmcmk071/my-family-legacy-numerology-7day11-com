@@ -1422,7 +1422,8 @@ function calculateFamilyMember(name, birthDate) {
     // Personal cycles if life path and birth date provided
     if (lifePath && birthMonth && birthDay) {
       // Correct personal year calculation: birthMonth + birthDay + currentYear
-      const personalYear = reduceToDigit(birthMonth + birthDay + universalYear);
+      // Using the full year value, not the reduced universal year
+      const personalYear = reduceToDigit(birthMonth + birthDay + year);
 
       // Personal Month = Personal Year + calendar month, reduced  
       const personalMonth = reduceToDigit(personalYear + month);
