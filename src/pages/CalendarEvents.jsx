@@ -16,6 +16,16 @@ const getESTDate = () => {
   return estParts; // Returns YYYY-MM-DD format directly
 };
 
+// Helper function to extract birth month and day from a date
+const extractBirthMonthDay = (dateOfBirth) => {
+  if (!dateOfBirth) return { birthMonth: null, birthDay: null };
+  const birthDate = new Date(dateOfBirth);
+  return {
+    birthMonth: birthDate.getUTCMonth() + 1,
+    birthDay: birthDate.getUTCDate()
+  };
+};
+
 export default function CalendarEvents() {
   const [selectedDate, setSelectedDate] = useState(() => {
     const now = new Date();
@@ -117,13 +127,7 @@ export default function CalendarEvents() {
     setCautionAlerts([]);
     
     // Extract birth month and day from userMember
-    let birthMonth = null;
-    let birthDay = null;
-    if (userMember?.date_of_birth) {
-      const birthDate = new Date(userMember.date_of_birth);
-      birthMonth = birthDate.getUTCMonth() + 1;
-      birthDay = birthDate.getUTCDate();
-    }
+    const { birthMonth, birthDay } = extractBirthMonthDay(userMember?.date_of_birth);
     
     const response = await base44.functions.invoke('calculateNumerology', {
       type: 'dayNumbers',
@@ -193,13 +197,7 @@ export default function CalendarEvents() {
       
       if (newEvent.attach_numerology) {
         // Extract birth month and day from userMember
-        let birthMonth = null;
-        let birthDay = null;
-        if (userMember?.date_of_birth) {
-          const birthDate = new Date(userMember.date_of_birth);
-          birthMonth = birthDate.getUTCMonth() + 1;
-          birthDay = birthDate.getUTCDate();
-        }
+        const { birthMonth, birthDay } = extractBirthMonthDay(userMember?.date_of_birth);
         
         // Calculate accurate numerology for each specific date
         const calcResponse = await base44.functions.invoke('calculateNumerology', {

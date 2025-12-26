@@ -267,10 +267,14 @@ Deno.serve(async (req) => {
     let memberLifePath = lifePath;
     let memberBirthMonth = null;
     let memberBirthDay = null;
-    if (familyMemberId && !lifePath) {
+    if (familyMemberId) {
       const members = await base44.entities.FamilyMember.filter({ id: familyMemberId });
       if (members.length > 0) {
-        memberLifePath = members[0].life_path_western || members[0].life_path_chaldean;
+        // Use provided lifePath or get from member
+        if (!lifePath) {
+          memberLifePath = members[0].life_path_western || members[0].life_path_chaldean;
+        }
+        // Always extract birth date if available
         if (members[0].date_of_birth) {
           const birthDate = new Date(members[0].date_of_birth);
           memberBirthMonth = birthDate.getUTCMonth() + 1;
