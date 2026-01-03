@@ -395,9 +395,12 @@ Deno.serve(async (req) => {
       existingLeftovers = []
     } = body;
     
+    console.log('Meal recommendations request:', { lifePath, personalDay, activityLevel });
+    
     if (!lifePath || !personalDay) {
       return Response.json({ 
-        error: 'Missing required parameters: lifePath and personalDay are required' 
+        error: 'Missing required parameters: lifePath and personalDay are required',
+        received: { lifePath, personalDay }
       }, { status: 400 });
     }
     
@@ -408,9 +411,19 @@ Deno.serve(async (req) => {
       existingLeftovers
     );
     
+    console.log('Meal recommendations result:', { 
+      breakfastCount: result.recommendations.breakfast.length,
+      lunchCount: result.recommendations.lunch.length,
+      dinnerCount: result.recommendations.dinner.length
+    });
+    
     return Response.json({ success: true, data: result });
     
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('Meal recommendations error:', error);
+    return Response.json({ 
+      error: error.message,
+      stack: error.stack 
+    }, { status: 500 });
   }
 });

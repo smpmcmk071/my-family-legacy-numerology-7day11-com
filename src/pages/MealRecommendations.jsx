@@ -68,12 +68,40 @@ export default function MealRecommendations() {
       
       // Get today's numbers
       const today = getESTDate();
+      
+      // Extract birth month/day safely
+      let birthMonth = null;
+      let birthDay = null;
+      if (selfMember.birth_date_encrypted) {
+        try {
+          const decryptResponse = await base44.functions.invoke('encryptData', {
+            action: 'decrypt',
+            data: { birth_date_encrypted: selfMember.birth_date_encrypted }
+          });
+          if (decryptResponse.data?.decrypted?.birth_date) {
+            const bd = new Date(decryptResponse.data.decrypted.birth_date);
+            birthMonth = bd.getUTCMonth() + 1;
+            birthDay = bd.getUTCDate();
+          }
+        } catch (e) {
+          console.warn('Could not decrypt birth date:', e);
+        }
+      } else if (selfMember.birth_date) {
+        try {
+          const bd = new Date(selfMember.birth_date);
+          birthMonth = bd.getUTCMonth() + 1;
+          birthDay = bd.getUTCDate();
+        } catch (e) {
+          console.warn('Could not parse birth date:', e);
+        }
+      }
+      
       const response = await base44.functions.invoke('calculateNumerology', {
         type: 'dayNumbers',
         date: today,
         lifePath: selfMember.life_path_western,
-        birthMonth: new Date(selfMember.birth_date).getMonth() + 1,
-        birthDay: new Date(selfMember.birth_date).getDate()
+        birthMonth,
+        birthDay
       });
       
       if (response.data?.success) {
