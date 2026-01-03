@@ -85,10 +85,31 @@ export default function PersonalDashboard() {
       
       // Get today's numbers in EST
       const today = getESTDate();
+      // Extract birth month/day for personal calculations
+      let birthMonth = null;
+      let birthDay = null;
+      if (selfMember.birth_date_encrypted) {
+        const decryptResponse = await base44.functions.invoke('encryptData', {
+          action: 'decrypt',
+          data: { birth_date_encrypted: selfMember.birth_date_encrypted }
+        });
+        if (decryptResponse.data?.decrypted?.birth_date) {
+          const bd = new Date(decryptResponse.data.decrypted.birth_date);
+          birthMonth = bd.getUTCMonth() + 1;
+          birthDay = bd.getUTCDate();
+        }
+      } else if (selfMember.date_of_birth) {
+        const bd = new Date(selfMember.date_of_birth);
+        birthMonth = bd.getUTCMonth() + 1;
+        birthDay = bd.getUTCDate();
+      }
+      
       const response = await base44.functions.invoke('calculateNumerology', {
         type: 'dayNumbers',
         date: today,
-        lifePath: selfMember.life_path_western
+        lifePath: selfMember.life_path_western,
+        birthMonth,
+        birthDay
       });
       
       if (response.data?.success) {
@@ -403,6 +424,23 @@ export default function PersonalDashboard() {
                       <NumberBadge number={todayCalc.personalDay} size="lg" />
                     </div>
                   </div>
+                  
+                  {(todayCalc.personalMonth || todayCalc.personalYear) && (
+                    <div className="flex gap-4 mb-4">
+                      {todayCalc.personalMonth && (
+                        <div className="p-3 bg-purple-500/20 rounded-lg text-center flex-1 border border-purple-500/30">
+                          <p className="text-xs text-purple-300 mb-2">Personal Month</p>
+                          <NumberBadge number={todayCalc.personalMonth} size="md" />
+                        </div>
+                      )}
+                      {todayCalc.personalYear && (
+                        <div className="p-3 bg-purple-500/20 rounded-lg text-center flex-1 border border-purple-500/30">
+                          <p className="text-xs text-purple-300 mb-2">Personal Year</p>
+                          <NumberBadge number={todayCalc.personalYear} size="md" />
+                        </div>
+                      )}
+                    </div>
+                  )}
                   
                   {todayMeaning && (
                     <div className="p-4 bg-white/5 rounded-lg">
