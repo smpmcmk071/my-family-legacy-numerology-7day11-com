@@ -21,7 +21,7 @@ const HOUSE_QUIZ = [
   { question: "What planet rules the 12th House?", options: ["Pluto", "Saturn", "Neptune", "Moon"], correct: 2 },
 ];
 
-export default function HouseStoryViewer({ houses, personName, lifePath, birthDate, deathDate }) {
+export default function HouseStoryViewer({ houses, personName, lifePath, birthDate, deathDate, zodiac }) {
   const [currentHouse, setCurrentHouse] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -79,7 +79,7 @@ export default function HouseStoryViewer({ houses, personName, lifePath, birthDa
           <h1 className="text-3xl font-bold text-white mb-2">The 12 Houses of {personName}</h1>
           <p className="text-gray-300 text-sm">A life story told through the astrological houses</p>
           <p className="text-amber-400 text-xs mt-1">
-            Life Path {lifePath} • Born {birthDate}
+            Life Path {lifePath} • {zodiac && `${zodiac} • `}Born {birthDate}
             {deathDate && ` • Died ${deathDate}`}
           </p>
           {score > 0 && (

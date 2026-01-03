@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Home, Rocket, Crown, Zap, ArrowLeft } from 'lucide-react';
+import { Home, Rocket, Crown, Zap, ArrowLeft, TrendingUp, BookOpen } from 'lucide-react';
 
 const STORIES = [
   {
     name: 'Thomas Francis Meagher',
     subtitle: 'The Young Lion of Ireland',
     lifePath: '25/7 - The Seeker of Truth',
-    zodiac: 'Scorpio',
+    zodiac: 'Leo',
     birth: 'August 3, 1823',
     death: 'July 1, 1867',
     tagline: 'Irish revolutionary, Civil War general, Montana legend',
@@ -57,6 +57,32 @@ const STORIES = [
     page: 'HouseHuntKobe',
     gradient: 'from-purple-500 via-yellow-500 to-purple-700',
     preview: 'From Philadelphia to Italy to Lakers glory - a relentless pursuit of greatness, legacy, and transcendent spirit.'
+  },
+  {
+    name: 'W.D. Gann',
+    subtitle: 'The Mystic Trader\'s Wheel',
+    lifePath: '36/9 - The Mystic Trader',
+    zodiac: 'Gemini',
+    birth: 'June 6, 1878',
+    death: 'June 18, 1955',
+    tagline: 'The man who predicted markets through the stars',
+    icon: TrendingUp,
+    page: 'HouseHuntGann',
+    gradient: 'from-teal-500 via-blue-500 to-purple-600',
+    preview: 'From Texas cotton fields to Wall Street prophecy - a mystical journey of geometry, astrology, and hidden market codes.'
+  },
+  {
+    name: 'Isaac Asimov',
+    subtitle: 'Stars of Reason',
+    lifePath: '15/6 - The Rational Visionary',
+    zodiac: 'Capricorn',
+    birth: 'January 2, 1920',
+    death: 'April 6, 1992',
+    tagline: 'The man who explained the universe, one word at a time',
+    icon: BookOpen,
+    page: 'HouseHuntAsimov',
+    gradient: 'from-indigo-500 via-blue-500 to-cyan-600',
+    preview: 'From Russian exile to Brooklyn candy stores to 500 books - a rational mind hiding cosmic wonder in science fiction.'
   }
 ];
 
