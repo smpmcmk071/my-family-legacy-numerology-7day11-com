@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import NumberBadge from '@/components/legacy/NumberBadge';
+import AIFeaturesPanel from '@/components/meals/AIFeaturesPanel';
 
 // Get current date in EST timezone
 const getESTDate = () => {
@@ -39,6 +40,7 @@ export default function MealRecommendations() {
   const [activityLevel, setActivityLevel] = useState('mixed'); // 'relaxed', 'on-the-go', 'mixed'
   const [preparedMeals, setPreparedMeals] = useState(new Set());
   const [error, setError] = useState(null);
+  const [showAIFeatures, setShowAIFeatures] = useState(false);
 
   useEffect(() => {
     loadUserData();
@@ -355,6 +357,26 @@ export default function MealRecommendations() {
             </div>
           </CardContent>
         </Card>
+
+        {/* AI Features Toggle */}
+        <Button
+          onClick={() => setShowAIFeatures(!showAIFeatures)}
+          className="w-full mb-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+        >
+          <Sparkles className="w-4 h-4 mr-2" />
+          {showAIFeatures ? 'Hide' : 'Show'} AI Meal Features
+        </Button>
+
+        {/* AI Features Panel */}
+        {showAIFeatures && (
+          <div className="mb-6">
+            <AIFeaturesPanel 
+              userMember={userMember} 
+              todayCalc={todayCalc} 
+              activityLevel={activityLevel} 
+            />
+          </div>
+        )}
 
         {/* Error Display */}
         {error && (
