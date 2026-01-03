@@ -1426,26 +1426,26 @@ function calculateFamilyMember(name, birthDate) {
       recommendations: getUniversalDayRecommendations(universalDay)
     };
 
-    // Personal year calculation requires lifePath and birth date (month and day)
-    // Note: This requires all three parameters to be provided for personal calculations
-    // If only lifePath is available without birthMonth/birthDay, personal calculations will be skipped
-    // Personal cycles if life path and birth date provided
-    if (lifePath && birthMonth && birthDay) {
-      // Correct personal year calculation: birthMonth + birthDay + currentYear
-      // Using the full year value, not the reduced universal year
-      const personalYear = reduceToDigit(birthMonth + birthDay + year);
+    // Personal year calculation requires birthMonth and birthDay
+    // Industry standard: Birth Month (reduced) + Birth Day (reduced) + Universal Year (reduced)
+    if (birthMonth && birthDay) {
+      // Personal Year = reduced birth month + reduced birth day + universal year
+      const birthMonthReduced = reduceToDigit(birthMonth);
+      const birthDayReduced = reduceToDigit(birthDay);
+      const personalYear = reduceToDigit(birthMonthReduced + birthDayReduced + universalYear);
 
-      // Personal Month = Personal Year + calendar month, reduced  
+      // Personal Month = Personal Year + current month, then reduced  
       const personalMonth = reduceToDigit(personalYear + month);
 
-      // Personal Day = Personal Month + calendar day, reduced
+      // Personal Day = Personal Month + current day, then reduced
       const personalDay = reduceToDigit(personalMonth + day);
 
-      result.lifePath = lifePath;
+      result.lifePath = lifePath || null;
       result.personalYear = personalYear;
       result.personalMonth = personalMonth;
       result.personalDay = personalDay;
       result.personalDayDisplay = formatWithReduction(personalMonth + day);
+      result.personalYearCalculation = `${birthMonthReduced}+${birthDayReduced}+${universalYear}=${birthMonthReduced + birthDayReduced + universalYear}→${personalYear}`;
     }
 
     return result;
