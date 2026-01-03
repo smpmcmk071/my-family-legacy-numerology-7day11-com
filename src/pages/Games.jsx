@@ -38,8 +38,8 @@ export default function Games() {
       gradient: 'from-green-500 to-emerald-600'
     },
     {
-      name: 'The 12 Houses of Meagher',
-      description: 'Learn astrology through the epic life of Thomas Francis Meagher - Irish revolutionary, Civil War general, Montana legend',
+      name: 'The 12 Houses',
+      description: 'Learn astrology through legendary lives - Meagher, Elon Musk, Trump, Kobe Bryant mapped to the 12 astrological houses',
       icon: Gamepad2,
       page: 'HouseHunt',
       gradient: 'from-purple-500 to-indigo-600'
