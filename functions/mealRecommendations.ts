@@ -13,37 +13,13 @@
  * Version: 1.0
  */
 
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
-
-// ============================================================================
-// TYPE DEFINITIONS
-// ============================================================================
-
-interface Meal {
-  name: string;
-  ingredients: string[];
-  prepTime: number;
-  portable: boolean;
-  energyAlignment: string;
-}
-
-interface MealCategory {
-  breakfast: Meal[];
-  lunch: Meal[];
-  dinner: Meal[];
-}
-
-interface LeftoverSuggestion {
-  idea: string;
-  ingredients: string[];
-  energyAlignment: string;
-}
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 // ============================================================================
 // MEAL DATABASE - Organized by Life Path Number Energy
 // ============================================================================
 
-const MEAL_DATABASE: Record<number, MealCategory> = {
+const MEAL_DATABASE = {
   // Life Path 1: Leadership, Independence, Initiative - Bold, energizing foods
   1: {
     breakfast: [
@@ -277,6 +253,10 @@ const MEAL_DATABASE: Record<number, MealCategory> = {
 // PERSONAL DAY ENERGY INFLUENCE
 // ============================================================================
 
+// ============================================================================
+// PERSONAL DAY ENERGY INFLUENCE
+// ============================================================================
+
 const PERSONAL_DAY_INFLUENCE = {
   1: { energy: 'Initiative', mealAdvice: 'Bold flavors, high protein for action', preferLeftovers: false },
   2: { energy: 'Balance', mealAdvice: 'Balanced meals, nothing too extreme', preferLeftovers: true },
@@ -296,12 +276,7 @@ const PERSONAL_DAY_INFLUENCE = {
 // MEAL RECOMMENDATION ENGINE
 // ============================================================================
 
-function getMealRecommendations(
-  lifePath: number,
-  personalDay: number,
-  activityLevel: string = 'mixed', // 'relaxed', 'on-the-go', 'mixed'
-  existingLeftovers: string[] = []
-) {
+function getMealRecommendations(lifePath, personalDay, activityLevel = 'mixed', existingLeftovers = []) {
   // Normalize life path for master numbers
   // Master numbers (11, 22, 33) use their own meal sets
   // Other numbers > 9 are reduced (e.g., 10 becomes 1)
@@ -312,7 +287,7 @@ function getMealRecommendations(
   const dayInfluence = PERSONAL_DAY_INFLUENCE[personalDay] || PERSONAL_DAY_INFLUENCE[1];
   
   // Filter by activity level
-  const filterByActivity = (meal: Meal) => {
+  const filterByActivity = (meal) => {
     if (activityLevel === 'on-the-go') return meal.portable === true;
     if (activityLevel === 'relaxed') return true; // All meals work for relaxed days
     return true; // Mixed accepts all
@@ -340,11 +315,11 @@ function getMealRecommendations(
   };
 }
 
-function generateLeftoverIdeas(leftovers: string[], personalDay: number): LeftoverSuggestion[] {
-  const ideas: LeftoverSuggestion[] = [];
+function generateLeftoverIdeas(leftovers, personalDay) {
+  const ideas = [];
   
   // Generic leftover transformation ideas based on personal day
-  const transformations: Record<number, string> = {
+  const transformations = {
     2: 'Combine leftovers into a balanced bowl',
     4: 'Turn into a hearty casserole or hash',
     6: 'Make a comforting soup or stew',
@@ -362,8 +337,8 @@ function generateLeftoverIdeas(leftovers: string[], personalDay: number): Leftov
   return ideas;
 }
 
-function generateShoppingList(breakfast: Meal | undefined, lunch: Meal | undefined, dinner: Meal | undefined): string[] {
-  const allIngredients = new Set<string>();
+function generateShoppingList(breakfast, lunch, dinner) {
+  const allIngredients = new Set();
   
   [breakfast, lunch, dinner].forEach(meal => {
     if (meal && meal.ingredients) {
