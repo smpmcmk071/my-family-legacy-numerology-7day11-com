@@ -28,6 +28,7 @@ import ParentsLegacy from './pages/ParentsLegacy';
 import PersonalDashboard from './pages/PersonalDashboard';
 import StephenLegacy from './pages/StephenLegacy';
 import HouseHunt from './pages/HouseHunt';
+import HouseHuntMeagher from './pages/HouseHuntMeagher';
 import __Layout from './Layout.jsx';
 
 
@@ -62,6 +63,7 @@ export const PAGES = {
     "PersonalDashboard": PersonalDashboard,
     "StephenLegacy": StephenLegacy,
     "HouseHunt": HouseHunt,
+    "HouseHuntMeagher": HouseHuntMeagher,
 }
 
 export const pagesConfig = {
