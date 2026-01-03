@@ -364,14 +364,147 @@ Deno.serve(async (req) => {
     
     const body = await req.json();
     const { 
+      action = 'recommend',
       lifePath, 
       personalDay, 
       activityLevel = 'mixed',
-      existingLeftovers = []
+      existingLeftovers = [],
+      preferences = {},
+      availableIngredients = [],
+      ingredientToSubstitute = '',
+      dietaryRestrictions = []
     } = body;
     
-    console.log('Meal recommendations request:', { lifePath, personalDay, activityLevel });
+    console.log('Meal recommendations request:', { action, lifePath, personalDay, activityLevel });
     
+    // Handle different actions
+    if (action === 'generateCustomMeal') {
+      // AI-powered custom meal generation
+      const dayEnergy = PERSONAL_DAY_INFLUENCE[personalDay] || PERSONAL_DAY_INFLUENCE[1];
+      
+      const prompt = `Create a unique, delicious meal recipe that aligns with this numerology energy:
+
+Life Path ${lifePath} Energy: ${preferences.lifePathEnergy || 'balanced and nourishing'}
+Personal Day ${personalDay} Energy: ${dayEnergy.focus}
+${dayEnergy.emphasis}
+
+User Preferences:
+- Cuisine: ${preferences.cuisine || 'any'}
+- Protein: ${preferences.protein || 'any'}
+- Dietary Restrictions: ${dietaryRestrictions.join(', ') || 'none'}
+- Available Ingredients: ${availableIngredients.join(', ') || 'suggest ingredients'}
+- Meal Type: ${preferences.mealType || 'dinner'}
+
+Create a recipe that matches this energy and preferences. Include:
+- Name (creative and appealing)
+- Ingredients list (quantities)
+- Brief cooking steps
+- Prep time
+- Why it aligns with today's numerology energy`;
+
+      const aiResponse = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            ingredients: { type: 'array', items: { type: 'string' } },
+            steps: { type: 'array', items: { type: 'string' } },
+            prepTime: { type: 'number' },
+            energyAlignment: { type: 'string' }
+          }
+        }
+      });
+      
+      return Response.json({ success: true, data: aiResponse });
+    }
+    
+    if (action === 'substituteIngredient') {
+      // AI-powered ingredient substitution
+      const prompt = `Suggest 3 healthy substitutions for "${ingredientToSubstitute}" that:
+- Maintain similar flavor profile
+- Consider dietary restrictions: ${dietaryRestrictions.join(', ') || 'none'}
+- Are commonly available
+- Keep the nutritional value similar
+
+For each substitution, explain why it works and any adjustments needed.`;
+
+      const aiResponse = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            substitutions: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  ingredient: { type: 'string' },
+                  reason: { type: 'string' },
+                  adjustments: { type: 'string' }
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      return Response.json({ success: true, data: aiResponse });
+    }
+    
+    if (action === 'weeklyPlan') {
+      // AI-powered weekly meal plan
+      const prompt = `Create a 7-day meal plan for someone with Life Path ${lifePath}.
+
+User Profile:
+- Dietary Restrictions: ${dietaryRestrictions.join(', ') || 'none'}
+- Preferences: ${JSON.stringify(preferences)}
+- Activity Level: ${activityLevel}
+
+Requirements:
+- Align meals with daily numerology energy (varies 1-9 each day)
+- Include breakfast, lunch, dinner for each day
+- Ensure variety and balance
+- Consider meal prep efficiency (use ingredients across multiple days)
+- List shopping list for the week
+
+Format: For each day, suggest meals that match that day's numerology energy.`;
+
+      const aiResponse = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            weeklyPlan: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  day: { type: 'string' },
+                  dayNumber: { type: 'number' },
+                  breakfast: { type: 'string' },
+                  lunch: { type: 'string' },
+                  dinner: { type: 'string' },
+                  energyFocus: { type: 'string' }
+                }
+              }
+            },
+            shoppingList: {
+              type: 'array',
+              items: { type: 'string' }
+            },
+            prepTips: {
+              type: 'array',
+              items: { type: 'string' }
+            }
+          }
+        }
+      });
+      
+      return Response.json({ success: true, data: aiResponse });
+    }
+    
+    // Default recommendation action
     if (!lifePath || !personalDay) {
       return Response.json({ 
         error: 'Missing required parameters: lifePath and personalDay are required',
