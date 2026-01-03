@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 
-// Quiz questions for each house (generic - works for all stories)
+// Quiz questions for each house - testing PRIMARY modern rulers
 const HOUSE_QUIZ = [
   { question: "What planet rules the 1st House?", options: ["Venus", "Mars", "Jupiter", "Saturn"], correct: 1 },
   { question: "What planet rules the 2nd House?", options: ["Mars", "Mercury", "Venus", "Moon"], correct: 2 },
@@ -14,11 +14,11 @@ const HOUSE_QUIZ = [
   { question: "What planet rules the 5th House?", options: ["Moon", "Sun", "Venus", "Mercury"], correct: 1 },
   { question: "What planet rules the 6th House?", options: ["Saturn", "Mercury", "Mars", "Venus"], correct: 1 },
   { question: "What planet rules the 7th House?", options: ["Mars", "Moon", "Venus", "Sun"], correct: 2 },
-  { question: "What planet rules the 8th House?", options: ["Neptune", "Pluto", "Saturn", "Uranus"], correct: 1 },
+  { question: "What planet rules the 8th House? (modern)", options: ["Neptune", "Pluto", "Saturn", "Mars"], correct: 1 },
   { question: "What planet rules the 9th House?", options: ["Saturn", "Uranus", "Neptune", "Jupiter"], correct: 3 },
   { question: "What planet rules the 10th House?", options: ["Jupiter", "Saturn", "Pluto", "Mars"], correct: 1 },
-  { question: "What planet rules the 11th House?", options: ["Neptune", "Jupiter", "Uranus", "Venus"], correct: 2 },
-  { question: "What planet rules the 12th House?", options: ["Pluto", "Saturn", "Neptune", "Moon"], correct: 2 },
+  { question: "What planet rules the 11th House? (modern)", options: ["Neptune", "Saturn", "Uranus", "Venus"], correct: 2 },
+  { question: "What planet rules the 12th House? (modern)", options: ["Pluto", "Saturn", "Neptune", "Moon"], correct: 2 },
 ];
 
 export default function HouseStoryViewer({ houses, personName, lifePath, birthDate, deathDate, zodiac }) {
