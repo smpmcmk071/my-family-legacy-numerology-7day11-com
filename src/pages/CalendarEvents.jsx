@@ -385,16 +385,20 @@ export default function CalendarEvents() {
                   )}
                 </div>
 
-                {dayCalc.personalMonth && (
+                {(dayCalc.personalMonth || dayCalc.personalYear) && (
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-purple-500/20 rounded-lg text-center border border-purple-500/30">
-                      <p className="text-xs text-purple-300 mb-2">Personal Month</p>
-                      <NumberBadge number={dayCalc.personalMonth} size="lg" />
-                    </div>
-                    <div className="p-4 bg-purple-500/20 rounded-lg text-center border border-purple-500/30">
-                      <p className="text-xs text-purple-300 mb-2">Personal Year</p>
-                      <NumberBadge number={dayCalc.personalYear} size="lg" />
-                    </div>
+                    {dayCalc.personalMonth && (
+                      <div className="p-4 bg-purple-500/20 rounded-lg text-center border border-purple-500/30">
+                        <p className="text-xs text-purple-300 mb-2">Personal Month</p>
+                        <NumberBadge number={dayCalc.personalMonth} size="lg" />
+                      </div>
+                    )}
+                    {dayCalc.personalYear && (
+                      <div className="p-4 bg-purple-500/20 rounded-lg text-center border border-purple-500/30">
+                        <p className="text-xs text-purple-300 mb-2">Personal Year</p>
+                        <NumberBadge number={dayCalc.personalYear} size="lg" />
+                      </div>
+                    )}
                   </div>
                 )}
 
