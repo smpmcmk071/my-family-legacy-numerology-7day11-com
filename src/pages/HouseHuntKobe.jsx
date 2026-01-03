@@ -16,7 +16,7 @@ From the start, his identity flowed like Aquarius's bearer: the innovative pheno
 
 By NBA draft 1996, Kobe's persona solidified: the enigmatic Mamba who projects transcendent will while the world mistakes it for arrogance.`,
     keyDate: "August 23, 1978",
-    numerology: "8+2+3+1+9+7+8 = 38/11/2 - The Master Illuminator",
+    numerology: "8+2+3+1+9+7+8 = 38/11 - The Master Illuminator",
     color: "from-red-500 to-orange-500"
   },
   {
@@ -202,7 +202,7 @@ export default function HouseHuntKobe() {
     <HouseStoryViewer 
       houses={KOBE_HOUSES}
       personName="Kobe Bryant"
-      lifePath="38/11/2"
+      lifePath="38/11"
       birthDate="August 23, 1978"
       deathDate="January 26, 2020"
     />

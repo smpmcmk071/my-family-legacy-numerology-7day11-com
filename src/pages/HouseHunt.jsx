@@ -48,7 +48,7 @@ const STORIES = [
   {
     name: 'Kobe Bryant',
     subtitle: 'The Eternal Mamba',
-    lifePath: '38/11/2 - The Master Illuminator',
+    lifePath: '38/11 - The Master Illuminator',
     zodiac: 'Leo',
     birth: 'August 23, 1978',
     death: 'January 26, 2020',
