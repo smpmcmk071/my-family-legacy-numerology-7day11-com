@@ -13,6 +13,13 @@ import Games from './pages/Games';
 import GenealogyResearch from './pages/GenealogyResearch';
 import GrandparentsLegacy from './pages/GrandparentsLegacy';
 import Home from './pages/Home';
+import HouseHunt from './pages/HouseHunt';
+import HouseHuntAsimov from './pages/HouseHuntAsimov';
+import HouseHuntElon from './pages/HouseHuntElon';
+import HouseHuntGann from './pages/HouseHuntGann';
+import HouseHuntKobe from './pages/HouseHuntKobe';
+import HouseHuntMeagher from './pages/HouseHuntMeagher';
+import HouseHuntTrump from './pages/HouseHuntTrump';
 import JoinFamily from './pages/JoinFamily';
 import KyleLegacy from './pages/KyleLegacy';
 import Landing from './pages/Landing';
@@ -27,13 +34,6 @@ import NumerologyWar from './pages/NumerologyWar';
 import ParentsLegacy from './pages/ParentsLegacy';
 import PersonalDashboard from './pages/PersonalDashboard';
 import StephenLegacy from './pages/StephenLegacy';
-import HouseHunt from './pages/HouseHunt';
-import HouseHuntMeagher from './pages/HouseHuntMeagher';
-import HouseHuntElon from './pages/HouseHuntElon';
-import HouseHuntTrump from './pages/HouseHuntTrump';
-import HouseHuntKobe from './pages/HouseHuntKobe';
-import HouseHuntGann from './pages/HouseHuntGann';
-import HouseHuntAsimov from './pages/HouseHuntAsimov';
 import __Layout from './Layout.jsx';
 
 
@@ -53,6 +53,13 @@ export const PAGES = {
     "GenealogyResearch": GenealogyResearch,
     "GrandparentsLegacy": GrandparentsLegacy,
     "Home": Home,
+    "HouseHunt": HouseHunt,
+    "HouseHuntAsimov": HouseHuntAsimov,
+    "HouseHuntElon": HouseHuntElon,
+    "HouseHuntGann": HouseHuntGann,
+    "HouseHuntKobe": HouseHuntKobe,
+    "HouseHuntMeagher": HouseHuntMeagher,
+    "HouseHuntTrump": HouseHuntTrump,
     "JoinFamily": JoinFamily,
     "KyleLegacy": KyleLegacy,
     "Landing": Landing,
@@ -67,13 +74,6 @@ export const PAGES = {
     "ParentsLegacy": ParentsLegacy,
     "PersonalDashboard": PersonalDashboard,
     "StephenLegacy": StephenLegacy,
-    "HouseHunt": HouseHunt,
-    "HouseHuntMeagher": HouseHuntMeagher,
-    "HouseHuntElon": HouseHuntElon,
-    "HouseHuntTrump": HouseHuntTrump,
-    "HouseHuntKobe": HouseHuntKobe,
-    "HouseHuntGann": HouseHuntGann,
-    "HouseHuntAsimov": HouseHuntAsimov,
 }
 
 export const pagesConfig = {

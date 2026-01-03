@@ -319,23 +319,53 @@ export default function MealRecommendations() {
         {/* Meal Plans */}
         {mealPlan && (
           <>
-            <div className="grid md:grid-cols-3 gap-6 mb-6">
-              {renderMealCard(mealPlan.recommendations.breakfast[0], 'breakfast')}
-              {renderMealCard(mealPlan.recommendations.lunch[0], 'lunch')}
-              {renderMealCard(mealPlan.recommendations.dinner[0], 'dinner')}
+            {/* Breakfast Options */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <Coffee className="w-6 h-6 text-amber-400" />
+                Breakfast Options ({mealPlan.recommendations.breakfast.length})
+              </h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                {mealPlan.recommendations.breakfast.map((meal, idx) => renderMealCard(meal, `breakfast-${idx}`))}
+              </div>
             </div>
 
-            {/* Shopping List */}
+            {/* Lunch Options */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <Sun className="w-6 h-6 text-yellow-400" />
+                Lunch Options ({mealPlan.recommendations.lunch.length})
+              </h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                {mealPlan.recommendations.lunch.map((meal, idx) => renderMealCard(meal, `lunch-${idx}`))}
+              </div>
+            </div>
+
+            {/* Dinner Options */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <ChefHat className="w-6 h-6 text-orange-400" />
+                Dinner Options ({mealPlan.recommendations.dinner.length})
+              </h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                {mealPlan.recommendations.dinner.map((meal, idx) => renderMealCard(meal, `dinner-${idx}`))}
+              </div>
+            </div>
+
+            {/* Shopping List - based on selected meals */}
             <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <ShoppingCart className="w-5 h-5 text-green-400" />
-                  Today's Shopping List
+                  Sample Shopping List
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                <p className="text-gray-400 text-sm mb-4">
+                  Select meals you want to prepare to generate your personalized shopping list
+                </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {mealPlan.shoppingList.map((item, i) => (
+                  {mealPlan.shoppingList.slice(0, 20).map((item, i) => (
                     <div 
                       key={i}
                       className="p-3 bg-white/10 rounded-lg text-center hover:bg-white/20 transition-colors cursor-pointer"
@@ -344,6 +374,11 @@ export default function MealRecommendations() {
                     </div>
                   ))}
                 </div>
+                {mealPlan.shoppingList.length > 20 && (
+                  <p className="text-gray-400 text-xs mt-3 text-center">
+                    And {mealPlan.shoppingList.length - 20} more ingredients across all meals...
+                  </p>
+                )}
               </CardContent>
             </Card>
 
