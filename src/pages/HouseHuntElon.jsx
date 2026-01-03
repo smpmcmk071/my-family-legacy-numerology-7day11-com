@@ -189,6 +189,7 @@ export default function HouseHuntElon() {
       lifePath="34/7"
       birthDate="June 28, 1971"
       deathDate={null}
+      zodiac="Cancer"
     />
   );
 }

@@ -32,6 +32,8 @@ import HouseHuntMeagher from './pages/HouseHuntMeagher';
 import HouseHuntElon from './pages/HouseHuntElon';
 import HouseHuntTrump from './pages/HouseHuntTrump';
 import HouseHuntKobe from './pages/HouseHuntKobe';
+import HouseHuntGann from './pages/HouseHuntGann';
+import HouseHuntAsimov from './pages/HouseHuntAsimov';
 import __Layout from './Layout.jsx';
 
 
@@ -70,6 +72,8 @@ export const PAGES = {
     "HouseHuntElon": HouseHuntElon,
     "HouseHuntTrump": HouseHuntTrump,
     "HouseHuntKobe": HouseHuntKobe,
+    "HouseHuntGann": HouseHuntGann,
+    "HouseHuntAsimov": HouseHuntAsimov,
 }
 
 export const pagesConfig = {

@@ -205,6 +205,7 @@ export default function HouseHuntKobe() {
       lifePath="38/11"
       birthDate="August 23, 1978"
       deathDate="January 26, 2020"
+      zodiac="Leo"
     />
   );
 }

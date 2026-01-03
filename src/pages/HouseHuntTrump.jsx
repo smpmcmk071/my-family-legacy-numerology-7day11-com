@@ -205,6 +205,7 @@ export default function HouseHuntTrump() {
       lifePath="31/4"
       birthDate="June 14, 1946"
       deathDate={null}
+      zodiac="Gemini"
     />
   );
 }
