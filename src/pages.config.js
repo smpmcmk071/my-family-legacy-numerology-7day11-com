@@ -29,6 +29,9 @@ import PersonalDashboard from './pages/PersonalDashboard';
 import StephenLegacy from './pages/StephenLegacy';
 import HouseHunt from './pages/HouseHunt';
 import HouseHuntMeagher from './pages/HouseHuntMeagher';
+import HouseHuntElon from './pages/HouseHuntElon';
+import HouseHuntTrump from './pages/HouseHuntTrump';
+import HouseHuntKobe from './pages/HouseHuntKobe';
 import __Layout from './Layout.jsx';
 
 
@@ -64,6 +67,9 @@ export const PAGES = {
     "StephenLegacy": StephenLegacy,
     "HouseHunt": HouseHunt,
     "HouseHuntMeagher": HouseHuntMeagher,
+    "HouseHuntElon": HouseHuntElon,
+    "HouseHuntTrump": HouseHuntTrump,
+    "HouseHuntKobe": HouseHuntKobe,
 }
 
 export const pagesConfig = {
