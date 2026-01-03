@@ -73,7 +73,7 @@ export const PAGES = {
 }
 
 export const pagesConfig = {
-    mainPage: "PersonalDashboard",
+    mainPage: "AboutNumerology",
     Pages: PAGES,
     Layout: __Layout,
 };
