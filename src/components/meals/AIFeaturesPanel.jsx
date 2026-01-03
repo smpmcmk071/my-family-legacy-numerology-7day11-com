@@ -97,7 +97,7 @@ export default function AIFeaturesPanel({ userMember, todayCalc, activityLevel }
           <Input placeholder="Available ingredients (comma-separated)" value={availableIngredients} onChange={(e) => setAvailableIngredients(e.target.value)} className="bg-white/10 border-white/20 text-white placeholder:text-gray-500" />
           <div className="flex flex-wrap gap-2">
             {['vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'keto', 'low-carb'].map(diet => (
-              <Button key={diet} size="sm" variant={dietaryRestrictions.includes(diet) ? 'default' : 'outline'} onClick={() => toggleDietaryRestriction(diet)} className={dietaryRestrictions.includes(diet) ? 'bg-purple-600' : 'border-white/20 text-white'}>
+              <Button key={diet} size="sm" variant={dietaryRestrictions.includes(diet) ? 'default' : 'outline'} onClick={() => toggleDietaryRestriction(diet)} className={dietaryRestrictions.includes(diet) ? 'bg-purple-600 text-white' : 'bg-white/10 border-white/30 text-white hover:bg-white/20'}>
                 {diet}
               </Button>
             ))}
