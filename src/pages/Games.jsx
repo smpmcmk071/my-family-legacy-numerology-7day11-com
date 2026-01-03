@@ -36,6 +36,13 @@ export default function Games() {
       icon: Club,
       page: 'NumerologyBlackjack',
       gradient: 'from-green-500 to-emerald-600'
+    },
+    {
+      name: 'The 12 Houses of Meagher',
+      description: 'Learn astrology through the epic life of Thomas Francis Meagher - Irish revolutionary, Civil War general, Montana legend',
+      icon: Gamepad2,
+      page: 'HouseHunt',
+      gradient: 'from-purple-500 to-indigo-600'
     }
   ];
 
