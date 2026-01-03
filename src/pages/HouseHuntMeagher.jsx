@@ -211,6 +211,7 @@ export default function HouseHuntMeagher() {
       lifePath="25/7"
       birthDate="August 3, 1823"
       deathDate="July 1, 1867"
+      zodiac="Leo"
     />
   );
 }
