@@ -35,8 +35,10 @@ export default function MealRecommendations() {
   const [todayCalc, setTodayCalc] = useState(null);
   const [mealPlan, setMealPlan] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMeals, setIsLoadingMeals] = useState(false);
   const [activityLevel, setActivityLevel] = useState('mixed'); // 'relaxed', 'on-the-go', 'mixed'
   const [preparedMeals, setPreparedMeals] = useState(new Set());
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     loadUserData();
@@ -84,6 +86,9 @@ export default function MealRecommendations() {
   const loadMealRecommendations = async () => {
     if (!userMember || !todayCalc) return;
     
+    setIsLoadingMeals(true);
+    setError(null);
+    
     try {
       const response = await base44.functions.invoke('mealRecommendations', {
         lifePath: userMember.life_path_western,
@@ -92,11 +97,18 @@ export default function MealRecommendations() {
         existingLeftovers: []
       });
       
+      console.log('Meal recommendations response:', response.data);
+      
       if (response.data?.success) {
         setMealPlan(response.data.data);
+      } else {
+        setError('Failed to load meal recommendations');
       }
     } catch (error) {
       console.error('Error loading meal recommendations:', error);
+      setError(error.message || 'Failed to load meals');
+    } finally {
+      setIsLoadingMeals(false);
     }
   };
 
@@ -248,8 +260,8 @@ export default function MealRecommendations() {
               </div>
               <div className="p-4 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg border border-cyan-500/30">
                 <p className="text-xs text-cyan-300 mb-2">Day Energy</p>
-                <p className="text-white font-bold text-lg">{mealPlan?.dayEnergy}</p>
-                <p className="text-cyan-200 text-xs mt-1">{mealPlan?.mealAdvice}</p>
+                <p className="text-white font-bold text-lg">{mealPlan?.dayEnergy || 'Loading...'}</p>
+                <p className="text-cyan-200 text-xs mt-1">{mealPlan?.mealAdvice || 'Calculating your personalized meal advice...'}</p>
               </div>
             </div>
           </CardContent>
@@ -316,71 +328,99 @@ export default function MealRecommendations() {
           </CardContent>
         </Card>
 
+        {/* Error Display */}
+        {error && (
+          <Card className="bg-red-500/20 backdrop-blur-sm border-red-500/30 mb-6">
+            <CardContent className="py-6">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-6 h-6 text-red-400" />
+                <p className="text-red-300">{error}</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Loading State */}
+        {isLoadingMeals && (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+            <span className="ml-3 text-white">Loading your personalized meals...</span>
+          </div>
+        )}
+
         {/* Meal Plans */}
-        {mealPlan && (
+        {!isLoadingMeals && mealPlan && mealPlan.recommendations && (
           <>
             {/* Breakfast Options */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                <Coffee className="w-6 h-6 text-amber-400" />
-                Breakfast Options ({mealPlan.recommendations.breakfast.length})
-              </h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                {mealPlan.recommendations.breakfast.map((meal, idx) => renderMealCard(meal, `breakfast-${idx}`))}
+            {mealPlan.recommendations.breakfast && mealPlan.recommendations.breakfast.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                  <Coffee className="w-6 h-6 text-amber-400" />
+                  Breakfast Options ({mealPlan.recommendations.breakfast.length})
+                </h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {mealPlan.recommendations.breakfast.map((meal, idx) => renderMealCard(meal, `breakfast-${idx}`))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Lunch Options */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                <Sun className="w-6 h-6 text-yellow-400" />
-                Lunch Options ({mealPlan.recommendations.lunch.length})
-              </h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                {mealPlan.recommendations.lunch.map((meal, idx) => renderMealCard(meal, `lunch-${idx}`))}
+            {mealPlan.recommendations.lunch && mealPlan.recommendations.lunch.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                  <Sun className="w-6 h-6 text-yellow-400" />
+                  Lunch Options ({mealPlan.recommendations.lunch.length})
+                </h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {mealPlan.recommendations.lunch.map((meal, idx) => renderMealCard(meal, `lunch-${idx}`))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Dinner Options */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                <ChefHat className="w-6 h-6 text-orange-400" />
-                Dinner Options ({mealPlan.recommendations.dinner.length})
-              </h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                {mealPlan.recommendations.dinner.map((meal, idx) => renderMealCard(meal, `dinner-${idx}`))}
+            {mealPlan.recommendations.dinner && mealPlan.recommendations.dinner.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                  <ChefHat className="w-6 h-6 text-orange-400" />
+                  Dinner Options ({mealPlan.recommendations.dinner.length})
+                </h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {mealPlan.recommendations.dinner.map((meal, idx) => renderMealCard(meal, `dinner-${idx}`))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Shopping List - based on selected meals */}
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <ShoppingCart className="w-5 h-5 text-green-400" />
-                  Sample Shopping List
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-400 text-sm mb-4">
-                  Select meals you want to prepare to generate your personalized shopping list
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {mealPlan.shoppingList.slice(0, 20).map((item, i) => (
-                    <div 
-                      key={i}
-                      className="p-3 bg-white/10 rounded-lg text-center hover:bg-white/20 transition-colors cursor-pointer"
-                    >
-                      <p className="text-white text-sm">{item}</p>
-                    </div>
-                  ))}
-                </div>
-                {mealPlan.shoppingList.length > 20 && (
-                  <p className="text-gray-400 text-xs mt-3 text-center">
-                    And {mealPlan.shoppingList.length - 20} more ingredients across all meals...
+            {mealPlan.shoppingList && mealPlan.shoppingList.length > 0 && (
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <ShoppingCart className="w-5 h-5 text-green-400" />
+                    Sample Shopping List
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-400 text-sm mb-4">
+                    Ingredients from today's meal recommendations
                   </p>
-                )}
-              </CardContent>
-            </Card>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {mealPlan.shoppingList.slice(0, 20).map((item, i) => (
+                      <div 
+                        key={i}
+                        className="p-3 bg-white/10 rounded-lg text-center hover:bg-white/20 transition-colors cursor-pointer"
+                      >
+                        <p className="text-white text-sm">{item}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {mealPlan.shoppingList.length > 20 && (
+                    <p className="text-gray-400 text-xs mt-3 text-center">
+                      And {mealPlan.shoppingList.length - 20} more ingredients across all meals...
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
             {/* Leftover Suggestions */}
             {mealPlan.leftoverSuggestions.length > 0 && (
