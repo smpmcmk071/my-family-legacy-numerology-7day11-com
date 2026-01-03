@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Music, Loader2, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { DAILY_SONGS } from '../utils/songRecommendations';
 import NumberBadge from './NumberBadge';
@@ -18,10 +19,18 @@ export default function DailySongs() {
   const [dayNumber, setDayNumber] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [todayDate, setTodayDate] = useState('');
+  const [useAI, setUseAI] = useState(false);
+  const [aiSongs, setAiSongs] = useState([]);
 
   useEffect(() => {
     loadTodayNumber();
   }, []);
+
+  useEffect(() => {
+    if (useAI && dayNumber) {
+      generateAISongs();
+    }
+  }, [useAI, dayNumber]);
 
   const loadTodayNumber = async () => {
     setIsLoading(true);
@@ -39,7 +48,65 @@ export default function DailySongs() {
     setIsLoading(false);
   };
 
-  const songs = dayNumber ? (DAILY_SONGS[dayNumber] || DAILY_SONGS[dayNumber % 9 || 9]) : [];
+  const generateAISongs = async () => {
+    setIsLoading(true);
+    try {
+      const meanings = {
+        1: 'Leadership and new beginnings',
+        2: 'Balance and partnerships',
+        3: 'Creativity and self-expression',
+        4: 'Structure and foundation',
+        5: 'Freedom and adventure',
+        6: 'Nurturing and responsibility',
+        7: 'Spirituality and introspection',
+        8: 'Power and achievement',
+        9: 'Completion and wisdom',
+        11: 'Intuition and inspiration',
+        22: 'Master builder energy',
+        33: 'Master teacher energy'
+      };
+
+      const prompt = `Generate a personalized music playlist for today based on numerology:
+
+Universal Day Number: ${dayNumber}
+Energy Theme: ${meanings[dayNumber] || 'Unique energy'}
+
+Create 3 song recommendations that align with today's numerological energy. For each song include:
+- Song title and artist (real, well-known songs from any era)
+- Brief reason why it matches today's energy (1-2 sentences)
+
+Make the recommendations diverse across genres and meaningful.`;
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: 'object',
+          properties: {
+            songs: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  song: { type: 'string' },
+                  artist: { type: 'string' },
+                  reason: { type: 'string' }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      if (response?.songs) {
+        setAiSongs(response.songs);
+      }
+    } catch (err) {
+      console.error('AI song generation failed:', err);
+    }
+    setIsLoading(false);
+  };
+
+  const songs = useAI ? aiSongs : (dayNumber ? (DAILY_SONGS[dayNumber] || DAILY_SONGS[dayNumber % 9 || 9]) : []);
 
   if (isLoading) {
     return (
@@ -54,11 +121,22 @@ export default function DailySongs() {
   return (
     <Card className="bg-white/10 backdrop-blur-sm border-white/20">
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-white">
-          <Music className="w-5 h-5 text-purple-400" />
-          Today's Playlist
-          <NumberBadge number={dayNumber} size="sm" />
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-white">
+            <Music className="w-5 h-5 text-purple-400" />
+            Today's Playlist
+            <NumberBadge number={dayNumber} size="sm" />
+          </CardTitle>
+          <Button
+            size="sm"
+            onClick={() => setUseAI(!useAI)}
+            disabled={isLoading}
+            className={useAI ? 'bg-purple-600 hover:bg-purple-700' : 'bg-white/10 hover:bg-white/20 text-white'}
+          >
+            <Sparkles className="w-4 h-4 mr-1" />
+            {useAI ? 'AI' : 'Curated'}
+          </Button>
+        </div>
         <p className="text-sm text-gray-400">
           Songs for {new Date(todayDate + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
