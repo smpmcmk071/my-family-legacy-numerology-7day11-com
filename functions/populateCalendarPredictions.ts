@@ -63,20 +63,23 @@ function calculateDayNumbers(dateStr, lifePath = null, birthMonth = null, birthD
     universalDay
   };
 
-  // Personal year calculation requires lifePath and birth date (month and day)
-  // Note: This requires all three parameters to be provided for personal calculations
-  // If only lifePath is available without birthMonth/birthDay, personal calculations will be skipped
-  // Personal cycles if life path and birth date provided
-  if (lifePath && birthMonth && birthDay) {
-    // Correct personal year calculation: birthMonth + birthDay + currentYear
-    // Using the full year value, not the reduced universal year
-    const personalYear = reduceToDigit(birthMonth + birthDay + year);
+  // Personal year/month/day requires birthMonth and birthDay
+  // Industry standard: Birth Month (reduced) + Birth Day (reduced) + Universal Year (reduced)
+  if (birthMonth && birthDay) {
+    // Personal Year = reduced birth month + reduced birth day + universal year
+    const birthMonthReduced = reduceToDigit(birthMonth);
+    const birthDayReduced = reduceToDigit(birthDay);
+    const personalYear = reduceToDigit(birthMonthReduced + birthDayReduced + universalYear);
+    
+    // Personal Month = Personal Year + current month, then reduced
     const personalMonthSum = personalYear + month;
     const personalMonthReduced = reduceToDigit(personalMonthSum, false);
     const personalMonthMaster = [11, 22].includes(month) ? month : null;
+    
+    // Personal Day = Personal Month + current day, then reduced
     const personalDay = reduceToDigit(personalMonthReduced + day);
 
-    result.lifePath = lifePath;
+    result.lifePath = lifePath || null;
     result.personalYear = personalYear;
     result.personalMonth = personalMonthReduced;
     result.personalMonthMaster = personalMonthMaster;
@@ -282,18 +285,40 @@ Deno.serve(async (req) => {
     let memberLifePath = lifePath;
     let memberBirthMonth = null;
     let memberBirthDay = null;
+    let memberKarmicDebt = [];
+    
     if (familyMemberId) {
       const members = await base44.entities.FamilyMember.filter({ id: familyMemberId });
       if (members.length > 0) {
+        const member = members[0];
+        
         // Use provided lifePath or get from member
         if (!lifePath) {
-          memberLifePath = members[0].life_path_western || members[0].life_path_chaldean;
+          memberLifePath = member.life_path_western || member.life_path_chaldean;
         }
-        // Always extract birth date if available
-        if (members[0].date_of_birth) {
-          const birthDate = new Date(members[0].date_of_birth);
+        
+        // Extract birth month and day - try birth_date_encrypted first, fallback to date_of_birth
+        if (member.birth_date_encrypted) {
+          // Decrypt birth date to get month/day
+          const decryptResponse = await base44.functions.invoke('encryptData', {
+            action: 'decrypt',
+            data: { birth_date_encrypted: member.birth_date_encrypted }
+          });
+          
+          if (decryptResponse.data?.decrypted?.birth_date) {
+            const birthDate = new Date(decryptResponse.data.decrypted.birth_date);
+            memberBirthMonth = birthDate.getUTCMonth() + 1;
+            memberBirthDay = birthDate.getUTCDate();
+          }
+        } else if (member.date_of_birth) {
+          const birthDate = new Date(member.date_of_birth);
           memberBirthMonth = birthDate.getUTCMonth() + 1;
           memberBirthDay = birthDate.getUTCDate();
+        }
+        
+        // Get karmic debt
+        if (member.karmic_debt_number) {
+          memberKarmicDebt = member.karmic_debt_number.split(',').map(n => n.trim()).filter(Boolean);
         }
       }
     }
@@ -301,15 +326,6 @@ Deno.serve(async (req) => {
     const predictions = [];
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
-    // Get karmic debt if family member provided
-    let memberKarmicDebt = [];
-    if (familyMemberId) {
-      const members = await base44.entities.FamilyMember.filter({ id: familyMemberId });
-      if (members.length > 0 && members[0].karmic_debt_number) {
-        memberKarmicDebt = members[0].karmic_debt_number.split(',').map(n => n.trim()).filter(Boolean);
-      }
-    }
     
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
       const dateStr = d.toISOString().split('T')[0];
@@ -332,6 +348,8 @@ Deno.serve(async (req) => {
         date: dateStr,
         universal_day_number: dayNumbers.universalDay,
         personal_day_number: dayNumbers.personalDay || null,
+        personal_year_number: dayNumbers.personalYear || null,
+        personal_month_number: dayNumbers.personalMonth || null,
         universal_vibe: getVibeSummary(dayNumbers.universalDay),
         personal_vibe: dayNumbers.personalDay ? getVibeSummary(dayNumbers.personalDay) : null,
         recommendations: getRecommendations(dayNumbers.personalDay || dayNumbers.universalDay),
