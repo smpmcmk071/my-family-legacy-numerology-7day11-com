@@ -83,6 +83,71 @@ const STORIES = [
     page: 'HouseHuntAsimov',
     gradient: 'from-indigo-500 via-blue-500 to-cyan-600',
     preview: 'From Russian exile to Brooklyn candy stores to 500 books - a rational mind hiding cosmic wonder in science fiction.'
+  },
+  {
+    name: 'Michael Crichton',
+    subtitle: 'The Techno-Thriller Titan',
+    lifePath: '22/4 - The Master Builder',
+    zodiac: 'Scorpio',
+    birth: 'October 23, 1942',
+    death: 'November 4, 2008',
+    tagline: 'The 6\'9" genius who warned us about playing God',
+    icon: BookOpen,
+    page: 'HouseHuntCrichton',
+    gradient: 'from-red-500 via-orange-500 to-yellow-600',
+    preview: 'From Harvard med school to Jurassic Park - a master builder of cautionary tales where science meets consequence.'
+  },
+  {
+    name: 'Arthur C. Clarke',
+    subtitle: 'The Space Age Prophet',
+    lifePath: '28/10/1 - The Futuristic Pioneer',
+    zodiac: 'Sagittarius',
+    birth: 'December 16, 1917',
+    death: 'March 19, 2008',
+    tagline: 'The man who invented the satellite and imagined 2001',
+    icon: Rocket,
+    page: 'HouseHuntClarke',
+    gradient: 'from-blue-500 via-indigo-500 to-purple-600',
+    preview: 'From English farms to Sri Lankan seas to cosmic visions - the prophet who predicted our connected world.'
+  },
+  {
+    name: 'Dr. Seuss',
+    subtitle: 'The Whimsical Word Wizard',
+    lifePath: '19/10/1 - Independent Imaginer',
+    zodiac: 'Pisces',
+    birth: 'March 2, 1904',
+    death: 'September 24, 1991',
+    tagline: 'The man who made reading an adventure',
+    icon: BookOpen,
+    page: 'HouseHuntSeuss',
+    gradient: 'from-pink-500 via-yellow-500 to-green-600',
+    preview: 'From Springfield doodles to Whoville wonders - silly rhymes hiding profound life lessons for generations.'
+  },
+  {
+    name: 'Roald Dahl',
+    subtitle: 'The Magical Mischief Maker',
+    lifePath: '30/3 - Creative Charmer',
+    zodiac: 'Virgo',
+    birth: 'September 13, 1916',
+    death: 'November 23, 1990',
+    tagline: 'The RAF pilot who invented Wonka',
+    icon: BookOpen,
+    page: 'HouseHuntDahl',
+    gradient: 'from-purple-500 via-pink-500 to-red-600',
+    preview: 'From Welsh pranks to wartime heroics to chocolate factories - dark magic wrapped in sweet stories.'
+  },
+  {
+    name: 'J.K. Rowling',
+    subtitle: 'The Wizarding Wonder Weaver',
+    lifePath: '32/5 - Adventurous Author',
+    zodiac: 'Leo',
+    birth: 'July 31, 1965',
+    death: null,
+    tagline: 'The woman who conjured Harry Potter on a train',
+    icon: Zap,
+    page: 'HouseHuntRowling',
+    gradient: 'from-amber-500 via-red-600 to-purple-700',
+    preview: 'From welfare mother to wizard world architect - seven books that cast a spell on billions.'
   }
 ];
 
