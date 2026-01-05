@@ -39,6 +39,10 @@ import HouseHuntClarke from './pages/HouseHuntClarke';
 import HouseHuntSeuss from './pages/HouseHuntSeuss';
 import HouseHuntDahl from './pages/HouseHuntDahl';
 import HouseHuntRowling from './pages/HouseHuntRowling';
+import Horoscopes from './pages/Horoscopes';
+import PlanetaryTransits from './pages/PlanetaryTransits';
+import ZodiacCompatibility from './pages/ZodiacCompatibility';
+import AstrologyLearning from './pages/AstrologyLearning';
 import __Layout from './Layout.jsx';
 
 
@@ -84,6 +88,10 @@ export const PAGES = {
     "HouseHuntSeuss": HouseHuntSeuss,
     "HouseHuntDahl": HouseHuntDahl,
     "HouseHuntRowling": HouseHuntRowling,
+    "Horoscopes": Horoscopes,
+    "PlanetaryTransits": PlanetaryTransits,
+    "ZodiacCompatibility": ZodiacCompatibility,
+    "AstrologyLearning": AstrologyLearning,
 }
 
 export const pagesConfig = {
