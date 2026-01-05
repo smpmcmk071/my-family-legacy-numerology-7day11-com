@@ -148,7 +148,20 @@ const STORIES = [
     page: 'HouseHuntRowling',
     gradient: 'from-amber-500 via-red-600 to-purple-700',
     preview: 'From welfare mother to wizard world architect - seven books that cast a spell on billions.'
-  }
+    },
+    {
+    name: 'Bob Marley',
+    subtitle: 'The Natural Mystic',
+    lifePath: '27/9 - Universal Humanitarian',
+    zodiac: 'Aquarius',
+    birth: 'February 6, 1945',
+    death: 'May 11, 1981',
+    tagline: 'The prophet who turned reggae into revolution',
+    icon: TrendingUp,
+    page: 'HouseHuntMarley',
+    gradient: 'from-green-500 via-yellow-500 to-red-600',
+    preview: 'From Trenchtown to the world - One Love philosophy that united humanity through music and Rastafari consciousness.'
+    }
 ];
 
 export default function HouseHunt() {

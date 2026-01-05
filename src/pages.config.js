@@ -43,6 +43,7 @@ import Horoscopes from './pages/Horoscopes';
 import PlanetaryTransits from './pages/PlanetaryTransits';
 import ZodiacCompatibility from './pages/ZodiacCompatibility';
 import AstrologyLearning from './pages/AstrologyLearning';
+import HouseHuntMarley from './pages/HouseHuntMarley';
 import __Layout from './Layout.jsx';
 
 
@@ -92,6 +93,7 @@ export const PAGES = {
     "PlanetaryTransits": PlanetaryTransits,
     "ZodiacCompatibility": ZodiacCompatibility,
     "AstrologyLearning": AstrologyLearning,
+    "HouseHuntMarley": HouseHuntMarley,
 }
 
 export const pagesConfig = {
