@@ -46,9 +46,14 @@ export default function AdminNumerology() {
   // Family settings
   const [family, setFamily] = useState(null);
   const [savingSettings, setSavingSettings] = useState(false);
+  
+  // Analytics
+  const [analytics, setAnalytics] = useState(null);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
 
   useEffect(() => {
     checkAdminAccess();
+    loadAnalytics();
   }, []);
 
   const checkAdminAccess = async () => {
@@ -104,6 +109,25 @@ export default function AdminNumerology() {
     await base44.entities.Family.update(family.id, { [setting]: value });
     setFamily(prev => ({ ...prev, [setting]: value }));
     setSavingSettings(false);
+  };
+
+  const loadAnalytics = async () => {
+    setLoadingAnalytics(true);
+    try {
+      const users = await base44.entities.User.list();
+      const families = await base44.entities.Family.list();
+      const members = await base44.entities.FamilyMember.list();
+      
+      setAnalytics({
+        totalSignups: users.length,
+        totalFamilies: families.length,
+        totalMembers: members.length,
+        avgMembersPerFamily: families.length > 0 ? (members.length / families.length).toFixed(1) : 0
+      });
+    } catch (error) {
+      console.error('Failed to load analytics:', error);
+    }
+    setLoadingAnalytics(false);
   };
 
   const loadFamilyMembers = async (familyId) => {
@@ -341,6 +365,56 @@ export default function AdminNumerology() {
           <h1 className="text-4xl font-bold text-white mb-2">Numerology Admin</h1>
           <p className="text-gray-300">Populate the DateNumerology calendar database</p>
         </div>
+
+        {/* Analytics Dashboard */}
+        <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Users className="w-5 h-5 text-green-400" />
+              App Analytics
+              {loadingAnalytics && <Loader2 className="w-4 h-4 animate-spin text-amber-400" />}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {analytics ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-lg border border-green-500/30 text-center">
+                  <p className="text-3xl font-bold text-green-400">{analytics.totalSignups}</p>
+                  <p className="text-sm text-gray-300 mt-1">Total Signups</p>
+                  <p className="text-xs text-gray-500 mt-1">(User accounts)</p>
+                </div>
+                <div className="p-4 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg border border-purple-500/30 text-center">
+                  <p className="text-3xl font-bold text-purple-400">{analytics.totalFamilies}</p>
+                  <p className="text-sm text-gray-300 mt-1">Families Created</p>
+                  <p className="text-xs text-gray-500 mt-1">(Active groups)</p>
+                </div>
+                <div className="p-4 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-lg border border-amber-500/30 text-center">
+                  <p className="text-3xl font-bold text-amber-400">{analytics.totalMembers}</p>
+                  <p className="text-sm text-gray-300 mt-1">Total Members</p>
+                  <p className="text-xs text-gray-500 mt-1">(All profiles)</p>
+                </div>
+                <div className="p-4 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg border border-cyan-500/30 text-center">
+                  <p className="text-3xl font-bold text-cyan-400">{analytics.avgMembersPerFamily}</p>
+                  <p className="text-sm text-gray-300 mt-1">Avg per Family</p>
+                  <p className="text-xs text-gray-500 mt-1">(Members/family)</p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-400 text-center py-4">Loading analytics...</p>
+            )}
+            <div className="mt-4 flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={loadAnalytics}
+                className="border-white/20 text-white hover:bg-white/10"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Family App Settings */}
         <Card className="bg-white/10 backdrop-blur-sm border-white/20 mb-6">
