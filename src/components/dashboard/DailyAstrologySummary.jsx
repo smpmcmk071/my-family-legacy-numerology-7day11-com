@@ -106,42 +106,66 @@ export default function DailyAstrologySummary({ userMember }) {
   const generateSummary = async () => {
     setLoading(true);
     
-    // Get user's zodiac info from member or calculate
-    const zodiac = userMember?.sun_sign ? {
-      sunSign: userMember.sun_sign,
-      moonSign: userMember.moon_sign || 'Unknown',
-      risingSign: userMember.ascendant || 'Unknown',
-      element: userMember.element || 'Unknown'
-    } : getZodiacInfo(userMember?.birth_date);
+    // Set timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.warn('Astrology summary timed out after 15 seconds');
+      const zodiac = userMember?.sun_sign ? {
+        sunSign: userMember.sun_sign,
+        moonSign: userMember.moon_sign || 'Unknown',
+        risingSign: userMember.ascendant || 'Unknown',
+        element: userMember.element || 'Unknown'
+      } : getZodiacInfo(userMember?.birth_date);
+      
+      setAstroSummary({
+        zodiac,
+        retrogrades: [],
+        upcomingRetrogrades: [],
+        overview: 'Today brings cosmic energy. Stay centered and trust your intuition.',
+        bestActivities: ['meditation', 'reflection', 'planning'],
+        cautionAreas: [],
+        luckyNumber: Math.floor(Math.random() * 9) + 1,
+        luckyColor: 'Purple'
+      });
+      setLoading(false);
+    }, 15000);
+    
+    try {
+      // Get user's zodiac info from member or calculate
+      const zodiac = userMember?.sun_sign ? {
+        sunSign: userMember.sun_sign,
+        moonSign: userMember.moon_sign || 'Unknown',
+        risingSign: userMember.ascendant || 'Unknown',
+        element: userMember.element || 'Unknown'
+      } : getZodiacInfo(userMember?.birth_date);
 
-    // Check active retrogrades
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-    const activeRetrogrades = CURRENT_RETROGRADES.filter(r => {
-      return todayStr >= r.start && todayStr <= r.end;
-    });
+      // Check active retrogrades
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const activeRetrogrades = CURRENT_RETROGRADES.filter(r => {
+        return todayStr >= r.start && todayStr <= r.end;
+      });
 
-    // Get retrograde warnings for this user
-    const retroWarnings = activeRetrogrades.map(retro => {
-      const signEffect = RETROGRADE_EFFECTS[retro.planet]?.[zodiac.sunSign] || 
-                        RETROGRADE_EFFECTS[retro.planet]?.[zodiac.moonSign] ||
-                        RETROGRADE_EFFECTS[retro.planet]?.default;
-      return {
-        ...retro,
-        personalEffect: signEffect
-      };
-    });
+      // Get retrograde warnings for this user
+      const retroWarnings = activeRetrogrades.map(retro => {
+        const signEffect = RETROGRADE_EFFECTS[retro.planet]?.[zodiac.sunSign] || 
+                          RETROGRADE_EFFECTS[retro.planet]?.[zodiac.moonSign] ||
+                          RETROGRADE_EFFECTS[retro.planet]?.default;
+        return {
+          ...retro,
+          personalEffect: signEffect
+        };
+      });
 
-    // Get upcoming retrogrades (next 60 days)
-    const futureDate = new Date(today);
-    futureDate.setDate(futureDate.getDate() + 60);
-    const futureDateStr = futureDate.toISOString().split('T')[0];
-    const upcomingRetrogrades = CURRENT_RETROGRADES.filter(r => {
-      return r.start > todayStr && r.start <= futureDateStr;
-    }).sort((a, b) => a.start.localeCompare(b.start));
+      // Get upcoming retrogrades (next 60 days)
+      const futureDate = new Date(today);
+      futureDate.setDate(futureDate.getDate() + 60);
+      const futureDateStr = futureDate.toISOString().split('T')[0];
+      const upcomingRetrogrades = CURRENT_RETROGRADES.filter(r => {
+        return r.start > todayStr && r.start <= futureDateStr;
+      }).sort((a, b) => a.start.localeCompare(b.start));
 
-    // Generate daily summary using LLM
-    const prompt = `Generate a brief, personalized daily astrology summary for someone with:
+      // Generate daily summary using LLM
+      const prompt = `Generate a brief, personalized daily astrology summary for someone with:
 - Sun Sign: ${zodiac.sunSign}
 - Moon Sign: ${zodiac.moonSign}
 - Rising Sign: ${zodiac.risingSign}
@@ -154,7 +178,6 @@ Active planetary retrogrades: ${activeRetrogrades.map(r => r.planet).join(', ') 
 
 Provide a 2-3 sentence daily overview focusing on energy, mood, and best activities. Keep it practical and encouraging.`;
 
-    try {
       const response = await base44.integrations.Core.InvokeLLM({
         prompt,
         response_json_schema: {
@@ -169,6 +192,8 @@ Provide a 2-3 sentence daily overview focusing on energy, mood, and best activit
         }
       });
 
+      clearTimeout(timeoutId);
+      
       setAstroSummary({
         zodiac,
         retrogrades: retroWarnings,
@@ -176,11 +201,25 @@ Provide a 2-3 sentence daily overview focusing on energy, mood, and best activit
         ...response
       });
     } catch (error) {
+      console.error('Astrology summary generation failed:', error);
+      clearTimeout(timeoutId);
+      
       // Fallback if LLM fails
+      const zodiac = userMember?.sun_sign ? {
+        sunSign: userMember.sun_sign,
+        moonSign: userMember.moon_sign || 'Unknown',
+        risingSign: userMember.ascendant || 'Unknown',
+        element: userMember.element || 'Unknown'
+      } : getZodiacInfo(userMember?.birth_date);
+      
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const activeRetrogrades = CURRENT_RETROGRADES.filter(r => todayStr >= r.start && todayStr <= r.end);
+      
       setAstroSummary({
         zodiac,
-        retrogrades: retroWarnings,
-        upcomingRetrogrades,
+        retrogrades: [],
+        upcomingRetrogrades: [],
         overview: `As a ${zodiac.sunSign} with ${zodiac.moonSign} Moon, today brings ${zodiac.element} energy to your endeavors. Trust your intuition and stay grounded.`,
         bestActivities: ['meditation', 'planning', 'connecting with loved ones'],
         cautionAreas: activeRetrogrades.length > 0 ? ['major decisions', 'signing contracts'] : [],
@@ -194,9 +233,9 @@ Provide a 2-3 sentence daily overview focusing on energy, mood, and best activit
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 text-gray-400 py-4">
-        <Loader2 className="w-4 h-4 animate-spin" />
-        Generating your daily astrology...
+      <div className="flex flex-col items-center gap-2 text-gray-400 py-6">
+        <Loader2 className="w-5 h-5 animate-spin" />
+        <p className="text-sm">Consulting the stars...</p>
       </div>
     );
   }
