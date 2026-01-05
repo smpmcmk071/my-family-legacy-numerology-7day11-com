@@ -34,6 +34,11 @@ import NumerologyWar from './pages/NumerologyWar';
 import ParentsLegacy from './pages/ParentsLegacy';
 import PersonalDashboard from './pages/PersonalDashboard';
 import StephenLegacy from './pages/StephenLegacy';
+import HouseHuntCrichton from './pages/HouseHuntCrichton';
+import HouseHuntClarke from './pages/HouseHuntClarke';
+import HouseHuntSeuss from './pages/HouseHuntSeuss';
+import HouseHuntDahl from './pages/HouseHuntDahl';
+import HouseHuntRowling from './pages/HouseHuntRowling';
 import __Layout from './Layout.jsx';
 
 
@@ -74,6 +79,11 @@ export const PAGES = {
     "ParentsLegacy": ParentsLegacy,
     "PersonalDashboard": PersonalDashboard,
     "StephenLegacy": StephenLegacy,
+    "HouseHuntCrichton": HouseHuntCrichton,
+    "HouseHuntClarke": HouseHuntClarke,
+    "HouseHuntSeuss": HouseHuntSeuss,
+    "HouseHuntDahl": HouseHuntDahl,
+    "HouseHuntRowling": HouseHuntRowling,
 }
 
 export const pagesConfig = {
