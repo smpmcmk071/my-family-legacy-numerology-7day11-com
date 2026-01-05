@@ -10,9 +10,9 @@ const DAHL_HOUSES = [
     theme: "Identity & Beginnings",
     ruler: "Mars",
     storyTitle: "The Welsh Wonder Kid",
-    content: "Born September 13, 1916 in Llandaff, Wales, Roald Dahl's 1st House brimmed with adventurous spirit from Norwegian roots.\n\nA tall tale-spinner who loved pranks. What magical mischief started it all?",
+    content: "Born September 13, 1916 in Llandaff, Wales, Roald Dahl's 1st House brimmed with adventurous spirit from Norwegian roots.\n\nVirgo precision + Norwegian mysticism. Born 9/13 = 13 (death) + 9 (completion) = dark rebirth. Sister Astri dies at 7 (1922=5)—echoes in Matilda's orphan journey.\n\n🔮 Tarot: Death (transformation, not morbidity) • Astrology: Virgo Sun (analysis), 8th House themes (dark transformation)",
     keyDate: "September 13, 1916",
-    numerology: "9+1+3+1+9+1+6 = 30/3 - Creative charmer",
+    numerology: "9+1+3+1+9+1+6 = 30/3 - Creative magician • Birth Number 4, Destiny 3",
     color: "from-red-500 to-orange-600"
   },
   {
@@ -22,9 +22,9 @@ const DAHL_HOUSES = [
     theme: "Resources & Worth",
     ruler: "Venus",
     storyTitle: "Treasure of Tall Tales",
-    content: "Dahl's 2nd House collected chocolate inspirations and wartime stories for wealth in words.\n\nValued imagination over gold, gifting books to kids. Hidden candy bars?",
+    content: "Dahl's 2nd House collected chocolate inspirations and wartime stories for wealth in words.\n\nWilly Wonka = alchemy master. Factory has 9 sections (karmic completion), 5 children (transformation). Chocolate = transmutation of pain into pleasure.\n\n🔮 Tarot: The Devil (hidden desires, true tastes) • Wonka Code: 9 golden tickets = karmic trial",
     keyDate: "1964 Charlie",
-    numerology: "2 = Balanced fantasies",
+    numerology: "2 = Duality—pain/joy, dark/light • Wonka = 16/7 (mystical factory)",
     color: "from-green-500 to-emerald-600"
   },
   {
@@ -70,9 +70,9 @@ const DAHL_HOUSES = [
     theme: "Service & Daily Life",
     ruler: "Mercury",
     storyTitle: "Daily Dream Duty",
-    content: "Dahl's 6th House: RAF pilot in WWII, crashed but created.\n\nHealth battles for family. Routine of rhyming remedies?",
+    content: "Dahl's 6th House: RAF pilot in WWII, crashed 1940 (1+9+4+0=14/5: brush with death)—transformation awakens.\n\nHealth battles for family. Near-death experience unlocked creative darkness. Codes childhood trauma into moral tales—Witches = predators, but children triumph.\n\n🔮 WWII Drama: 1940 crash = 14/5 (death awakens genius)",
     keyDate: "1939 WWII",
-    numerology: "6 = Helpful hijinks",
+    numerology: "6 = Helpful hijinks • RAF crash unlocked shadow work",
     color: "from-teal-500 to-green-600"
   },
   {

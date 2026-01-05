@@ -10,9 +10,9 @@ const CLARKE_HOUSES = [
     theme: "Identity & Beginnings",
     ruler: "Mars",
     storyTitle: "The Farm Boy Dreamer",
-    content: "Born December 16, 1917 in Minehead, England, Arthur C. Clarke's 1st House envisioned space from rural fields.\n\nRadar pioneer in WWII. Identity as sci-fi prophet - hidden visions?",
+    content: "Born December 16, 1917 in Minehead, England, Arthur C. Clarke's 1st House envisioned space from rural fields.\n\nRadar pioneer in WWII. Sagittarius vision + Jupiter expansion = cosmic scope. Identity as sci-fi prophet—what celestial calling?\n\n🔮 Tarot: The Magician (manifest possibilities) • Astrology: Sagittarius Sun (archer aiming at stars), Jupiter (expansion)",
     keyDate: "December 16, 1917",
-    numerology: "1+2+1+6+1+9+1+7 = 28/10/1 - Independent visionary",
+    numerology: "1+2+1+6+1+9+1+7 = 28/10/1 - Independent visionary • Birth Number 7, Destiny 1",
     color: "from-red-500 to-orange-600"
   },
   {
@@ -22,9 +22,9 @@ const CLARKE_HOUSES = [
     theme: "Resources & Worth",
     ruler: "Venus",
     storyTitle: "Idea Collector",
-    content: "Clarke's 2nd House: Modest means, but rich in concepts like geostationary satellites 1945.\n\nValued exploration. Royalties funded Sri Lanka home.",
+    content: "Clarke's 2nd House: Modest means, but rich in concepts like geostationary satellites 1945.\n\nValued exploration. Royalties funded Sri Lanka home. Satellite paper predicted orbit at 22,236 miles—synchronous with Earth's 24-hour sacred cycle.\n\n🔮 Tarot: The Hermit (valuable solitude) • Prediction: Geostationary orbit became reality (prophecy = 19/1)",
     keyDate: "1945 Satellite Paper",
-    numerology: "2 = Harmonious inventions",
+    numerology: "2 = Visionary ideas create wealth • 1945 = 19/1 (prophecy becomes reality)",
     color: "from-green-500 to-emerald-600"
   },
   {
@@ -106,9 +106,9 @@ const CLARKE_HOUSES = [
     theme: "Wisdom & Travel",
     ruler: "Jupiter",
     storyTitle: "Island Exile",
-    content: "Clarke's 9th House: Moved to Sri Lanka 1956, dived reefs.\n\nPhilosophy: Clarke's Laws on tech/magic.",
+    content: "Clarke's 9th House: Moved to Sri Lanka 1956 (5+6=11 master number)—cosmic retreat for wisdom.\n\nPhilosophy: Clarke's Three Laws encode numerology: 1=New vision, 2=Gradual acceptance, 3=Indistinguishable from magic. Survived 2004 tsunami (age 87=15/6).\n\n🔮 Three Laws: Technology prophecy hidden in sacred triad",
     keyDate: "1956 Sri Lanka",
-    numerology: "9 = Universal explorer",
+    numerology: "9 = Universal explorer • 1956 = 21/3 (creative expression)",
     color: "from-indigo-500 to-blue-600"
   },
   {

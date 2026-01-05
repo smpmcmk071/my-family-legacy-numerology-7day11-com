@@ -10,9 +10,9 @@ const SEUSS_HOUSES = [
     theme: "Identity & Beginnings",
     ruler: "Mars",
     storyTitle: "The Springfield Sprout",
-    content: "Born March 2, 1904 in Springfield, Massachusetts, Dr. Seuss's 1st House sparkled with silly imagination from a young age, drawing doodles and dreaming up nonsense.\n\nA tall tale-teller who turned 'Seuss' into magic. But what wacky wonder sparked his first rhyme?",
+    content: "Born March 2, 1904 in Springfield, Massachusetts, Dr. Seuss's 1st House sparkled with silly imagination from a young age, drawing doodles and dreaming up nonsense.\n\nPisces dreamer who turned nonsense into wisdom. Numerology 19/10/1: independent visionary channeling Neptune's madness into method.\n\n🔮 Tarot: The Fool (divine madness) • Astrology: Pisces Sun (dreams), Neptune (dissolution of logic into magic)",
     keyDate: "March 2, 1904",
-    numerology: "3+2+1+9+0+4 = 19/10/1 - Independent imaginer",
+    numerology: "3+2+1+9+0+4 = 19/10/1 - Independent imaginer • Birth Number 2, Destiny 1",
     color: "from-red-500 to-orange-600"
   },
   {
@@ -34,9 +34,9 @@ const SEUSS_HOUSES = [
     theme: "Expression & Learning",
     ruler: "Mercury",
     storyTitle: "Rhyme Time Chatter",
-    content: "Dr. Seuss's 3rd House bubbled with bouncy words, writing 'Green Eggs and Ham' with just 50 words!\n\nCartoons and books chatted to children. Secret silly messages in his verses?",
+    content: "Dr. Seuss's 3rd House bubbled with bouncy words, writing 'Green Eggs and Ham' with just 50 words (5+0=5: transformation)!\n\nAnapestic tetrameter encodes sacred rhythm. 61 books published = 6+1 = 7 (mystical mastery). Did he encode learning secrets in rhyme schemes?\n\n🔮 Tarot: The Magician (words create worlds) • Green Eggs Code: 50 words = constraint as creativity gate",
     keyDate: "1960 Green Eggs",
-    numerology: "3 = Playful expression",
+    numerology: "3 = Communication, sacred speech • Mercury rules language mastery",
     color: "from-yellow-500 to-amber-600"
   },
   {
@@ -106,9 +106,9 @@ const SEUSS_HOUSES = [
     theme: "Wisdom & Travel",
     ruler: "Jupiter",
     storyTitle: "Worldwide Wacky Wanders",
-    content: "Dr. Seuss's 9th House: Traveled ideas to kids globally, with morals like environmentalism in 'The Lorax'.\n\nPhilosophy of fun learning. Universal giggles?",
+    content: "Dr. Seuss's 9th House: Traveled ideas to kids globally, with morals like environmentalism in 'The Lorax'.\n\nLorax (1971 = 18/9: universal completion) warned of environmental collapse 50 years early. Philosophy of fun learning hiding profound prophecy.\n\n🔮 Lorax Prophecy: Environmental warning encoded as children's story",
     keyDate: "1971 Lorax",
-    numerology: "9 = Global goofiness",
+    numerology: "9 = Global wisdom • 1971 = 18/9 (universal completion)",
     color: "from-indigo-500 to-blue-600"
   },
   {

@@ -10,9 +10,9 @@ const ROWLING_HOUSES = [
     theme: "Identity & Beginnings",
     ruler: "Mars",
     storyTitle: "The Yate Young Dreamer",
-    content: "Born July 31, 1965 in Yate, England, J.K. Rowling's 1st House glowed with storytelling spark from age 6.\n\nA magical mind who created Harry. What wizardly wish began it?",
+    content: "Born July 31, 1965 in Yate, England, J.K. Rowling's 1st House glowed with storytelling spark from age 6.\n\nLeo creativity + numerology 32/5 (freedom through adventure). SYNCHRONICITY: Harry Potter born same day (7/31/1980)! Karmic soul connection—author and character share birthday.\n\n🔮 Tarot: The Sun (enlightenment, creative power) • Astrology: Leo Sun (royal), 5th House dominant (creativity, children)",
     keyDate: "July 31, 1965",
-    numerology: "7+3+1+1+9+6+5 = 32/5 - Adventurous author",
+    numerology: "7+3+1+1+9+6+5 = 32/5 - Adventurous liberator • Birth Number 4, Destiny 5",
     color: "from-red-500 to-orange-600"
   },
   {
@@ -22,9 +22,9 @@ const ROWLING_HOUSES = [
     theme: "Resources & Worth",
     ruler: "Venus",
     storyTitle: "Magic Manuscript Treasures",
-    content: "Rowling's 2nd House: From welfare to wizard wealth with Potter sales.\n\nValued imagination, philanthropy follows. Hidden horcruxes of hope?",
+    content: "Rowling's 2nd House: From welfare to wizard wealth with Potter sales.\n\nMother's death (December 30, 1990 = 23/5: freedom through loss) triggered Harry creation. Mirror of trauma into fiction. $1B+ but gives to charity.\n\n🔮 Tarot: Wheel of Fortune (destiny fulfilled) • Mother's Death Code: 1990 = 10/1 (new beginning from grief)",
     keyDate: "1997 Philosopher's Stone",
-    numerology: "2 = Balanced broomsticks",
+    numerology: "2 = Transformation: rags to riches • 1997 = 26/8 (material foundations)",
     color: "from-green-500 to-emerald-600"
   },
   {
@@ -34,9 +34,9 @@ const ROWLING_HOUSES = [
     theme: "Expression & Learning",
     ruler: "Mercury",
     storyTitle: "Spellbinding Scribbles",
-    content: "Rowling's 3rd House: Wrote Harry on train, series of seven books.\n\nTweets and tales connect fans. Secret charms in chapters?",
+    content: "Rowling's 3rd House: Wrote Harry on train (Mercury moment!), series of seven books.\n\n7 = spiritual completion cycle. 7 Horcruxes = 7 chakras inverted—Voldemort's fear of death = root chakra obsession. Platform 9¾ = 9.75 (sacred irrational: transcendence).\n\n🔮 Tarot: The Magician (words manifest worlds) • Seven Sacred: 7 books, 7 years, 7 Horcruxes = Hermetic perfection",
     keyDate: "1990 Idea",
-    numerology: "3 = Expressive enchantments",
+    numerology: "3 = Creative expression • 7 books = sacred completion",
     color: "from-yellow-500 to-amber-600"
   },
   {
@@ -94,9 +94,9 @@ const ROWLING_HOUSES = [
     theme: "Death & Rebirth",
     ruler: "Pluto",
     storyTitle: "Transforming Tales",
-    content: "Rowling's 8th House: Themes of death in Potter, personal losses.\n\nTransformation to billionaire. Secrets in shadows?",
+    content: "Rowling's 8th House: Themes of death in Potter mirror personal losses.\n\nMother's death 1990 → Depression era → Harry born from darkness (1990-1997 = 7 years of gestation). Depression inspired dementors. Transformation to billionaire through shadow work.\n\n🔮 Deathly Hallows: Master of Death = acceptance, not avoidance. Phoenix rises from ashes.",
     keyDate: "2007 Deathly Hallows",
-    numerology: "8 = Powerful phoenix",
+    numerology: "8 = Powerful phoenix • Transformation through grief",
     color: "from-gray-700 to-slate-800"
   },
   {

@@ -10,9 +10,9 @@ const CRICHTON_HOUSES = [
     theme: "Identity & Beginnings",
     ruler: "Mars",
     storyTitle: "The Tall Prodigy",
-    content: "Born October 23, 1942 in Chicago, Michael Crichton's 1st House towered at 6'9\", a Harvard med student turned author.\n\nIdentity as techno-thriller king. But what drove his diverse pursuits?",
+    content: "Born October 23, 1942 in Chicago, Michael Crichton's 1st House towered at 6'9\"—a Harvard med student turned author.\n\nScorpio intensity met Saturnian discipline (22/4 Master Number). Height (6'9\") unusual—Saturn elongates bones, indicates karmic authority. 5 careers (doctor, writer, director, investor, explorer) = numerology 5 (versatility).\n\n🔮 Tarot: The Devil (hidden knowledge, complexity) • Astrology: Scorpio Sun (secrets), likely Capricorn rising (authority)",
     keyDate: "October 23, 1942",
-    numerology: "1+0+2+3+1+9+4+2 = 22/4 - Master builder",
+    numerology: "1+0+2+3+1+9+4+2 = 22/4 - Master builder of warnings • Birth Number 5, Destiny 4",
     color: "from-red-500 to-orange-600"
   },
   {
@@ -94,9 +94,9 @@ const CRICHTON_HOUSES = [
     theme: "Death & Rebirth",
     ruler: "Pluto",
     storyTitle: "Unexpected Exit",
-    content: "Crichton's 8th House: Died November 4, 2008 from lymphoma.\n\nPrivate battle. Transformation of works posthumous.",
+    content: "Crichton's 8th House: Died November 4, 2008 from lymphoma—body's immune system (doctor) turns against itself. Karmic irony: Healer becomes patient.\n\nPrivate battle. Survived 2004 Indian Ocean tsunami—Pluto (rebirth) at work. Transformation of works posthumous.\n\n🔮 Death Symbolism: Lymphoma = immune betrayal. Doctor's karma completes.",
     keyDate: "November 4, 2008",
-    numerology: "1+1+4+2+0+0+8 = 16/7 - Mystic end",
+    numerology: "1+1+4+2+0+0+8 = 16/7 - Mystic end • Transformation through shadow",
     color: "from-gray-700 to-slate-800"
   },
   {
@@ -118,9 +118,9 @@ const CRICHTON_HOUSES = [
     theme: "Status & Achievement",
     ruler: "Saturn",
     storyTitle: "Bestseller Mogul",
-    content: "Crichton's 10th House: 200M books sold, ER Emmy.\n\nLegacy in cautionary tales. Climate views controversial.",
+    content: "Crichton's 10th House: 200M books sold, ER Emmy.\n\nJurassic Park (1993=22/4) warns: 'Life finds a way'—Nature's 9 cycles vs human 4-structure. State of Fear (2004=1+1) questions climate narrative with duality.\n\n🔮 Jurassic Warning: Master number 22 warning against hubris in creation",
     keyDate: "1994 ER",
-    numerology: "10/1 = Public warn-er",
+    numerology: "10/1 = Public warner • $400M from Jurassic alone",
     color: "from-amber-500 to-yellow-600"
   },
   {
