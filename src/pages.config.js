@@ -2,6 +2,7 @@ import AboutNumerology from './pages/AboutNumerology';
 import AddFamilyMember from './pages/AddFamilyMember';
 import AdminNumerology from './pages/AdminNumerology';
 import AmyLegacy from './pages/AmyLegacy';
+import AstrologyLearning from './pages/AstrologyLearning';
 import BoujeeZodiacRoyale from './pages/BoujeeZodiacRoyale';
 import BrothersLegacy from './pages/BrothersLegacy';
 import CalendarEvents from './pages/CalendarEvents';
@@ -13,12 +14,19 @@ import Games from './pages/Games';
 import GenealogyResearch from './pages/GenealogyResearch';
 import GrandparentsLegacy from './pages/GrandparentsLegacy';
 import Home from './pages/Home';
+import Horoscopes from './pages/Horoscopes';
 import HouseHunt from './pages/HouseHunt';
 import HouseHuntAsimov from './pages/HouseHuntAsimov';
+import HouseHuntClarke from './pages/HouseHuntClarke';
+import HouseHuntCrichton from './pages/HouseHuntCrichton';
+import HouseHuntDahl from './pages/HouseHuntDahl';
 import HouseHuntElon from './pages/HouseHuntElon';
 import HouseHuntGann from './pages/HouseHuntGann';
 import HouseHuntKobe from './pages/HouseHuntKobe';
+import HouseHuntMarley from './pages/HouseHuntMarley';
 import HouseHuntMeagher from './pages/HouseHuntMeagher';
+import HouseHuntRowling from './pages/HouseHuntRowling';
+import HouseHuntSeuss from './pages/HouseHuntSeuss';
 import HouseHuntTrump from './pages/HouseHuntTrump';
 import JoinFamily from './pages/JoinFamily';
 import KyleLegacy from './pages/KyleLegacy';
@@ -33,17 +41,10 @@ import NumerologyBlackjack from './pages/NumerologyBlackjack';
 import NumerologyWar from './pages/NumerologyWar';
 import ParentsLegacy from './pages/ParentsLegacy';
 import PersonalDashboard from './pages/PersonalDashboard';
-import StephenLegacy from './pages/StephenLegacy';
-import HouseHuntCrichton from './pages/HouseHuntCrichton';
-import HouseHuntClarke from './pages/HouseHuntClarke';
-import HouseHuntSeuss from './pages/HouseHuntSeuss';
-import HouseHuntDahl from './pages/HouseHuntDahl';
-import HouseHuntRowling from './pages/HouseHuntRowling';
-import Horoscopes from './pages/Horoscopes';
 import PlanetaryTransits from './pages/PlanetaryTransits';
+import StephenLegacy from './pages/StephenLegacy';
 import ZodiacCompatibility from './pages/ZodiacCompatibility';
-import AstrologyLearning from './pages/AstrologyLearning';
-import HouseHuntMarley from './pages/HouseHuntMarley';
+import ShareApp from './pages/ShareApp';
 import __Layout from './Layout.jsx';
 
 
@@ -52,6 +53,7 @@ export const PAGES = {
     "AddFamilyMember": AddFamilyMember,
     "AdminNumerology": AdminNumerology,
     "AmyLegacy": AmyLegacy,
+    "AstrologyLearning": AstrologyLearning,
     "BoujeeZodiacRoyale": BoujeeZodiacRoyale,
     "BrothersLegacy": BrothersLegacy,
     "CalendarEvents": CalendarEvents,
@@ -63,12 +65,19 @@ export const PAGES = {
     "GenealogyResearch": GenealogyResearch,
     "GrandparentsLegacy": GrandparentsLegacy,
     "Home": Home,
+    "Horoscopes": Horoscopes,
     "HouseHunt": HouseHunt,
     "HouseHuntAsimov": HouseHuntAsimov,
+    "HouseHuntClarke": HouseHuntClarke,
+    "HouseHuntCrichton": HouseHuntCrichton,
+    "HouseHuntDahl": HouseHuntDahl,
     "HouseHuntElon": HouseHuntElon,
     "HouseHuntGann": HouseHuntGann,
     "HouseHuntKobe": HouseHuntKobe,
+    "HouseHuntMarley": HouseHuntMarley,
     "HouseHuntMeagher": HouseHuntMeagher,
+    "HouseHuntRowling": HouseHuntRowling,
+    "HouseHuntSeuss": HouseHuntSeuss,
     "HouseHuntTrump": HouseHuntTrump,
     "JoinFamily": JoinFamily,
     "KyleLegacy": KyleLegacy,
@@ -83,17 +92,10 @@ export const PAGES = {
     "NumerologyWar": NumerologyWar,
     "ParentsLegacy": ParentsLegacy,
     "PersonalDashboard": PersonalDashboard,
-    "StephenLegacy": StephenLegacy,
-    "HouseHuntCrichton": HouseHuntCrichton,
-    "HouseHuntClarke": HouseHuntClarke,
-    "HouseHuntSeuss": HouseHuntSeuss,
-    "HouseHuntDahl": HouseHuntDahl,
-    "HouseHuntRowling": HouseHuntRowling,
-    "Horoscopes": Horoscopes,
     "PlanetaryTransits": PlanetaryTransits,
+    "StephenLegacy": StephenLegacy,
     "ZodiacCompatibility": ZodiacCompatibility,
-    "AstrologyLearning": AstrologyLearning,
-    "HouseHuntMarley": HouseHuntMarley,
+    "ShareApp": ShareApp,
 }
 
 export const pagesConfig = {
