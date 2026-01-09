@@ -42,9 +42,9 @@ import NumerologyWar from './pages/NumerologyWar';
 import ParentsLegacy from './pages/ParentsLegacy';
 import PersonalDashboard from './pages/PersonalDashboard';
 import PlanetaryTransits from './pages/PlanetaryTransits';
+import ShareApp from './pages/ShareApp';
 import StephenLegacy from './pages/StephenLegacy';
 import ZodiacCompatibility from './pages/ZodiacCompatibility';
-import ShareApp from './pages/ShareApp';
 import __Layout from './Layout.jsx';
 
 
@@ -93,9 +93,9 @@ export const PAGES = {
     "ParentsLegacy": ParentsLegacy,
     "PersonalDashboard": PersonalDashboard,
     "PlanetaryTransits": PlanetaryTransits,
+    "ShareApp": ShareApp,
     "StephenLegacy": StephenLegacy,
     "ZodiacCompatibility": ZodiacCompatibility,
-    "ShareApp": ShareApp,
 }
 
 export const pagesConfig = {

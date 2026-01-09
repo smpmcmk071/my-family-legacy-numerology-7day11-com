@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Printer, Share2, Download } from 'lucide-react';
 
 export default function ShareApp() {
-  const appUrl = window.location.origin;
+  const appUrl = 'https://the-family-legacy-numerology-76bb1e61.base44.app';
   
   const handlePrint = () => {
     window.print();
