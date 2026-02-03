@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building, Coins, Scroll, Home, Star, Briefcase, Users, Skull, Globe, Crown, Eye, Flag } from 'lucide-react';
+import { Coins, Scroll, Home, Star, Briefcase, Users, Skull, Globe, Crown, Eye, Flag } from 'lucide-react';
 import HouseStoryViewer from '../components/househunt/HouseStoryViewer';
 
 const TRUMP_HOUSES = [
@@ -14,9 +14,9 @@ const TRUMP_HOUSES = [
 
 From the start, his identity echoed Gemini's twins: the charismatic showman projecting bold confidence, versus the hidden strategist intuiting power's flows. Sent to New York Military Academy at thirteen for discipline, he excelled, projecting leadership while enduring rigors.
 
-By Wharton in 1968, Donald's persona solidified: the enigmatic builder who projects unassailable drive while the world mistakes it for bravado.`,
+By Wharton in 1968, Donald's persona solidified: the enigmatic builder who projects unassailable drive while the world mistakes it for bravado. His 31/4 life path—the Master Builder—was already manifest: creative force (31) channeling structured ambition (4).`,
     keyDate: "June 14, 1946",
-    numerology: "6+1+4+1+9+4+6 = 31/4 - The Master Builder",
+    numerology: "6+1+4+1+9+4+6 = 31/4 - The Master Builder: creative power (31) manifesting through structure (4)",
     color: "from-red-500 to-orange-500"
   },
   {
@@ -30,9 +30,9 @@ By Wharton in 1968, Donald's persona solidified: the enigmatic builder who proje
 
 His early moves were audacious. Taking over Fred's firm in 1971, he rebranded to Trump Organization. Grand Hyatt renovation 1980 netted fortunes, valuing branding over basics.
 
-Number 2 embodies duality, partnerships—merging family legacy with personal empire. It teaches accumulation as harmony, gathering towers to redefine skylines.`,
+Number 2 embodies duality, partnerships—merging family legacy with personal empire. It teaches accumulation as harmony, gathering towers to redefine skylines. The 31/4 builder understands: creative vision (31) requires solid foundation (4) to manifest wealth.`,
     keyDate: "1971-1980s",
-    numerology: "2 = Balance between inheritance and innovation",
+    numerology: "2 = Balance between inheritance and innovation, the 31/4 builder's dual foundation",
     color: "from-green-500 to-emerald-500"
   },
   {
@@ -46,9 +46,9 @@ Number 2 embodies duality, partnerships—merging family legacy with personal em
 
 The verbal arsenal built early. In 1987, The Art of the Deal became a bestseller, forecasting negotiation as art. But mastery peaked with Twitter, joined 2009—platform for cryptic declarations: "Make America Great Again" in 2012, presaging political tides.
 
-Number 3 represents expression, creative prophecy—the herald's energy. Mercury adds wit: truth proclaimed boldly, wisdom in soundbites.`,
+Number 3 represents expression, creative prophecy—the herald's energy. Mercury adds wit: truth proclaimed boldly, wisdom in soundbites. The 31/4 master builder communicates: creative ideas (31) structured into memorable phrases (4).`,
     keyDate: "1987-2015",
-    numerology: "3 = Expression, the communicator who commands",
+    numerology: "3 = Expression, the 31/4 communicator who builds with words",
     color: "from-yellow-500 to-amber-500"
   },
   {
@@ -62,9 +62,9 @@ Number 3 represents expression, creative prophecy—the herald's energy. Mercury
 
 Jamaica Estates home was modest grandeur—Fred's self-made ethos instilling work ethic amid five siblings. From 1946-1964, these sanctuaries blended privilege with rigor, military academy forging resilience.
 
-Number 4 signifies structure, quadrate base upholding all. For Donald, Queens' solidity fueled rises—the square's geometry mirroring disciplined origins birthing towering visions.`,
+Number 4 signifies structure, quadrate base upholding all. For Donald, Queens' solidity fueled rises—the square's geometry mirroring disciplined origins birthing towering visions. The 31/4 foundation: creative dreams (31) requiring structured roots (4) to build empires.`,
     keyDate: "1946-1968",
-    numerology: "4 = Structure, foundation, the roots that anchor towers",
+    numerology: "4 = Structure, the 31/4 master builder's foundational geometry anchoring towers",
     color: "from-amber-600 to-yellow-600"
   },
   {
@@ -78,9 +78,9 @@ Number 4 signifies structure, quadrate base upholding all. For Donald, Queens' s
 
 Atlantic City casinos 1984, risking on glamour. Romances: Ivana (1977-1992), three children; Marla (1993-1999), Tiffany; Melania (2005), Barron. The Apprentice TV 2004, creative risks in reality television.
 
-Number 5 evokes adventure, liberated creation—Leo's blaze in Gemini's wit. Donald wagered brands like stellar bets, showmanship veiling passionate drives.`,
+Number 5 evokes adventure, liberated creation—Leo's blaze in Gemini's wit. Donald wagered brands like stellar bets, showmanship veiling passionate drives. The 31/4 creates: imaginative risks (31) built on calculated structure (4).`,
     keyDate: "1984-2004",
-    numerology: "5 = Creative risk, adventure, the showman's gamble",
+    numerology: "5 = Creative risk, the 31/4 master builder's adventurous gambles",
     color: "from-pink-500 to-rose-500"
   },
   {
@@ -94,9 +94,9 @@ Number 5 evokes adventure, liberated creation—Leo's blaze in Gemini's wit. Don
 
 The daily routine of business: phone calls by 5 AM, deals structured methodically, health (2020 COVID tested). Service in developments, reshaping skylines, creating jobs through projects.
 
-Number 6 mandates devoted harmony, routines as offerings. His work ethic became legendary—organization and deal-making as daily ritual.`,
+Number 6 mandates devoted harmony, routines as offerings. His work ethic became legendary—organization and deal-making as daily ritual. The 31/4 serves: creative vision (31) through disciplined work (4).`,
     keyDate: "1970s-2010s",
-    numerology: "6 = Service, daily work, health and routine",
+    numerology: "6 = Service, the 31/4 builder's daily work ethic and structured routine",
     color: "from-blue-500 to-indigo-500"
   },
   {
@@ -110,9 +110,9 @@ Number 6 mandates devoted harmony, routines as offerings. His work ethic became 
 
 Open enemies: media critics, political opponents, legal challengers. The 7th House asks: Who reflects your energy back? Donald's relationships became battlegrounds and alliances, mirrors of power.
 
-Number 7 whispers mystic ties, intellectual pacts. His partnerships veiled deeper resonances—cooperation and conflict in eternal dance.`,
+Number 7 whispers mystic ties, intellectual pacts. His partnerships veiled deeper resonances—cooperation and conflict in eternal dance. The 31/4 partners: creative alliances (31) built on structured agreements (4).`,
     keyDate: "1977-Present",
-    numerology: "7 = Partnerships, the mirror of allies and enemies",
+    numerology: "7 = Partnerships, the 31/4 builder's mirrors of power and structured alliances",
     color: "from-purple-500 to-violet-500"
   },
   {
@@ -126,9 +126,9 @@ Number 7 whispers mystic ties, intellectual pacts. His partnerships veiled deepe
 
 Using other people's money (OPM), leveraging debt as transformation tool. Each bankruptcy a death, each restructuring a rebirth. The 8th House alchemist turning crisis into opportunity.
 
-The transformation: from real estate to reality TV to politics. Multiple lives, multiple resurrections.`,
+The transformation: from real estate to reality TV to politics. Multiple lives, multiple resurrections. The 31/4 transforms: creative reinvention (31) through structural reorganization (4).`,
     keyDate: "1991-2009",
-    numerology: "8 = Transformation, death and rebirth through power",
+    numerology: "8 = Transformation, the 31/4 builder's death and rebirth through structured power",
     color: "from-slate-700 to-gray-900"
   },
   {
@@ -142,9 +142,9 @@ The transformation: from real estate to reality TV to politics. Multiple lives, 
 
 Political philosophy: "America First" as 9th House doctrine, foreign policy as expansion of influence. Travel: campaigns, summits, golf courses spanning continents.
 
-Number 9 represents universal reach, completion. His 9th House expressed through global presence, philosophical polarization, the businessman-turned-president bridging worlds.`,
+Number 9 represents universal reach, completion. His 9th House expressed through global presence, philosophical polarization, the businessman-turned-president bridging worlds. The 31/4 expands: creative vision (31) building global structures (4).`,
     keyDate: "1980s-Present",
-    numerology: "9 = Global expansion, philosophy, foreign influence",
+    numerology: "9 = Global expansion, the 31/4 builder's worldwide philosophical structures",
     color: "from-teal-500 to-cyan-500"
   },
   {
@@ -158,9 +158,9 @@ Number 9 represents universal reach, completion. His 9th House expressed through
 
 His 10th House achievement: reshaping American politics, disrupting establishment norms, creating a movement that outlasted his term. Love him or hate him, indifference is impossible.
 
-Public image as masterwork—branding perfected, every headline amplified. The tower builder who made his name the tower itself.`,
+Public image as masterwork—branding perfected, every headline amplified. The tower builder who made his name the tower itself. The 31/4 culminates: creative legacy (31) built on structural achievement (4).`,
     keyDate: "2017-2021",
-    numerology: "10/1 = Leadership, new cycles, the pioneer's legacy",
+    numerology: "10/1 = Leadership, the 31/4 master builder's pioneering legacy through structured power",
     color: "from-amber-500 to-yellow-500"
   },
   {
@@ -174,9 +174,9 @@ Public image as masterwork—branding perfected, every headline amplified. The t
 
 Rally crowds, social media following, political base as community. The 11th House vision: restore American greatness, unite forgotten workers, disrupt elite consensus.
 
-Number 11 is master visionary, but inverted: populist rather than spiritual, revolutionary through political upheaval. His humanitarian hope: prosperity for the common American.`,
+Number 11 is master visionary, but inverted: populist rather than spiritual, revolutionary through political upheaval. His humanitarian hope: prosperity for the common American. The 31/4 unites: creative movement (31) built on structural organization (4).`,
     keyDate: "2015-Present",
-    numerology: "11 = Master vision, community as movement",
+    numerology: "11 = Master vision, the 31/4 builder's community as structured movement",
     color: "from-indigo-500 to-purple-500"
   },
   {
@@ -190,9 +190,9 @@ Number 11 is master visionary, but inverted: populist rather than spiritual, rev
 
 Hidden enemies within government, "deep state" narratives. Spirituality expressed through Norman Vincent Peale's positive thinking, confidence as faith. The unconscious revealed through unfiltered tweets, stream-of-consciousness speeches.
 
-The 12th House keeps secrets still being written. What endings? What mysteries? The final chapter remains unwritten.`,
+The 12th House keeps secrets still being written. What endings? What mysteries? The final chapter remains unwritten. The 31/4 mysteries: creative power (31) tested by structured systems (4).`,
     keyDate: "2017-Present",
-    numerology: "12/3 = Hidden wisdom, spiritual tests, karmic completion",
+    numerology: "12/3 = Hidden wisdom, the 31/4 builder's spiritual tests and karmic completion",
     color: "from-violet-600 to-purple-900"
   }
 ];
