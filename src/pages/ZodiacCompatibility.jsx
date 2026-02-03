@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
 import { Loader2, Heart, Briefcase, Users, Zap } from 'lucide-react';
+import { toast } from "sonner";
 
 const ZODIAC_SIGNS = [
   { name: 'Aries', symbol: '♈', element: 'Fire', modality: 'Cardinal' },
@@ -68,6 +69,7 @@ Be insightful, practical, and balanced.`;
       setCompatibility(response);
     } catch (error) {
       console.error('Failed to analyze compatibility:', error);
+      toast.error("Failed to analyze compatibility. Please try again.");
     }
     setLoading(false);
   };
