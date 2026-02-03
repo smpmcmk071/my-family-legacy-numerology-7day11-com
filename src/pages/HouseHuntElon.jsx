@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rocket, Coins, Scroll, Home, Star, Briefcase, Users, Skull, Globe, Crown, Heart, Eye } from 'lucide-react';
+import { Rocket, Coins, Scroll, Home, Star, Briefcase, Users, Skull, Globe, Crown, Eye, Network } from 'lucide-react';
 import HouseStoryViewer from '../components/househunt/HouseStoryViewer';
 
 const ELON_HOUSES = [
@@ -14,9 +14,9 @@ const ELON_HOUSES = [
 
 From the start, his identity mirrored Cancer's crab: the intuitive protector shelling bold visions, versus the hidden dreamer intuiting future waves. He sold his first game, Blastar, at twelve for $500, projecting precocious genius while enduring bullying for his introversion.
 
-By Stanford in 1995 (briefly, before dropping out), Elon's persona crystallized: the visionary entrepreneur who projects audacious confidence while the world mistakes it for madness.`,
+By Stanford in 1995 (briefly, before dropping out), Elon's persona crystallized: the visionary entrepreneur who projects audacious confidence while the world mistakes it for madness. His 34/7 life path—the Intuitive Seeker—was already evident: analytical mind (34) seeking mystical truths (7).`,
     keyDate: "June 28, 1971",
-    numerology: "6+2+8+1+9+7+1 = 34/7 - The Intuitive Seeker",
+    numerology: "6+2+8+1+9+7+1 = 34/7 - The Intuitive Seeker: analytical depth (34) channeling mystical wisdom (7)",
     color: "from-red-500 to-orange-500"
   },
   {
@@ -30,9 +30,9 @@ By Stanford in 1995 (briefly, before dropping out), Elon's persona crystallized:
 
 His early ventures were bold. Zip2, founded 1995, sold for $307 million in 1999. He valued disruption over comfort, reinvesting into X.com, merging into PayPal—sold to eBay in 2002 for $1.5 billion.
 
-For Elon, this wasn't greed—it was fuel. If innovation drove progress, then wealth was the rocket propellant, proving ideas through scale.`,
+For Elon, this wasn't greed—it was fuel. If innovation drove progress, then wealth was the rocket propellant, proving ideas through scale. The 7 path understands: material success serves spiritual mission.`,
     keyDate: "1999-2002",
-    numerology: "2 = Duality, partnerships - merging ventures into PayPal's harmony",
+    numerology: "2 = Duality, partnerships - the 34/7 seeker merging ventures into PayPal's harmony",
     color: "from-green-500 to-emerald-500"
   },
   {
@@ -46,9 +46,9 @@ For Elon, this wasn't greed—it was fuel. If innovation drove progress, then we
 
 In 2000, amid PayPal battles, he communicated vision crisply, forecasting online finance's rise. But mastery came with Twitter (now X), acquired 2022—a platform for cryptic pronouncements: "Doge to the moon?" in 2021, spiking crypto.
 
-Number 3 represents expression, creative prophecy—the messenger's spark. Mercury adds agility: truth tweeted slant, wisdom in memes.`,
+Number 3 represents expression, creative prophecy—the messenger's spark. Mercury adds agility: truth tweeted slant, wisdom in memes. The 34/7 mind speaks in code, analytical precision (34) revealing mystical insights (7).`,
     keyDate: "2021-2022",
-    numerology: "3 = Expression, the herald who disrupts with words",
+    numerology: "3 = Expression, the 34/7 herald who disrupts with coded wisdom",
     color: "from-yellow-500 to-amber-500"
   },
   {
@@ -62,9 +62,9 @@ Number 3 represents expression, creative prophecy—the messenger's spark. Mercu
 
 Errol's engineering legacy and Maye's resilience formed modest altars, divorce at nine instilling self-reliance. From 1971-1989, these havens blended adventure with strife, South African ties echoing in bold risks.
 
-Cancer's shell protected visionary core. The square's geometry mirrored disciplined origins birthing infinite orbits.`,
+Cancer's shell protected visionary core. The square's geometry mirrored disciplined origins birthing infinite orbits. The 34/7 foundation: analytical structure (4) supporting intuitive flight (7).`,
     keyDate: "1971-1989",
-    numerology: "4 = Structure, the quadrate base fueling expansion",
+    numerology: "4 = Structure, the 34/7 quadrate base fueling spiritual expansion",
     color: "from-amber-600 to-yellow-600"
   },
   {
@@ -110,9 +110,9 @@ Number 6 mandates devoted harmony, routines as offerings. His daily grind became
 
 Rivals: Legacy auto giants, short-sellers, media critics. But fruitful tensions—competition as fuel for innovation.
 
-Number 7 whispers mystic ties, intellectual pacts. His partnerships reflected duality: collaboration and controversy, allies who mirror his vision.`,
+Number 7 whispers mystic ties, intellectual pacts. His partnerships reflected duality: collaboration and controversy, allies who mirror his vision. The 34/7 path makes 7 doubly significant—partnerships as spiritual mirrors reflecting the seeker's quest.`,
     keyDate: "2000-Present",
-    numerology: "7 = Partnerships as mirrors, allies and adversaries",
+    numerology: "7 = Partnerships as spiritual mirrors, doubly resonant with 34/7 life path",
     color: "from-purple-500 to-violet-500"
   },
   {
@@ -126,9 +126,9 @@ Number 7 whispers mystic ties, intellectual pacts. His partnerships reflected du
 
 Bankruptcy brushes: Tesla near-death 2008, SpaceX's three failed launches before the fourth succeeded. Each near-death birthed resurrection. Funding through investor capital, government contracts—other people's resources fueling revolutionary transformations.
 
-The 8th House transformation: killing fossil fuel dependency, traditional space industry, old Twitter. Phoenix rising from ashes, repeatedly.`,
+The 8th House transformation: killing fossil fuel dependency, traditional space industry, old Twitter. Phoenix rising from ashes, repeatedly. The 34/7 transforms through analytical insight (34) channeling mystical rebirth (7).`,
     keyDate: "2008",
-    numerology: "8 = Transformation, death and rebirth of industries",
+    numerology: "8 = Transformation, the 34/7 seeker's death and rebirth of industries",
     color: "from-slate-700 to-gray-900"
   },
   {
@@ -142,9 +142,9 @@ The 8th House transformation: killing fossil fuel dependency, traditional space 
 
 From South Africa to Canada to America to Mars (aspirationally)—his philosophy transcends borders. SpaceX missions, Starship development, Mars colonization plans. The 9th House philosopher-king who believes life must expand beyond one planet.
 
-Higher learning through first principles thinking. Foreign lands become foreign worlds. The ultimate 9th House expression.`,
+Higher learning through first principles thinking. Foreign lands become foreign worlds. The ultimate 9th House expression. The 34/7 seeker's philosophy: analytical rigor (34) pursuing cosmic wisdom (7).`,
     keyDate: "2002-Present",
-    numerology: "9 = Universal expansion, wisdom, foreign horizons",
+    numerology: "9 = Universal expansion, the 34/7 seeker's wisdom across foreign horizons",
     color: "from-teal-500 to-cyan-500"
   },
   {
@@ -164,6 +164,24 @@ His public image is polarizing by design—Cancer's protective shell versus Gemi
     color: "from-amber-500 to-yellow-500"
   },
   {
+    house: 11,
+    name: "House of Community",
+    icon: Network,
+    theme: "Groups, Friends & Humanitarian Vision",
+    ruler: "Uranus / Saturn",
+    storyTitle: "The Visionary Collective",
+    content: `The 11th House governs future-oriented communities, humanitarian ideals, and collective consciousness. For Elon, whose 34/7 life path embodies intuitive seeking and mystical vision, this house manifests as technological communities serving humanity's evolution.
+
+Tesla's mission: accelerating sustainable energy transition—not just selling cars, but igniting a movement. SpaceX's vision: making life multiplanetary—humanity's backup plan, collective survival. Neuralink: merging human consciousness with AI, the ultimate 7 path mysticism through technology.
+
+His community isn't traditional—it's Twitter/X followers, Tesla enthusiasts, SpaceX fans, the collective hivemind he cultivates through memes and vision. The 7 Life Path's spiritual seeking expressed through technological salvation, intuition channeled into innovation.
+
+Number 11 in numerology represents the master visionary, the illuminator. For Elon's 34/7 path, House 11 is where intuitive wisdom meets collective action—the seeker who transforms humanity's trajectory through shared technological awakening.`,
+    keyDate: "2003-Present",
+    numerology: "11 = Master visionary, humanitarian technology, collective awakening aligned with 34/7 intuitive seeking",
+    color: "from-indigo-500 to-purple-500"
+  },
+  {
     house: 12,
     name: "House of Secrets",
     icon: Eye,
@@ -174,9 +192,9 @@ His public image is polarizing by design—Cancer's protective shell versus Gemi
 
 Hidden enemies: regulators, competitors, media. But also hidden spirituality: "We're probably in a simulation" philosophy, DMT experiences mentioned, the 7 Life Path's mystical seeking behind the engineer's mask.
 
-The 12th House secret: beneath the rockets and memes lies a seeker questioning reality's source code, a Cancer intuitive masking existential wonder with technological ambition.`,
+The 12th House secret: beneath the rockets and memes lies a seeker questioning reality's source code, a Cancer intuitive masking existential wonder with technological ambition. The 34/7 culmination: analytical mind (34) dissolving into mystical union (7).`,
     keyDate: "Present",
-    numerology: "12/3 = The sacrifice, hidden wisdom, spiritual completion",
+    numerology: "12/3 = The sacrifice, the 34/7 seeker's hidden wisdom and spiritual completion",
     color: "from-violet-600 to-purple-900"
   }
 ];
