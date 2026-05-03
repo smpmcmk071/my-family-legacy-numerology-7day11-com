@@ -1,8 +1,7 @@
 # Base44 App
 Copyright (c) 2026 Stephen Paul Maher
 
-Permission is hereby granted, free of charge, to any person obtaining a copy...
-[standard MIT text]
+Permission is hereby granted, free of charge, to any person obtaining a copy.
 
 ---
 
