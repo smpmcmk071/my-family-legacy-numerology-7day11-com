@@ -1,0 +1,194 @@
+{
+  "name": "DateNumerology",
+  "type": "object",
+  "properties": {
+    "greg_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Gregorian date"
+    },
+    "greg_day": {
+      "type": "integer",
+      "description": "Gregorian day"
+    },
+    "greg_month": {
+      "type": "integer",
+      "description": "Gregorian month"
+    },
+    "greg_year": {
+      "type": "integer",
+      "description": "Gregorian year"
+    },
+    "day_vibe": {
+      "type": "integer",
+      "description": "Day reduced to single digit"
+    },
+    "month_vibe": {
+      "type": "integer",
+      "description": "Month reduced to single digit"
+    },
+    "year_vibe": {
+      "type": "integer",
+      "description": "Year reduced to single digit"
+    },
+    "day_month_eastern": {
+      "type": "string",
+      "description": "Day+Month eastern calculation"
+    },
+    "day_month_reverse": {
+      "type": "string",
+      "description": "Day+Month reverse calculation"
+    },
+    "day_month_western": {
+      "type": "string",
+      "description": "Day+Month western calculation"
+    },
+    "full_date_eastern": {
+      "type": "string",
+      "description": "Full date eastern method (reduced components then sum)"
+    },
+    "full_date_reverse": {
+      "type": "string",
+      "description": "Full date reverse method"
+    },
+    "full_date_western": {
+      "type": "string",
+      "description": "Full date western method (sum all digits)"
+    },
+    "full_date_vibe_eastern": {
+      "type": "string",
+      "description": "Final vibe from eastern method"
+    },
+    "full_date_vibe_western": {
+      "type": "string",
+      "description": "Final vibe from western method"
+    },
+    "full_date_vibe_reverse_eastern": {
+      "type": "string",
+      "description": "Reverse vibe eastern"
+    },
+    "full_date_vibe_reverse_western": {
+      "type": "string",
+      "description": "Reverse vibe western"
+    },
+    "greg_method_differs": {
+      "type": "boolean",
+      "description": "Whether eastern and western methods give different results"
+    },
+    "greg_reverse_equals_eastern_dm": {
+      "type": "boolean",
+      "description": "Whether reverse equals eastern for day/month"
+    },
+    "greg_reverse_equals_eastern_full": {
+      "type": "boolean",
+      "description": "Whether reverse equals eastern for full date"
+    },
+    "hebrew_date": {
+      "type": "string",
+      "description": "Hebrew calendar date string"
+    },
+    "hebrew_day": {
+      "type": "integer",
+      "description": "Hebrew day"
+    },
+    "hebrew_month": {
+      "type": "integer",
+      "description": "Hebrew month"
+    },
+    "hebrew_year": {
+      "type": "integer",
+      "description": "Hebrew year"
+    },
+    "hebrew_day_vibe": {
+      "type": "integer",
+      "description": "Hebrew day vibe"
+    },
+    "hebrew_month_vibe": {
+      "type": "integer",
+      "description": "Hebrew month vibe"
+    },
+    "hebrew_year_vibe": {
+      "type": "integer",
+      "description": "Hebrew year vibe"
+    },
+    "hebrew_day_month_eastern": {
+      "type": "string",
+      "description": "Hebrew day+month eastern"
+    },
+    "hebrew_day_month_reverse": {
+      "type": "string",
+      "description": "Hebrew day+month reverse"
+    },
+    "hebrew_day_month_western": {
+      "type": "string",
+      "description": "Hebrew day+month western"
+    },
+    "hebrew_full_date_eastern": {
+      "type": "string",
+      "description": "Hebrew full date eastern"
+    },
+    "hebrew_full_date_reverse": {
+      "type": "string",
+      "description": "Hebrew full date reverse"
+    },
+    "hebrew_full_date_western": {
+      "type": "string",
+      "description": "Hebrew full date western"
+    },
+    "hebrew_full_date_vibe_eastern": {
+      "type": "string",
+      "description": "Hebrew full date vibe eastern"
+    },
+    "hebrew_full_date_vibe_western": {
+      "type": "string",
+      "description": "Hebrew full date vibe western"
+    },
+    "hebrew_full_date_vibe_reverse_eastern": {
+      "type": "string",
+      "description": "Hebrew reverse vibe eastern"
+    },
+    "hebrew_full_date_vibe_reverse_western": {
+      "type": "string",
+      "description": "Hebrew reverse vibe western"
+    },
+    "heb_method_differs": {
+      "type": "boolean",
+      "description": "Whether Hebrew eastern and western differ"
+    },
+    "heb_reverse_equals_eastern_dm": {
+      "type": "boolean",
+      "description": "Hebrew reverse equals eastern day/month"
+    },
+    "heb_reverse_equals_eastern_full": {
+      "type": "boolean",
+      "description": "Hebrew reverse equals eastern full"
+    },
+    "has_master_number": {
+      "type": "string",
+      "description": "Comma-separated master numbers found (11,22,33)"
+    },
+    "master_locations": {
+      "type": "string",
+      "description": "Where master numbers appear (day:11; eastern:22)"
+    },
+    "hebrew_holiday_alert": {
+      "type": "string",
+      "description": "Hebrew holiday if applicable"
+    },
+    "shemitah_year_position": {
+      "type": "integer",
+      "description": "Position in 7-year Shemitah cycle (1-7)"
+    },
+    "shemitah_alert": {
+      "type": "string",
+      "description": "Shemitah alert message"
+    },
+    "combined_signal": {
+      "type": "string",
+      "description": "Combined energy signal for games"
+    }
+  },
+  "required": [
+    "greg_date"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "name": "BirthTimeTraits",
+  "type": "object",
+  "properties": {
+    "time_period": {
+      "type": "string",
+      "enum": [
+        "morning",
+        "midday",
+        "evening",
+        "night",
+        "dawn",
+        "noon",
+        "dusk",
+        "midnight"
+      ],
+      "description": "Name of the time period"
+    },
+    "time_range": {
+      "type": "string",
+      "description": "Time range (e.g., 06:00-12:00)"
+    },
+    "numerology_influence": {
+      "type": "integer",
+      "description": "Associated numerology number (1, 5, 7, 9, 11, 22, 33, 4)"
+    },
+    "general_traits": {
+      "type": "string",
+      "description": "General traits and energy of this birth time"
+    },
+    "personality_influence": {
+      "type": "string",
+      "description": "How this birth time influences personality"
+    },
+    "energy_pattern": {
+      "type": "string",
+      "description": "Energy patterns throughout the day"
+    },
+    "best_activities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Best activities for people born at this time"
+    },
+    "life_approach": {
+      "type": "string",
+      "description": "General life approach and philosophy"
+    }
+  },
+  "required": [
+    "time_period",
+    "time_range",
+    "numerology_influence"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "NumerologyCard",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name/word on the card"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "biblical",
+        "historical",
+        "family",
+        "rock",
+        "classical",
+        "sports",
+        "f1"
+      ],
+      "description": "Category of the card"
+    },
+    "raw_value": {
+      "type": "integer",
+      "description": "Raw Pythagorean total before reduction"
+    },
+    "reduced_value": {
+      "type": "integer",
+      "description": "Reduced to single digit or master number"
+    },
+    "short_bio": {
+      "type": "string",
+      "description": "Brief description of the person"
+    },
+    "numerology_insight": {
+      "type": "string",
+      "description": "How their number shaped who they were"
+    },
+    "birth_date": {
+      "type": "string",
+      "description": "Birth date if known (YYYY-MM-DD or partial)"
+    },
+    "life_path": {
+      "type": "integer",
+      "description": "Life path number if birth date known"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "raw_value",
+    "reduced_value"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "name": "SharedExperience",
+  "type": "object",
+  "properties": {
+    "user_name": {
+      "type": "string",
+      "description": "Display name (can be anonymous)"
+    },
+    "experience_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the experience"
+    },
+    "universal_day_number": {
+      "type": "integer",
+      "description": "Universal day number for this experience"
+    },
+    "personal_day_number": {
+      "type": "integer",
+      "description": "Personal day number if applicable"
+    },
+    "life_path_number": {
+      "type": "integer",
+      "description": "User's life path number"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the experience"
+    },
+    "content": {
+      "type": "string",
+      "description": "Description of the experience"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "insight",
+        "synchronicity",
+        "manifestation",
+        "challenge",
+        "breakthrough",
+        "other"
+      ],
+      "description": "Category of experience"
+    },
+    "is_anonymous": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to hide user identity"
+    },
+    "likes_count": {
+      "type": "integer",
+      "default": 0,
+      "description": "Number of likes"
+    },
+    "family_id": {
+      "type": "string",
+      "description": "Family group identifier"
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "category"
+  ]
+}

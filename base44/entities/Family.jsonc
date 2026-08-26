@@ -1,0 +1,55 @@
+{
+  "name": "Family",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Family name (e.g., Maher Family)"
+    },
+    "admin_email": {
+      "type": "string",
+      "description": "Email of family admin"
+    },
+    "description": {
+      "type": "string",
+      "description": "Family description or motto"
+    },
+    "invite_code": {
+      "type": "string",
+      "description": "Simple invite code for family members to join (e.g., MAHER123)"
+    },
+    "member_limit": {
+      "type": "integer",
+      "default": 5,
+      "description": "Maximum number of family members allowed (5 free, +4 per $33)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "enable_battle": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable Numerology Battle game"
+    },
+    "enable_blackjack": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable Numerology Blackjack game"
+    },
+    "enable_community": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable Community features"
+    },
+    "enable_calendar": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable Calendar features"
+    }
+  },
+  "required": [
+    "name",
+    "admin_email"
+  ]
+}

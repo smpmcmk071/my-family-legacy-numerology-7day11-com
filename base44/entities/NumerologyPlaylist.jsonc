@@ -1,0 +1,66 @@
+{
+  "name": "NumerologyPlaylist",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Playlist title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the playlist theme"
+    },
+    "target_numbers": {
+      "type": "string",
+      "description": "Comma-separated numbers this playlist is for (e.g., '1,8' for leadership days)"
+    },
+    "theme_type": {
+      "type": "string",
+      "enum": [
+        "creativity",
+        "abundance",
+        "love",
+        "career",
+        "spiritual",
+        "health",
+        "family",
+        "general"
+      ],
+      "description": "Theme category"
+    },
+    "activities": {
+      "type": "string",
+      "description": "Recommended activities for this theme"
+    },
+    "affirmations": {
+      "type": "string",
+      "description": "Affirmations for this theme"
+    },
+    "colors": {
+      "type": "string",
+      "description": "Recommended colors to wear/use"
+    },
+    "crystals": {
+      "type": "string",
+      "description": "Recommended crystals"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to share with community"
+    },
+    "likes_count": {
+      "type": "integer",
+      "default": 0,
+      "description": "Number of likes"
+    },
+    "family_id": {
+      "type": "string",
+      "description": "Family group identifier"
+    }
+  },
+  "required": [
+    "title",
+    "theme_type"
+  ]
+}

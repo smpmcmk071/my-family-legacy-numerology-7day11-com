@@ -1,0 +1,57 @@
+{
+  "name": "CalendarEvent",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User ID who owns this event"
+    },
+    "family_member_id": {
+      "type": "string",
+      "description": "Associated family member ID"
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the event"
+    },
+    "event_title": {
+      "type": "string",
+      "description": "Title of the event"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "birthday",
+        "anniversary",
+        "holiday",
+        "personal",
+        "family",
+        "work",
+        "spiritual",
+        "game"
+      ],
+      "description": "Type of calendar event"
+    },
+    "universal_day_number": {
+      "type": "integer",
+      "description": "Universal day number for this date (1-9)"
+    },
+    "personal_day_number": {
+      "type": "integer",
+      "description": "Personal day number based on life path"
+    },
+    "vibe_summary": {
+      "type": "string",
+      "description": "Summary of the day's numerological vibe"
+    },
+    "recommendations": {
+      "type": "string",
+      "description": "Recommendations for activities on this day"
+    }
+  },
+  "required": [
+    "event_date",
+    "event_title"
+  ]
+}

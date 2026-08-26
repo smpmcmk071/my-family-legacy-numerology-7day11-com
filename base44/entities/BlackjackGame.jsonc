@@ -1,0 +1,71 @@
+{
+  "name": "BlackjackGame",
+  "type": "object",
+  "properties": {
+    "player_email": {
+      "type": "string",
+      "description": "Email of the player"
+    },
+    "family_id": {
+      "type": "string",
+      "description": "Family ID for co-op/tournament modes"
+    },
+    "game_mode": {
+      "type": "string",
+      "enum": [
+        "solo",
+        "tournament",
+        "coop"
+      ],
+      "default": "solo"
+    },
+    "bet_amount": {
+      "type": "integer",
+      "default": 0
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "win",
+        "lose",
+        "push",
+        "bust",
+        "dealerBust",
+        "blackjack"
+      ]
+    },
+    "payout": {
+      "type": "integer",
+      "default": 0
+    },
+    "player_total": {
+      "type": "integer"
+    },
+    "dealer_total": {
+      "type": "integer"
+    },
+    "player_cards": {
+      "type": "string",
+      "description": "JSON array of card names"
+    },
+    "dealer_cards": {
+      "type": "string",
+      "description": "JSON array of card names"
+    },
+    "deck_category": {
+      "type": "string"
+    },
+    "coop_partner_email": {
+      "type": "string",
+      "description": "Partner email for co-op games"
+    },
+    "tournament_id": {
+      "type": "string",
+      "description": "Tournament identifier"
+    }
+  },
+  "required": [
+    "player_email",
+    "result"
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "name": "FamilyMember",
+  "type": "object",
+  "properties": {
+    "family_id": {
+      "type": "string",
+      "description": "Family group identifier"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Full name of family member"
+    },
+    "nickname": {
+      "type": "string",
+      "description": "Display name or nickname"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address (display only, may be masked)"
+    },
+    "email_encrypted": {
+      "type": "string",
+      "description": "Encrypted email address"
+    },
+    "birth_date": {
+      "type": "string",
+      "description": "Date of birth display (may be masked as month/day only)"
+    },
+    "birth_date_encrypted": {
+      "type": "string",
+      "description": "Encrypted full birth date"
+    },
+    "birth_time": {
+      "type": "string",
+      "description": "Time of birth display (may be masked)"
+    },
+    "birth_time_encrypted": {
+      "type": "string",
+      "description": "Encrypted birth time"
+    },
+    "birth_place": {
+      "type": "string",
+      "description": "Place of birth display (may be masked as state/country only)"
+    },
+    "birth_place_encrypted": {
+      "type": "string",
+      "description": "Encrypted full birth place"
+    },
+    "birth_latitude": {
+      "type": "number",
+      "description": "Birth location latitude"
+    },
+    "birth_longitude": {
+      "type": "number",
+      "description": "Birth location longitude"
+    },
+    "relationship": {
+      "type": "string",
+      "enum": [
+        "great-great-great-grandparent",
+        "great-great-grandparent",
+        "great-grandparent",
+        "grandparent",
+        "parent",
+        "uncle",
+        "aunt",
+        "sibling",
+        "child",
+        "cousin",
+        "spouse",
+        "self"
+      ],
+      "description": "Relationship to primary user"
+    },
+    "generation": {
+      "type": "integer",
+      "description": "Generation number (1=oldest, 4=youngest)"
+    },
+    "display_order": {
+      "type": "integer",
+      "description": "Display order within the family tree"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "Profile photo URL"
+    },
+    "is_admin": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this member has admin access to manage data"
+    },
+    "life_path_western": {
+      "type": "integer",
+      "description": "Life Path number (Western method)"
+    },
+    "life_path_chaldean": {
+      "type": "integer",
+      "description": "Life Path number (Chaldean/Eastern method)"
+    },
+    "life_path_master": {
+      "type": "string",
+      "description": "Life Path with master number notation"
+    },
+    "birthday_vibe": {
+      "type": "string",
+      "description": "Birthday vibe display (e.g., 25/7)"
+    },
+    "birthday_number": {
+      "type": "integer",
+      "description": "Birthday number (day reduced)"
+    },
+    "birthday_month_number": {
+      "type": "integer",
+      "description": "Birth month reduced"
+    },
+    "expression_western": {
+      "type": "integer",
+      "description": "Expression/Destiny number (Western)"
+    },
+    "expression_chaldean": {
+      "type": "integer",
+      "description": "Expression/Destiny number (Chaldean)"
+    },
+    "expression_master": {
+      "type": "string",
+      "description": "Expression with master number notation"
+    },
+    "soul_urge_western": {
+      "type": "integer",
+      "description": "Soul Urge/Heart's Desire number (Western)"
+    },
+    "soul_urge_chaldean": {
+      "type": "integer",
+      "description": "Soul Urge/Heart's Desire number (Chaldean)"
+    },
+    "soul_urge_master": {
+      "type": "string",
+      "description": "Soul Urge with master number notation"
+    },
+    "personality_western": {
+      "type": "integer",
+      "description": "Personality number (Western)"
+    },
+    "personality_chaldean": {
+      "type": "integer",
+      "description": "Personality number (Chaldean)"
+    },
+    "personality_master": {
+      "type": "string",
+      "description": "Personality with master number notation"
+    },
+    "karmic_debt_number": {
+      "type": "string",
+      "description": "Karmic debt numbers if any (13, 14, 16, 19)"
+    },
+    "karmic_lessons": {
+      "type": "string",
+      "description": "Karmic lessons - missing numbers 1-9 in name"
+    },
+    "life_purpose": {
+      "type": "integer",
+      "description": "Life purpose number (same as destiny/expression)"
+    },
+    "master_numbers": {
+      "type": "string",
+      "description": "Comma-separated list of master numbers found"
+    },
+    "sun_sign": {
+      "type": "string",
+      "description": "Astrological sun sign"
+    },
+    "moon_sign": {
+      "type": "string",
+      "description": "Astrological moon sign"
+    },
+    "ascendant": {
+      "type": "string",
+      "description": "Ascendant/Rising sign"
+    },
+    "ascendant_degree": {
+      "type": "integer",
+      "description": "Degree of ascendant within sign"
+    },
+    "big_three": {
+      "type": "string",
+      "description": "Sun/Moon/Rising combination"
+    },
+    "zodiac_sign": {
+      "type": "string",
+      "description": "Zodiac sign"
+    },
+    "ruling_planet": {
+      "type": "string",
+      "description": "Ruling planet"
+    },
+    "element": {
+      "type": "string",
+      "enum": [
+        "Fire",
+        "Earth",
+        "Air",
+        "Water"
+      ],
+      "description": "Primary zodiac element (from sun sign)"
+    },
+    "secondary_element": {
+      "type": "string",
+      "enum": [
+        "Fire",
+        "Earth",
+        "Air",
+        "Water"
+      ],
+      "description": "Secondary element (from life path number)"
+    },
+    "dominant_element": {
+      "type": "string",
+      "enum": [
+        "Fire",
+        "Earth",
+        "Air",
+        "Water"
+      ],
+      "description": "Dominant element from Sun/Moon/Rising"
+    },
+    "dominant_modality": {
+      "type": "string",
+      "enum": [
+        "Cardinal",
+        "Fixed",
+        "Mutable"
+      ],
+      "description": "Dominant modality from Sun/Moon/Rising"
+    },
+    "modality": {
+      "type": "string",
+      "enum": [
+        "Cardinal",
+        "Fixed",
+        "Mutable"
+      ],
+      "description": "Zodiac modality"
+    },
+    "strengths": {
+      "type": "string",
+      "description": "Key strengths"
+    },
+    "weaknesses": {
+      "type": "string",
+      "description": "Key weaknesses/challenges"
+    },
+    "pythagorean_total": {
+      "type": "integer",
+      "description": "Pythagorean name total"
+    },
+    "chaldean_total": {
+      "type": "integer",
+      "description": "Chaldean name total"
+    },
+    "gematria_total": {
+      "type": "integer",
+      "description": "Hebrew Gematria total"
+    },
+    "opt_in_community": {
+      "type": "boolean",
+      "default": false,
+      "description": "Opted into community features"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether member is active"
+    }
+  },
+  "required": [
+    "family_id",
+    "full_name"
+  ]
+}

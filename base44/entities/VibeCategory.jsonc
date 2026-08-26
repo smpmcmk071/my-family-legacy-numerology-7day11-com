@@ -1,0 +1,45 @@
+{
+  "name": "VibeCategory",
+  "type": "object",
+  "properties": {
+    "category_name": {
+      "type": "string",
+      "enum": [
+        "general",
+        "love",
+        "business",
+        "finance",
+        "family",
+        "work",
+        "health",
+        "spiritual",
+        "creativity",
+        "communication",
+        "leadership",
+        "wisdom",
+        "emotions",
+        "social",
+        "personal_growth",
+        "abundance"
+      ],
+      "description": "Name of the vibe category"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of this category"
+    },
+    "display_order": {
+      "type": "integer",
+      "description": "Order for display purposes"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this category is active"
+    }
+  },
+  "required": [
+    "category_name",
+    "description"
+  ]
+}

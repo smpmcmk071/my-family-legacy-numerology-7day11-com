@@ -1,0 +1,63 @@
+{
+  "name": "NumerologyVibe",
+  "type": "object",
+  "properties": {
+    "number": {
+      "type": "integer",
+      "description": "The numerology number (1-9, 11, 22, 33)"
+    },
+    "vibe_type": {
+      "type": "string",
+      "enum": [
+        "general",
+        "love",
+        "business",
+        "finance",
+        "family",
+        "work",
+        "health",
+        "spiritual",
+        "creativity",
+        "communication",
+        "leadership",
+        "wisdom",
+        "emotions",
+        "social",
+        "personal_growth",
+        "abundance"
+      ],
+      "description": "Category of the vibe"
+    },
+    "hebrew_name": {
+      "type": "string",
+      "description": "Hebrew letter name (Aleph, Bet, Gimel, etc.)"
+    },
+    "hebrew_letter": {
+      "type": "string",
+      "description": "Hebrew letter character"
+    },
+    "tribe_association": {
+      "type": "string",
+      "description": "Associated tribe of Israel"
+    },
+    "vibe_text": {
+      "type": "string",
+      "description": "Full vibe description text"
+    },
+    "energy_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "very-high"
+      ],
+      "description": "Energy level for this vibe"
+    }
+  },
+  "required": [
+    "number",
+    "vibe_type",
+    "vibe_text"
+  ]
+}

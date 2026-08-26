@@ -1,0 +1,12 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "premium_calendar": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has access to premium calendar predictions feature"
+    }
+  },
+  "required": []
+}
