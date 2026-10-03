@@ -2,15 +2,9 @@ import React from 'react';
 import { Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// Only master-number 11 cards act as flexible aces (11 or 1) for blackjack.
+// Only cards whose stored reduced_value is a true master-number 11 act as flexible aces (11 or 1).
 // These are rare enough to feel special; all other cards use their reduced value (1–9).
-const isAce = (card) => {
-  let num = card.reduced_value || card.raw_value || 5;
-  while (num > 9) {
-    num = String(num).split('').reduce((a, b) => a + parseInt(b), 0);
-  }
-  return num === 11;
-};
+const isAce = (card) => card.reduced_value === 11;
 
 const getGameValue = (card) => {
   let num = card.reduced_value || card.raw_value || 5;
