@@ -172,8 +172,14 @@ export default function FamilyLegacy() {
               <Printer className="w-4 h-4 mr-2" />
               Print
             </Button>
-            <Button 
-              variant="outline" 
+            <Link to={createPageUrl('FamilyMasterNumberMap')}>
+              <Button variant="outline">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Master Number Map
+              </Button>
+            </Link>
+            <Button
+              variant="outline"
               onClick={() => setEditMode(!editMode)}
               className={editMode ? 'bg-amber-100' : ''}
             >

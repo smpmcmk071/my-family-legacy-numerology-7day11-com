@@ -58,6 +58,7 @@ import CalendarEvents from './pages/CalendarEvents';
 import ChristianLegacy from './pages/ChristianLegacy';
 import Community from './pages/Community';
 import FamilyLegacy from './pages/FamilyLegacy';
+import FamilyMasterNumberMap from './pages/FamilyMasterNumberMap';
 import FamilyTree from './pages/FamilyTree';
 import Games from './pages/Games';
 import GenealogyResearch from './pages/GenealogyResearch';
@@ -109,6 +110,7 @@ export const PAGES = {
     "ChristianLegacy": ChristianLegacy,
     "Community": Community,
     "FamilyLegacy": FamilyLegacy,
+    "FamilyMasterNumberMap": FamilyMasterNumberMap,
     "FamilyTree": FamilyTree,
     "Games": Games,
     "GenealogyResearch": GenealogyResearch,
