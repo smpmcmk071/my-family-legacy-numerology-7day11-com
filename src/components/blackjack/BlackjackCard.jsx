@@ -65,6 +65,9 @@ export default function BlackjackCard({ card, faceDown = false, index = 0, isNew
   const gameVal = getGameValue(card);
   const rawVal = card.raw_value || 0;
   const reducedVal = card.reduced_value || gameVal;
+  const ace = isAce(card);
+  const displayVal = ace ? 'A' : gameVal;
+  const cornerVal = ace ? 11 : gameVal;
 
   return (
     <motion.div
@@ -108,9 +111,9 @@ export default function BlackjackCard({ card, faceDown = false, index = 0, isNew
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.3, type: "spring" }}
-              className="text-2xl font-bold text-purple-900 text-center"
+              className={`text-2xl font-bold text-center ${ace ? 'text-rose-700' : 'text-purple-900'}`}
             >
-              {gameVal}
+              {displayVal}
             </motion.div>
             <div className="flex-1 flex items-center justify-center">
               <p className="text-xs text-center text-purple-800 font-semibold px-1 leading-tight">
@@ -118,7 +121,7 @@ export default function BlackjackCard({ card, faceDown = false, index = 0, isNew
               </p>
             </div>
             <div className="text-[10px] text-center text-purple-500">
-              {rawVal}/{reducedVal}{reducedVal !== gameVal ? `→${gameVal}` : ''}
+              {rawVal}/{reducedVal}{ace ? `→${cornerVal}` : (reducedVal !== gameVal ? `→${gameVal}` : '')}
             </div>
             <div className="text-xs text-center text-purple-600 capitalize">{card.category}</div>
           </div>
