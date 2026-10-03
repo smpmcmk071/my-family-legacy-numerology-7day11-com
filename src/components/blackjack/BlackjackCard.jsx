@@ -2,12 +2,63 @@ import React from 'react';
 import { Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+// Cards whose reduced value is 2 act as flexible aces (11 or 1) for blackjack.
+// All other cards use their reduced value (1–9).
+const isAce = (card) => {
+  let num = card.reduced_value || card.raw_value || 5;
+  while (num > 9) {
+    num = String(num).split('').reduce((a, b) => a + parseInt(b), 0);
+  }
+  return num === 2;
+};
+
 const getGameValue = (card) => {
   let num = card.reduced_value || card.raw_value || 5;
   while (num > 9) {
     num = String(num).split('').reduce((a, b) => a + parseInt(b), 0);
   }
   return num;
+};
+
+// Compute the best total for a hand, treating aces as 11 then downgrading to 1 to avoid busts.
+const getHandTotal = (hand) => {
+  let total = 0;
+  let aces = 0;
+  for (const card of hand) {
+    if (isAce(card)) {
+      aces += 1;
+      total += 11;
+    } else {
+      total += getGameValue(card);
+    }
+  }
+  while (total > 21 && aces > 0) {
+    total -= 10;
+    aces -= 1;
+  }
+  return total;
+};
+
+// True if a hand's total was achieved without any ace-downgrade (used for soft-17 dealer rule).
+const isSoft = (hand) => {
+  let total = 0;
+  let aces = 0;
+  for (const card of hand) {
+    if (isAce(card)) {
+      aces += 1;
+      total += 11;
+    } else {
+      total += getGameValue(card);
+    }
+  }
+  // If no downgrade was needed, it's soft
+  let workingAces = aces;
+  let workingTotal = total;
+  while (workingTotal > 21 && workingAces > 0) {
+    workingTotal -= 10;
+    workingAces -= 1;
+  }
+  return workingAces > 0 && workingTotal <= 21;
 };
 
 export default function BlackjackCard({ card, faceDown = false, index = 0, isNew = false, isWinning = false }) {
@@ -77,4 +128,4 @@ export default function BlackjackCard({ card, faceDown = false, index = 0, isNew
   );
 }
 
-export { getGameValue };
+export { getGameValue, getHandTotal, isAce, isSoft };

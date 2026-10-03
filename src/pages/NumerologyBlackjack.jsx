@@ -10,13 +10,13 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import BlackjackCard, { getGameValue } from '../components/blackjack/BlackjackCard';
+import BlackjackCard, { getGameValue, getHandTotal, isAce, isSoft } from '../components/blackjack/BlackjackCard';
 import BettingPanel from '../components/blackjack/BettingPanel';
 import GameHistory from '../components/blackjack/GameHistory';
 import Leaderboard from '../components/blackjack/Leaderboard';
 import ResultAnimation from '../components/blackjack/ResultAnimation';
 import CoopMode from '../components/blackjack/CoopMode';
-import { STARTING_BALANCE, BLACKJACK_MULTIPLIER, MINIMUM_BET } from '@/constants/blackjackConstants';
+import { STARTING_BALANCE, BLACKJACK_MULTIPLIER, MINIMUM_BET, RESHUFFLE_THRESHOLD, NATURAL_TARGET, DEALER_STAND } from '@/constants/blackjackConstants';
 
 export default function NumerologyBlackjack() {
   const [user, setUser] = useState(null);
@@ -118,9 +118,9 @@ export default function NumerologyBlackjack() {
     setShowBankruptcyDialog(false);
   };
 
-  const getPlayerTotal = () => playerHand.reduce((sum, card) => sum + getGameValue(card), 0);
-  const getDealerTotal = () => dealerHand.reduce((sum, card) => sum + getGameValue(card), 0);
-  const getPartnerTotal = () => partnerHand.reduce((sum, card) => sum + getGameValue(card), 0);
+  const getPlayerTotal = () => getHandTotal(playerHand);
+  const getDealerTotal = () => getHandTotal(dealerHand);
+  const getPartnerTotal = () => getHandTotal(partnerHand);
 
   const shuffleDeck = (cards) => {
     const shuffled = [...cards];
@@ -129,6 +129,19 @@ export default function NumerologyBlackjack() {
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
+  };
+
+  // Build (or rebuild) the running shoe when empty or too low
+  const ensureShoe = () => {
+    if (deck.length >= RESHUFFLE_THRESHOLD) return deck;
+    let cardsToUse = allCards;
+    if (selectedCategory !== 'all') {
+      cardsToUse = allCards.filter(c => c.category === selectedCategory);
+    }
+    // Use two copies of the deck so the shoe lasts several hands
+    const shoe = shuffleDeck([...cardsToUse, ...cardsToUse]);
+    setDeck(shoe);
+    return shoe;
   };
 
   const startGame = () => {
@@ -157,19 +170,17 @@ export default function NumerologyBlackjack() {
     // Deduct bet from balance
     saveBalance(balance - currentBet);
 
-    const shuffled = shuffleDeck(cardsToUse);
-    const newDeck = [...shuffled];
-    
-    // Deal cards
-    const pHand = [newDeck.pop(), newDeck.pop()];
-    const dHand = [newDeck.pop(), newDeck.pop()];
+    // Deal from the persistent shoe (reshuffles automatically when low)
+    let workingDeck = [...ensureShoe()];
+    const pHand = [workingDeck.pop(), workingDeck.pop()];
+    const dHand = [workingDeck.pop(), workingDeck.pop()];
     let partHand = [];
     
     if (gameMode === 'coop' && coopPartner) {
-      partHand = [newDeck.pop(), newDeck.pop()];
+      partHand = [workingDeck.pop(), workingDeck.pop()];
     }
     
-    setDeck(newDeck);
+    setDeck(workingDeck);
     setPlayerHand(pHand);
     setDealerHand(dHand);
     setPartnerHand(partHand);
@@ -178,12 +189,12 @@ export default function NumerologyBlackjack() {
     setResult(null);
     setPayout(0);
 
-    // Check for natural blackjack
-    const playerTotal = pHand.reduce((sum, card) => sum + getGameValue(card), 0);
-    if (playerTotal === 21) {
+    // Check for natural blackjack (two-card 21, now achievable via aces)
+    const playerTotal = getHandTotal(pHand);
+    if (playerTotal === NATURAL_TARGET) {
       setTimeout(() => {
         setGameState('dealerTurn');
-        dealerPlayWithHands(dHand, newDeck, pHand, partHand);
+        dealerPlayWithHands(dHand, workingDeck, pHand, partHand);
       }, 1000);
     }
   };
@@ -198,10 +209,10 @@ export default function NumerologyBlackjack() {
     setDeck(newDeck);
     setNewCardIndices(prev => ({ ...prev, player: [newHand.length - 1] }));
 
-    const total = newHand.reduce((sum, card) => sum + getGameValue(card), 0);
+    const total = getHandTotal(newHand);
     if (total > 21) {
       endGame('bust', newHand, dealerHand);
-    } else if (total === 21) {
+    } else if (total === NATURAL_TARGET) {
       stand();
     }
   };
@@ -216,10 +227,19 @@ export default function NumerologyBlackjack() {
     let newDeck = [...currentDeck];
     const newDealerCardIndices = [];
     
-    // Dealer hits until 17 or higher
-    while (newDealerHand.reduce((sum, card) => sum + getGameValue(card), 0) < 17 && newDeck.length > 0) {
-      newDealerHand.push(newDeck.pop());
-      newDealerCardIndices.push(newDealerHand.length - 1);
+    // Dealer hits on soft 17, stands on hard 16+ — busts more often against the low deck
+    while (newDeck.length > 0) {
+      const total = getHandTotal(newDealerHand);
+      if (total < DEALER_STAND) {
+        newDealerHand.push(newDeck.pop());
+        newDealerCardIndices.push(newDealerHand.length - 1);
+      } else if (total === DEALER_STAND && isSoft(newDealerHand)) {
+        // Soft 16 → hit once more
+        newDealerHand.push(newDeck.pop());
+        newDealerCardIndices.push(newDealerHand.length - 1);
+      } else {
+        break;
+      }
     }
     
     setDealerHand(newDealerHand);
@@ -228,12 +248,14 @@ export default function NumerologyBlackjack() {
     
     // Determine result
     setTimeout(() => {
-      const dealerTotal = newDealerHand.reduce((sum, card) => sum + getGameValue(card), 0);
-      const playerTotal = pHand.reduce((sum, card) => sum + getGameValue(card), 0);
+      const dealerTotal = getHandTotal(newDealerHand);
+      const playerTotal = getHandTotal(pHand);
 
       let gameResult;
-      if (playerTotal === 21 && pHand.length === 2) {
+      if (playerTotal === NATURAL_TARGET && pHand.length === 2) {
         gameResult = 'blackjack';
+      } else if (playerTotal > 21) {
+        gameResult = 'lose';
       } else if (dealerTotal > 21) {
         gameResult = 'dealerBust';
       } else if (dealerTotal > playerTotal) {
@@ -283,8 +305,8 @@ export default function NumerologyBlackjack() {
       bet_amount: currentBet,
       result: res,
       payout: actualPayout,
-      player_total: finalPlayerHand.reduce((sum, card) => sum + getGameValue(card), 0),
-      dealer_total: finalDealerHand.reduce((sum, card) => sum + getGameValue(card), 0),
+      player_total: getHandTotal(finalPlayerHand),
+      dealer_total: getHandTotal(finalDealerHand),
       player_cards: JSON.stringify(finalPlayerHand.map(c => c.name)),
       dealer_cards: JSON.stringify(finalDealerHand.map(c => c.name)),
       deck_category: selectedCategory,
