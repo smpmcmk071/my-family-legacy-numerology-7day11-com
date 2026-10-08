@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Users, Loader2, AlertTriangle, MapPin, Clock, Globe, Compass, Sun, Moon } from 'lucide-react';
 import ChartWheel from '@/components/astrology/ChartWheel';
+import ChartAnalysis from '@/components/astrology/ChartAnalysis';
 
 const PLANET_GLYPHS = {
   Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
@@ -269,6 +270,9 @@ export default function SiderealChart() {
                     </CardContent>
                   </Card>
                 )}
+
+                {/* AI interpretation */}
+                <ChartAnalysis member={member} chart={chart} houseSystem={houseSystem} />
               </div>
             )}
           </>
