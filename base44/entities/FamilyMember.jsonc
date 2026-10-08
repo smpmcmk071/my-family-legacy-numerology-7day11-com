@@ -261,6 +261,14 @@
       "type": "integer",
       "description": "Hebrew Gematria total"
     },
+    "sidereal_chart": {
+      "type": "string",
+      "description": "JSON string of the full sidereal Whole Sign birth chart (placements, houses, confidence)"
+    },
+    "chart_standard": {
+      "type": "string",
+      "description": "Chart standard used (e.g. sidereal-whole-sign-lahiri)"
+    },
     "opt_in_community": {
       "type": "boolean",
       "default": false,

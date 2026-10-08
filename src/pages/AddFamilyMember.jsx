@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -64,6 +65,8 @@ export default function AddFamilyMember() {
   const [editingMemberId, setEditingMemberId] = useState(null);
   const [displayMethod, setDisplayMethod] = useState('western'); // 'western' or 'chaldean'
   const [memberLimit, setMemberLimit] = useState(5); // Free tier = 5 members
+  const [siderealChart, setSiderealChart] = useState(null);
+  const [chartLoading, setChartLoading] = useState(false);
 
   // ZIP code lookup effect
   useEffect(() => {
@@ -149,6 +152,7 @@ export default function AddFamilyMember() {
       generation: member.generation?.toString() || ''
     });
     setCalculatedData(null);
+    setSiderealChart(null);
     setErrors({});
   };
 
@@ -172,6 +176,7 @@ export default function AddFamilyMember() {
       generation: ''
     });
     setCalculatedData(null);
+    setSiderealChart(null);
     setSaved(false);
     setErrors({});
   };
@@ -242,16 +247,28 @@ export default function AddFamilyMember() {
         const birthTime = getBirthTime();
         const birthPlace = getBirthPlace();
 
-        const response = await base44.functions.invoke('calculateNumerology', {
-          type: 'name',
-          name: formData.full_name,
-          birthDate,
-          birthTime,
-          birthPlace
-        });
+        const [numResponse, chartResponse] = await Promise.all([
+          base44.functions.invoke('calculateNumerology', {
+            type: 'name',
+            name: formData.full_name,
+            birthDate,
+            birthTime,
+            birthPlace
+          }),
+          base44.functions.invoke('calculateSiderealChart', {
+            birthDate,
+            birthTime: (formData.birth_hour && formData.birth_minute && formData.birth_ampm) ? birthTime : '',
+            birthPeriod: formData.birth_time_period || '',
+            birthPlace,
+            birthState: formData.birth_state || ''
+          })
+        ]);
 
-        if (response.data?.success) {
-          setCalculatedData(response.data.data);
+        if (numResponse.data?.success) {
+          setCalculatedData(numResponse.data.data);
+        }
+        if (chartResponse.data?.success) {
+          setSiderealChart(chartResponse.data.data);
         }
         setIsCalculating(false);
       };
@@ -321,6 +338,10 @@ export default function AddFamilyMember() {
             relationship: formData.relationship,
             generation: formData.generation ? parseInt(formData.generation) : null,
             ...calcData,
+            sidereal_chart: siderealChart ? JSON.stringify(siderealChart) : null,
+            chart_standard: siderealChart?.chart_standard || null,
+            birth_latitude: siderealChart?.input?.latitude ?? null,
+            birth_longitude: siderealChart?.input?.longitude ?? null,
             is_active: true
           };
 
@@ -404,16 +425,24 @@ export default function AddFamilyMember() {
             <CardContent>
               <div className="flex flex-wrap gap-2">
                 {existingMembers.map(member => (
-                  <Button
-                    key={member.id}
-                    variant={editingMemberId === member.id ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => loadMemberForEdit(member)}
-                    className={editingMemberId === member.id ? "bg-amber-600" : "border-white/20 text-gray-300 bg-white/5 hover:bg-white/10"}
-                  >
-                    {member.nickname || member.full_name.split(' ')[0]}
-                    {member.life_path && <span className="ml-1 text-xs opacity-70">LP:{member.life_path}</span>}
-                  </Button>
+                  <div key={member.id} className="flex items-center gap-1">
+                    <Button
+                      variant={editingMemberId === member.id ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => loadMemberForEdit(member)}
+                      className={editingMemberId === member.id ? "bg-amber-600" : "border-white/20 text-gray-300 bg-white/5 hover:bg-white/10"}
+                    >
+                      {member.nickname || member.full_name.split(' ')[0]}
+                      {member.life_path && <span className="ml-1 text-xs opacity-70">LP:{member.life_path}</span>}
+                    </Button>
+                    {member.sidereal_chart && (
+                      <Link to={`/SiderealChart?member=${member.id}`}>
+                        <Button size="sm" variant="ghost" className="text-amber-400 hover:bg-amber-500/20 px-2" title="View sidereal chart">
+                          <Sparkles className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 ))}
                 {editingMemberId && (
                   <Button variant="ghost" size="sm" onClick={clearForm} className="text-gray-400 hover:text-white">
@@ -864,6 +893,15 @@ export default function AddFamilyMember() {
 
                   <div className="pt-4 border-t border-white/10">
                                             <p className="text-xs text-gray-400 mb-2">Astrology - Big Three</p>
+                                            {siderealChart && (
+                                              <div className="mb-2 p-2 bg-amber-500/10 border border-amber-500/30 rounded text-xs text-amber-200">
+                                                <span className="font-medium">Sidereal (Whole Sign · Lahiri): </span>
+                                                Asc {siderealChart.ascendant?.signGlyph} {siderealChart.ascendant?.sign}
+                                                {' · '}Sun {siderealChart.planets?.find(p=>p.key==='Sun')?.sign}
+                                                {' · '}Moon {siderealChart.planets?.find(p=>p.key==='Moon')?.sign}
+                                                {!siderealChart.confidence?.ascendant_confident && <span className="text-amber-300/80"> · (limited confidence)</span>}
+                                              </div>
+                                            )}
                                             <div className="flex gap-4 text-sm text-gray-300 flex-wrap mb-2">
                                               <span title="Sun Sign">☉ {calculatedData.astrology?.sunSign || '-'}</span>
                                               <span title="Moon Sign">☽ {calculatedData.astrology?.moonSign || '-'}</span>

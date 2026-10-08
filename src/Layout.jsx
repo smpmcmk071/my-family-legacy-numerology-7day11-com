@@ -29,6 +29,7 @@ export default function Layout({ children, currentPageName }) {
             { name: 'Horoscopes', page: 'Horoscopes', icon: Sparkles },
             { name: 'Transits', page: 'PlanetaryTransits', icon: Sparkles },
             { name: 'Compatibility', page: 'ZodiacCompatibility', icon: Users },
+            { name: 'Sidereal Chart', page: 'SiderealChart', icon: Sparkles },
             { name: 'Learn Astrology', page: 'AstrologyLearning', icon: Sparkles },
             { name: 'Games', page: 'Games', icon: Sparkles },
             { name: 'Community', page: 'Community', icon: Users },
