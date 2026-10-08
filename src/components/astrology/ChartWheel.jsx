@@ -64,13 +64,13 @@ export default function ChartWheel({ houses, planets, ascendant, systemLabel }) 
   // Offset of each cusp from ASC, kept contiguous (end may exceed 360).
   const offsets = cusps.map(c => norm360(c - ascSid));
 
-  const V = 400;
+  const V = 560;
   const cx = V / 2, cy = V / 2;
-  const rOuter = 190;
-  const rInner = 78;
-  const rHouseNum = 172;
-  const rSignGlyph = 148;
-  const rPlanets = 104;
+  const rOuter = 266;
+  const rInner = 104;
+  const rHouseNum = 240;
+  const rSignGlyph = 208;
+  const rPlanets = 146;
 
   // Planet positions with anti-overlap radius bump for close clusters.
   const planetPts = [];
@@ -80,13 +80,13 @@ export default function ChartWheel({ houses, planets, ascendant, systemLabel }) 
     const ang = 180 - off;
     let bump = 0;
     planetPts.forEach(q => { if (Math.abs(q.off - off) < 9) bump++; });
-    const r = rPlanets + bump * 12;
+    const r = rPlanets + bump * 16;
     planetPts.push({ p, off, ang, r });
   });
 
   return (
     <div className="w-full flex flex-col items-center">
-      <svg viewBox={`0 0 ${V} ${V}`} className="w-full max-w-[420px] h-auto">
+      <svg viewBox={`0 0 ${V} ${V}`} className="w-full max-w-[640px] h-auto">
         {hs.map((h, i) => {
           let startOff = offsets[i];
           let endOff = offsets[(i + 1) % 12];
@@ -108,11 +108,11 @@ export default function ChartWheel({ houses, planets, ascendant, systemLabel }) 
                 x1={polar(cx, cy, rInner, startAng).x} y1={polar(cx, cy, rInner, startAng).y}
                 x2={polar(cx, cy, rOuter, startAng).x} y2={polar(cx, cy, rOuter, startAng).y}
                 stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
-              <circle cx={numPt.x} cy={numPt.y} r="9" fill="rgba(0,0,0,0.35)" />
+              <circle cx={numPt.x} cy={numPt.y} r="12" fill="rgba(0,0,0,0.35)" />
               <text x={numPt.x} y={numPt.y} textAnchor="middle" dominantBaseline="central"
-                fontSize="11" fill="#fbbf24" fontWeight="700">{h.house}</text>
+                fontSize="15" fill="#fbbf24" fontWeight="700">{h.house}</text>
               <text x={glyphPt.x} y={glyphPt.y} textAnchor="middle" dominantBaseline="central"
-                fontSize="17" fill="#ffffff">{h.signGlyph}</text>
+                fontSize="23" fill="#ffffff">{h.signGlyph}</text>
             </g>
           );
         })}
@@ -128,19 +128,19 @@ export default function ChartWheel({ houses, planets, ascendant, systemLabel }) 
           const inner = polar(cx, cy, rInner + 2, ang);
           const outer = polar(cx, cy, rOuter - 2, ang);
           const pt = polar(cx, cy, r, ang);
-          const labelPt = polar(cx, cy, r + 11, ang);
+          const labelPt = polar(cx, cy, r + 15, ang);
           return (
             <g key={p.key}>
               <line x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y}
-                stroke="rgba(253,230,138,0.45)" strokeWidth="0.75" strokeDasharray="2 2" />
-              <circle cx={pt.x} cy={pt.y} r="10" fill="rgba(2,6,23,0.7)" />
+                stroke="rgba(253,230,138,0.45)" strokeWidth="1" strokeDasharray="2 2" />
+              <circle cx={pt.x} cy={pt.y} r="14" fill="rgba(2,6,23,0.7)" />
               <text x={pt.x} y={pt.y} textAnchor="middle" dominantBaseline="central"
-                fontSize="14" fill="#fde68a"
+                fontSize="20" fill="#fde68a"
                 title={`${p.name} · ${p.sign} ${p.degreeInSign?.toFixed(1)}° · House ${p.house}`}>
                 {p.glyph}
               </text>
               <text x={labelPt.x} y={labelPt.y} textAnchor="middle" dominantBaseline="central"
-                fontSize="6.5" fill="#fbbf24" fontWeight="700">
+                fontSize="9" fill="#fbbf24" fontWeight="700">
                 H{p.house} {p.degreeInSign != null ? `${p.degreeInSign.toFixed(0)}°` : ''}
               </text>
             </g>
@@ -149,20 +149,20 @@ export default function ChartWheel({ houses, planets, ascendant, systemLabel }) 
 
         {/* ASC marker on the left (house 1 cusp) */}
         <g>
-          <line x1={cx - rOuter} y1={cy} x2={cx - rInner} y2={cy} stroke="#fbbf24" strokeWidth="2.5" />
-          <text x={cx - rOuter + 4} y={cy - 6} fontSize="9" fill="#fbbf24" fontWeight="700">ASC</text>
+          <line x1={cx - rOuter} y1={cy} x2={cx - rInner} y2={cy} stroke="#fbbf24" strokeWidth="3.5" />
+          <text x={cx - rOuter + 6} y={cy - 8} fontSize="12" fill="#fbbf24" fontWeight="700">ASC</text>
         </g>
 
         {/* Center: ascendant + Sun/Moon glyphs */}
-        <text x={cx} y={cy - 26} textAnchor="middle" fontSize="9" fill="#9ca3af">Ascendant</text>
+        <text x={cx} y={cy - 34} textAnchor="middle" fontSize="12" fill="#9ca3af">Ascendant</text>
         {ascendant?.signGlyph ? (
-          <text x={cx} y={cy - 6} textAnchor="middle" fontSize="26" fill="#fbbf24">{ascendant.signGlyph}</text>
+          <text x={cx} y={cy - 8} textAnchor="middle" fontSize="34" fill="#fbbf24">{ascendant.signGlyph}</text>
         ) : null}
-        <text x={cx} y={cy + 12} textAnchor="middle" fontSize="9" fill="#e5e7eb" fontWeight="600">{ascendant?.sign || '—'}</text>
-        <text x={cx} y={cy + 28} textAnchor="middle" fontSize="7.5" fill="#9ca3af">
+        <text x={cx} y={cy + 16} textAnchor="middle" fontSize="12" fill="#e5e7eb" fontWeight="600">{ascendant?.sign || '—'}</text>
+        <text x={cx} y={cy + 38} textAnchor="middle" fontSize="10" fill="#9ca3af">
           {(planets || []).filter(p => p.key === 'Sun' || p.key === 'Moon').map(p => p.signGlyph).join(' · ') || '—'}
         </text>
-        <text x={cx} y={cy + 40} textAnchor="middle" fontSize="6.5" fill="#6b7280">Sun · Moon</text>
+        <text x={cx} y={cy + 54} textAnchor="middle" fontSize="9" fill="#6b7280">Sun · Moon</text>
       </svg>
 
       {/* Element legend */}
