@@ -121,15 +121,29 @@ export default function ChartWheel({ houses, planets, ascendant, systemLabel }) 
         <circle cx={cx} cy={cy} r={rOuter} fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
         <circle cx={cx} cy={cy} r={rInner} fill="rgba(2,6,23,0.6)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
 
-        {/* Planets placed at their true sidereal longitude */}
+        {/* Planets placed at their true sidereal longitude.
+            A faint radial guide marks the exact longitude across the house band,
+            and a small H{n} + degree label makes each planet's house position explicit. */}
         {planetPts.map(({ p, ang, r }) => {
+          const inner = polar(cx, cy, rInner + 2, ang);
+          const outer = polar(cx, cy, rOuter - 2, ang);
           const pt = polar(cx, cy, r, ang);
+          const labelPt = polar(cx, cy, r + 11, ang);
           return (
-            <text key={p.key} x={pt.x} y={pt.y} textAnchor="middle" dominantBaseline="central"
-              fontSize="14" fill="#fde68a"
-              title={`${p.name} · ${p.sign} ${p.degreeInSign?.toFixed(1)}° · House ${p.house}`}>
-              {p.glyph}
-            </text>
+            <g key={p.key}>
+              <line x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y}
+                stroke="rgba(253,230,138,0.45)" strokeWidth="0.75" strokeDasharray="2 2" />
+              <circle cx={pt.x} cy={pt.y} r="10" fill="rgba(2,6,23,0.7)" />
+              <text x={pt.x} y={pt.y} textAnchor="middle" dominantBaseline="central"
+                fontSize="14" fill="#fde68a"
+                title={`${p.name} · ${p.sign} ${p.degreeInSign?.toFixed(1)}° · House ${p.house}`}>
+                {p.glyph}
+              </text>
+              <text x={labelPt.x} y={labelPt.y} textAnchor="middle" dominantBaseline="central"
+                fontSize="6.5" fill="#fbbf24" fontWeight="700">
+                H{p.house} {p.degreeInSign != null ? `${p.degreeInSign.toFixed(0)}°` : ''}
+              </text>
+            </g>
           );
         })}
 
