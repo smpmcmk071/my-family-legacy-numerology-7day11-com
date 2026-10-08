@@ -233,6 +233,77 @@ function midheavenTropical(ramcDeg, epsDeg) {
 }
 
 // ---------------------------------------------------------------------------
+// Placidus house cusps (tropical ecliptic longitudes)
+// Reference: https://alexeyborealis.com/blog/placidus-cusps/
+//   DSA(RA) = arccos( -sin(RA) * tan(phi) / tan(eps) )   (diurnal semi-arc)
+//   NSA(RA) = arccos(  sin(RA) * tan(phi) / tan(eps) )   (nocturnal semi-arc)
+//   cusp ecliptic longitude from right ascension:
+//     lambda = atan2( sin(RA), cos(eps)*cos(RA) )
+//   11th cusp: 1/3 of diurnal semi-arc from MC  (near MC)
+//   12th cusp: 2/3 of diurnal semi-arc from MC  (near ASC)
+//   3rd cusp: 1/3 of nocturnal semi-arc from IC (near IC)
+//   2nd cusp: 2/3 of nocturnal semi-arc from IC (near ASC)
+//   Remaining cusps by the opposite-cusp rule (cusp_n+6 = cusp_n + 180).
+// ---------------------------------------------------------------------------
+function placidusCuspsTropical(ramcDeg, latDeg, epsDeg) {
+  const D = Math.PI / 180;
+  const ramc = ramcDeg * D;
+  const eps = epsDeg * D;
+  const tanPhi = Math.tan(latDeg * D);
+  const tanEps = Math.tan(eps);
+  const cosEps = Math.cos(eps);
+
+  // DSA = 90 + arcsin(tan phi * tan delta), and for an ecliptic point tan delta = tan eps * sin RA.
+  // So DSA(RA) = arccos( -sin RA * tan phi * tan eps ); NSA = 180 - DSA.
+  function dsa(ra) {
+    let x = -Math.sin(ra) * tanPhi * tanEps;
+    if (x > 1) x = 1; else if (x < -1) x = -1;
+    return Math.acos(x);
+  }
+  function nsa(ra) {
+    let x = Math.sin(ra) * tanPhi * tanEps;
+    if (x > 1) x = 1; else if (x < -1) x = -1;
+    return Math.acos(x);
+  }
+  function lambdaFromRa(ra) {
+    const l = Math.atan2(Math.sin(ra), cosEps * Math.cos(ra));
+    return norm360(l / D);
+  }
+  function iterate(initialRa, frac, base, sign) {
+    let ra = initialRa;
+    for (let i = 0; i < 30; i++) {
+      const sa = sign > 0 ? dsa(ra) : nsa(ra);
+      const nra = base + sign * frac * sa;
+      if (Math.abs(nra - ra) < 1e-8) { ra = nra; break; }
+      ra = nra;
+    }
+    return lambdaFromRa(ra);
+  }
+
+  const halfPi = Math.PI / 2;
+  const c11 = iterate(ramc + (1 / 3) * halfPi, 1 / 3, ramc, +1);
+  const c12 = iterate(ramc + (2 / 3) * halfPi, 2 / 3, ramc, +1);
+  const c3  = iterate(ramc + Math.PI - (1 / 3) * halfPi, 1 / 3, ramc + Math.PI, -1);
+  const c2  = iterate(ramc + Math.PI - (2 / 3) * halfPi, 2 / 3, ramc + Math.PI, -1);
+
+  return { c11, c12, c2, c3 };
+}
+
+// Given a sidereal longitude and the 12 sidereal Placidus cusps (keys 1..12),
+// return the house number whose arc [cusp_n, cusp_{n+1}) contains the longitude.
+function placidusHouseOf(lonDeg, cusps) {
+  for (let n = 1; n <= 12; n++) {
+    const start = cusps[n];
+    const end = cusps[(n % 12) + 1];
+    let arc = end - start;
+    if (arc <= 0) arc += 360;
+    let rel = norm360(lonDeg - start);
+    if (rel < arc) return n;
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------------------
 // Main calculation
 // ---------------------------------------------------------------------------
 async function calculateChart(input) {
@@ -313,6 +384,32 @@ async function calculateChart(input) {
     ascSignIndex = signOf(ascSidereal);
   }
 
+  // --- Placidus cusps (tropical, then sidereal) ---
+  let placidusSidereal = null; // array index 1..12 of sidereal cusp longitudes
+  let placidusNotes = [];
+  if (locationResolved) {
+    try {
+      const { c11, c12, c2, c3 } = placidusCuspsTropical(ramcDeg, lat, eps);
+      const c11s = norm360(c11 - ayanamsa);
+      const c12s = norm360(c12 - ayanamsa);
+      const c2s = norm360(c2 - ayanamsa);
+      const c3s = norm360(c3 - ayanamsa);
+      // opposite cusps differ by 180 deg
+      placidusSidereal = {
+        1: ascSidereal, 7: norm360(ascSidereal + 180),
+        2: c2s,         8: norm360(c2s + 180),
+        3: c3s,         9: norm360(c3s + 180),
+        4: norm360(mcSidereal + 180), 10: mcSidereal,
+        5: norm360(c11s + 180), 11: c11s,
+        6: norm360(c12s + 180), 12: c12s
+      };
+    } catch (e) {
+      placidusNotes.push('Placidus cusps could not be computed for this latitude/time — Whole Sign houses remain available.');
+    }
+  } else {
+    placidusNotes.push('Placidus houses need a resolved birth location and time — Whole Sign houses remain available.');
+  }
+
   // --- Planets ---
   const planets = PLANETS.map(p => {
     let tropical;
@@ -335,7 +432,8 @@ async function calculateChart(input) {
       sign: SIGNS[sIdx],
       signGlyph: SIGN_GLYPHS[sIdx],
       degreeInSign: Number(degInSign(sidereal).toFixed(2)),
-      house: ascSignIndex != null ? ((sIdx - ascSignIndex + 12) % 12) + 1 : null
+      house: ascSignIndex != null ? ((sIdx - ascSignIndex + 12) % 12) + 1 : null,
+      house_placidus: placidusSidereal ? placidusHouseOf(sidereal, placidusSidereal) : null
     };
   }).filter(Boolean);
 
@@ -346,18 +444,45 @@ async function calculateChart(input) {
     for (let i = 0; i < 12; i++) {
       const houseNum = i + 1;
       const signIndex = (ascSignIndex + i) % 12;
+      const cuspLon = norm360(signIndex * 30); // whole-sign cusp = 0 deg of the house's sign
       const inHouse = planets.filter(pl => pl.house === houseNum).map(pl => ({
         key: pl.key, name: pl.name, glyph: pl.glyph,
-        degreeInSign: pl.degreeInSign, sign: pl.sign
+        sidereal: pl.sidereal, degreeInSign: pl.degreeInSign, sign: pl.sign
       }));
       houses.push({
         house: houseNum,
         sign: SIGNS[signIndex],
         signGlyph: SIGN_GLYPHS[signIndex],
+        cuspLongitude: Number(cuspLon.toFixed(4)),
         meaning: HOUSE_MEANINGS[houseNum],
         planets: inHouse
       });
     }
+  }
+
+  // --- Houses (Placidus) ---
+  let placidus = null;
+  if (placidusSidereal) {
+    const ph = [];
+    for (let n = 1; n <= 12; n++) {
+      const cuspLon = placidusSidereal[n];
+      const sIdx = signOf(cuspLon);
+      const inHouse = planets.filter(pl => pl.house_placidus === n).map(pl => ({
+        key: pl.key, name: pl.name, glyph: pl.glyph,
+        sidereal: pl.sidereal, degreeInSign: pl.degreeInSign, sign: pl.sign
+      }));
+      ph.push({
+        house: n,
+        sign: SIGNS[sIdx],
+        signGlyph: SIGN_GLYPHS[sIdx],
+        cuspLongitude: Number(cuspLon.toFixed(4)),
+        meaning: HOUSE_MEANINGS[n],
+        planets: inHouse
+      });
+    }
+    placidus = { available: true, houses: ph, notes: placidusNotes };
+  } else {
+    placidus = { available: false, houses: null, notes: placidusNotes };
   }
 
   // --- Confidence ---
@@ -405,6 +530,8 @@ async function calculateChart(input) {
     midheaven: midheavenOut,
     planets,
     houses,
+    house_systems: ['whole_sign', 'placidus'],
+    placidus,
     confidence: {
       time_exact: exactTime,
       location_resolved: locationResolved,

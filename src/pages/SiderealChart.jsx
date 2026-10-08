@@ -28,6 +28,7 @@ export default function SiderealChart() {
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [hasFamily, setHasFamily] = useState(false);
+  const [houseSystem, setHouseSystem] = useState('whole_sign'); // 'whole_sign' | 'placidus'
 
   useEffect(() => {
     const load = async () => {
@@ -64,6 +65,15 @@ export default function SiderealChart() {
   if (member?.sidereal_chart) {
     try { chart = JSON.parse(member.sidereal_chart); } catch (e) { chartError = 'Stored chart data was corrupt.'; }
   }
+
+  const placidusAvailable = !!chart?.placidus?.available && !!chart?.placidus?.houses;
+  const usePlacidus = houseSystem === 'placidus' && placidusAvailable;
+  // Houses + planet house assignments for the selected system.
+  const viewHouses = usePlacidus ? chart.placidus.houses : chart?.houses;
+  const viewPlanets = (chart?.planets || []).map(p => ({
+    ...p,
+    house: usePlacidus ? p.house_placidus : p.house
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
@@ -149,12 +159,39 @@ export default function SiderealChart() {
                   </CardContent>
                 </Card>
 
-                {/* Visual house wheel */}
-                {chart.houses ? (
+                {/* House system toggle */}
+                {chart?.houses ? (
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                    <CardHeader><CardTitle className="text-white text-base flex items-center gap-2"><Compass className="w-4 h-4 text-amber-400" />Whole Sign House Wheel</CardTitle></CardHeader>
+                    <CardContent className="p-3 flex flex-wrap items-center justify-center gap-2">
+                      <span className="text-xs text-gray-400 mr-1">House system:</span>
+                      <Button
+                        size="sm"
+                        variant={houseSystem === 'whole_sign' ? 'default' : 'outline'}
+                        onClick={() => setHouseSystem('whole_sign')}
+                        className={houseSystem === 'whole_sign' ? 'bg-amber-600 hover:bg-amber-700' : 'border-white/20 text-gray-200 hover:bg-white/10'}
+                      >Whole Sign</Button>
+                      <Button
+                        size="sm"
+                        variant={houseSystem === 'placidus' ? 'default' : 'outline'}
+                        onClick={() => setHouseSystem('placidus')}
+                        disabled={!placidusAvailable}
+                        className={houseSystem === 'placidus' ? 'bg-amber-600 hover:bg-amber-700' : 'border-white/20 text-gray-200 hover:bg-white/10'}
+                      >Placidus</Button>
+                      {!placidusAvailable && (
+                        <span className="text-[11px] text-amber-300/80 ml-1">
+                          Re-save this member in “Add Member” to compute Placidus cusps.
+                        </span>
+                      )}
+                    </CardContent>
+                  </Card>
+                ) : null}
+
+                {/* Visual house wheel */}
+                {viewHouses ? (
+                  <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                    <CardHeader><CardTitle className="text-white text-base flex items-center gap-2"><Compass className="w-4 h-4 text-amber-400" />{usePlacidus ? 'Placidus' : 'Whole Sign'} House Wheel</CardTitle></CardHeader>
                     <CardContent>
-                      <ChartWheel chart={chart} member={member} />
+                      <ChartWheel houses={viewHouses} planets={viewPlanets} ascendant={chart.ascendant} systemLabel={houseSystem} />
                     </CardContent>
                   </Card>
                 ) : null}
@@ -173,10 +210,10 @@ export default function SiderealChart() {
 
                 {/* Planets */}
                 <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                  <CardHeader><CardTitle className="text-white text-base">Planetary Placements</CardTitle></CardHeader>
+                  <CardHeader><CardTitle className="text-white text-base">Planetary Placements <span className="text-xs text-gray-400 font-normal">({usePlacidus ? 'Placidus' : 'Whole Sign'} houses)</span></CardTitle></CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-                      {chart.planets?.map(p => (
+                      {viewPlanets.map(p => (
                         <div key={p.key} className="p-3 bg-white/5 rounded-lg border border-white/10">
                           <div className="flex items-center justify-between">
                             <span className="text-2xl">{p.glyph}</span>
@@ -193,12 +230,12 @@ export default function SiderealChart() {
                 </Card>
 
                 {/* Houses */}
-                {chart.houses ? (
+                {viewHouses ? (
                   <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                    <CardHeader><CardTitle className="text-white text-base">The Twelve Houses (Whole Sign)</CardTitle></CardHeader>
+                    <CardHeader><CardTitle className="text-white text-base">The Twelve Houses ({usePlacidus ? 'Placidus' : 'Whole Sign'})</CardTitle></CardHeader>
                     <CardContent>
                       <div className="grid sm:grid-cols-2 gap-3">
-                        {chart.houses.map(h => (
+                        {viewHouses.map(h => (
                           <div key={h.house} className="p-3 bg-white/5 rounded-lg border border-white/10">
                             <div className="flex items-center justify-between mb-1">
                               <span className="text-amber-300 font-semibold">House {h.house}</span>
