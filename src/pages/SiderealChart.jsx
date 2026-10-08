@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Users, Loader2, AlertTriangle, MapPin, Clock, Globe, Compass, Sun, Moon } from 'lucide-react';
+import ChartWheel from '@/components/astrology/ChartWheel';
 
 const PLANET_GLYPHS = {
   Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
@@ -147,6 +148,16 @@ export default function SiderealChart() {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Visual house wheel */}
+                {chart.houses ? (
+                  <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+                    <CardHeader><CardTitle className="text-white text-base flex items-center gap-2"><Compass className="w-4 h-4 text-amber-400" />Whole Sign House Wheel</CardTitle></CardHeader>
+                    <CardContent>
+                      <ChartWheel chart={chart} member={member} />
+                    </CardContent>
+                  </Card>
+                ) : null}
 
                 {/* Big three */}
                 <Card className="bg-white/10 backdrop-blur-sm border-white/20">
