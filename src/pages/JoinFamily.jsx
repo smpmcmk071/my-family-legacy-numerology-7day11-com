@@ -52,15 +52,20 @@ export default function JoinFamily() {
     setError('');
     setFoundFamily(null);
 
-    const families = await base44.entities.Family.filter({ invite_code: inviteCode.toUpperCase().trim() });
-    
-    if (families.length === 0) {
-      setError('No family found with that code. Check the code and try again.');
+    // The invite code is checked on the server, so family records stay private.
+    const lookupResponse = await base44.functions.invoke('familyMembership', {
+      action: 'lookup',
+      inviteCode: inviteCode
+    });
+    const family = lookupResponse.data?.family;
+
+    if (!family) {
+      setError(lookupResponse.data?.error || 'No family found with that code. Check the code and try again.');
       setLoading(false);
       return;
     }
 
-    setFoundFamily(families[0]);
+    setFoundFamily(family);
     setLoading(false);
   };
 
@@ -69,12 +74,13 @@ export default function JoinFamily() {
 
     setLoading(true);
 
-    // Check member limit
-    const existingMembers = await base44.entities.FamilyMember.filter({ family_id: foundFamily.id });
-    const limit = foundFamily.member_limit || 5;
-    
-    if (existingMembers.length >= limit) {
-      setError(`This family has reached its member limit (${limit}). Ask the family admin to upgrade.`);
+    // The server re-checks the invite code and member limit, then links this account to the family.
+    const joinResponse = await base44.functions.invoke('familyMembership', {
+      action: 'join',
+      inviteCode: inviteCode
+    });
+    if (joinResponse.data?.error) {
+      setError(joinResponse.data.error);
       setLoading(false);
       return;
     }

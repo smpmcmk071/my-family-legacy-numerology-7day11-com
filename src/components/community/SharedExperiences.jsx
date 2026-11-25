@@ -67,6 +67,7 @@ export default function SharedExperiences({ user, userMember }) {
     await base44.entities.SharedExperience.create({
       ...newExperience,
       ...numerology,
+      family_id: userMember?.family_id,
       user_name: newExperience.is_anonymous ? 'Anonymous' : (userMember?.nickname || user?.full_name || 'User'),
       life_path_number: userMember?.life_path_western,
       likes_count: 0

@@ -281,18 +281,13 @@ export default function AddFamilyMember() {
         // Create family if doesn't exist and we have a name
         let familyToUse = userFamily;
         if (!familyToUse && formData.family_name) {
-          const user = await base44.auth.me();
-          // Generate a simple invite code from family name
-          const baseCode = formData.family_name.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 5);
-          const inviteCode = baseCode + Math.floor(Math.random() * 900 + 100);
-          
-          familyToUse = await base44.entities.Family.create({
-            name: formData.family_name,
-            admin_email: user.email,
-            description: `Family group for ${formData.family_name}`,
-            invite_code: inviteCode
+          // Family creation runs on the server, which also links this account to it.
+          const familyResponse = await base44.functions.invoke('familyMembership', {
+            action: 'create',
+            name: formData.family_name
           });
-          setUserFamily(familyToUse);
+          familyToUse = familyResponse.data?.family;
+          if (familyToUse) setUserFamily(familyToUse);
         }
 
         if (!familyToUse) {
@@ -323,6 +318,21 @@ export default function AddFamilyMember() {
         const maskedEmail = formData.email ? formData.email.replace(/(.{2}).*(@.*)/, '$1***$2') : null;
 
         const calcData = buildMemberDataFromCalc(calculatedData);
+
+        // Keep the computed chart, but never store the exact birth date, time or place inside it.
+        const chartForStorage = siderealChart ? {
+          ...siderealChart,
+          input: siderealChart.input ? {
+            ...siderealChart.input,
+            birthDate: null,
+            birthTime: null,
+            birthPeriod: null,
+            birthPlace: null,
+            latitude: null,
+            longitude: null
+          } : undefined
+        } : null;
+
           const memberData = {
             family_id: familyToUse.id,
             full_name: formData.full_name,
@@ -338,10 +348,10 @@ export default function AddFamilyMember() {
             relationship: formData.relationship,
             generation: formData.generation ? parseInt(formData.generation) : null,
             ...calcData,
-            sidereal_chart: siderealChart ? JSON.stringify(siderealChart) : null,
+            sidereal_chart: chartForStorage ? JSON.stringify(chartForStorage) : null,
             chart_standard: siderealChart?.chart_standard || null,
-            birth_latitude: siderealChart?.input?.latitude ?? null,
-            birth_longitude: siderealChart?.input?.longitude ?? null,
+            birth_latitude: null,
+            birth_longitude: null,
             is_active: true
           };
 

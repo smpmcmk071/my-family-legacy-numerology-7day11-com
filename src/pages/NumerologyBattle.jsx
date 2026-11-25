@@ -645,6 +645,7 @@ export default function NumerologyBattle() {
     
     // Save battle record
     await base44.entities.BattleRecord.create({
+      family_id: familyMembers[0]?.family_id || null,
       player1_id: player1Id,
       player2_id: player2Id,
       player1_name: player1Stats.name,

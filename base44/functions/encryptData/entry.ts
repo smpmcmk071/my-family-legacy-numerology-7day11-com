@@ -1,11 +1,11 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
-// Simple AES-like encryption using Web Crypto API
-const ENCRYPTION_KEY = Deno.env.get("ENCRYPTION_KEY") || "default-key-change-in-production-32";
-
+// AES-GCM encryption using Web Crypto API
 async function getKey() {
+  const secret = Deno.env.get("ENCRYPTION_KEY");
+  if (!secret) throw new Error("Encryption key is not configured");
   const encoder = new TextEncoder();
-  const keyData = encoder.encode(ENCRYPTION_KEY.padEnd(32, '0').slice(0, 32));
+  const keyData = encoder.encode(secret.padEnd(32, '0').slice(0, 32));
   return await crypto.subtle.importKey(
     'raw',
     keyData,

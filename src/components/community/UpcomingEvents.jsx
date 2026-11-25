@@ -78,6 +78,7 @@ export default function UpcomingEvents({ userMember }) {
       event_type: newEvent.type,
       ...eventNumerology,
       user_id: userMember?.id,
+      family_id: userMember?.family_id,
       family_member_id: userMember?.id
     });
     

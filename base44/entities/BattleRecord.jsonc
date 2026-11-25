@@ -2,6 +2,10 @@
   "name": "BattleRecord",
   "type": "object",
   "properties": {
+    "family_id": {
+      "type": "string",
+      "description": "Family group identifier"
+    },
     "player1_id": {
       "type": "string",
       "description": "FamilyMember ID of player 1"
@@ -59,5 +63,49 @@
   "required": [
     "player1_id",
     "player2_id"
-  ]
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.family_id": "{{user.data.family_id}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
 }

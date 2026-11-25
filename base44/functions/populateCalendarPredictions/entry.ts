@@ -376,6 +376,7 @@ Deno.serve(async (req) => {
         
         await base44.entities.CalendarEvent.create({
           user_id: user.id,
+          family_id: user.family_id || null,
           family_member_id: familyMemberId || null,
           event_date: dateStr,
           event_title: eventTitle,

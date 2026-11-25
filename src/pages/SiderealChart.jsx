@@ -145,8 +145,7 @@ export default function SiderealChart() {
                       <span className="text-gray-400">Ayanamsa {chart.ayanamsa}°</span>
                     </div>
                     <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-gray-400 mt-2">
-                      {chart.input?.birthPlace && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{chart.input.birthPlace}</span>}
-                      {chart.input?.latitude != null && <span className="flex items-center gap-1"><Globe className="w-3 h-3" />{chart.input.latitude}, {chart.input.longitude}</span>}
+                      {member.birth_place && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{member.birth_place}</span>}
                       {chart.input?.timezone && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{chart.input.timezone}</span>}
                     </div>
                     <div className={`mt-3 p-3 rounded-lg text-xs ${

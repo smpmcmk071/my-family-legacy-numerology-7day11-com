@@ -231,6 +231,7 @@ export default function CalendarEvents() {
         vibe_summary: eventNumerology.vibeSummary,
         recommendations: eventNumerology.recommendations,
         user_id: userMember?.id,
+        family_id: userMember?.family_id,
         family_member_id: userMember?.id
       });
     }

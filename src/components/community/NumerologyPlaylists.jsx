@@ -66,6 +66,7 @@ export default function NumerologyPlaylists({ user, userMember }) {
     
     await base44.entities.NumerologyPlaylist.create({
       ...newPlaylist,
+      family_id: userMember?.family_id,
       likes_count: 0
     });
     

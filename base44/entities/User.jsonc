@@ -6,6 +6,17 @@
       "type": "boolean",
       "default": false,
       "description": "Whether user has access to premium calendar predictions feature"
+    },
+    "family_id": {
+      "type": "string",
+      "description": "Family group the user belongs to (assigned by the server when creating or joining a family)",
+      "rls": {
+        "update": {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      }
     }
   },
   "required": []
